@@ -45,8 +45,8 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         passwordField = new javax.swing.JTextField();
         passwordConfirmationLabel = new javax.swing.JLabel();
         passwordConfirmationField = new javax.swing.JTextField();
-        okButton = new javax.swing.JToggleButton();
-        cancelButton = new javax.swing.JToggleButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         nameLabel.setText("Full Name:");
 
@@ -121,11 +121,6 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
-        // CLEAR ALL FIELD
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         // TODO add your handling code here:
         String name = "", email = "", password = "", passwordConfirmation = "";
@@ -168,14 +163,23 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_okButtonActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        // TODO add your handling code here:
+         // CLEAR ALL FIELDS
+        nameField.setText("");
+        emailField.setText("");
+        passwordField.setText("");
+        passwordConfirmationField.setText("");
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton cancelButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
-    private javax.swing.JToggleButton okButton;
+    private javax.swing.JButton okButton;
     private javax.swing.JTextField passwordConfirmationField;
     private javax.swing.JLabel passwordConfirmationLabel;
     private javax.swing.JTextField passwordField;

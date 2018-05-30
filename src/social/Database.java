@@ -1,6 +1,5 @@
 package social;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,7 +31,6 @@ public class Database implements Serializable {
         this.retriveData();
     }
 
-    
     /**
      * Serialize the database info
      */
@@ -50,7 +48,7 @@ public class Database implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     /*
      * Read Database File and set to Users field
      */
@@ -80,11 +78,13 @@ public class Database implements Serializable {
     }
 
     /**
-     *  Add user to the collection
+     * Add user to the collection
+     *
      * @param User to add to the collection
      */
     public void addUser(User user) {
         this.users.put(user.getUuid(), user);
+        System.out.println("ADD USER: " + user);
     }
 
     /**
@@ -99,8 +99,8 @@ public class Database implements Serializable {
      */
     public void listAllUsers() {
         this.users.keySet().forEach((key) -> {
-        	User u = getUserByKey(key);
-        	System.out.println(u);
+            User u = getUserByKey(key);
+            System.out.println(u);
         });
     }
 
@@ -113,6 +113,7 @@ public class Database implements Serializable {
 
     /**
      * Searches for a specific user's by a given email.
+     *
      * @param email
      * @return user's email key if exists. or null
      */
@@ -127,9 +128,9 @@ public class Database implements Serializable {
         return null;
     }
 
-
     /**
      * Validate login with given email and password.
+     *
      * @param email
      * @param password
      * @return User if sign in is valid. or null
@@ -137,7 +138,7 @@ public class Database implements Serializable {
     public User validateSignIn(String email, String password) {
         String key = getUserKeyByEmail(email);
         if ((key != null)) {
-        	User user = getUserByKey(key);
+            User user = getUserByKey(key);
             if (passwordMatch(key, password.trim())) {
                 return user;
             }
@@ -146,9 +147,9 @@ public class Database implements Serializable {
         return null;
     }
 
-    
     /**
      * Set users.
+     *
      * @param users
      */
     private void setUsers(HashMap<String, User> users) {
@@ -159,6 +160,7 @@ public class Database implements Serializable {
 
     /**
      * Get user with specific key
+     *
      * @param key
      * @return User with given key
      */
@@ -171,6 +173,7 @@ public class Database implements Serializable {
 
     /**
      * Check if given password match user's password
+     *
      * @param basePassword
      * @param toCheckPassword
      * @return True if passwords match.
@@ -181,22 +184,23 @@ public class Database implements Serializable {
 
     /**
      * Search in the database for users with given name.
+     *
      * @param firstName
      * @return A list of Users with given name
      */
     public ArrayList<User> getUsersByName(String name) {
-    	ArrayList<User> users = new ArrayList<User>();
+        ArrayList<User> users = new ArrayList<User>();
         for (String key : this.users.keySet()) {
             User user = this.users.get(key);
             if (user.getName().toLowerCase().startsWith(name.toLowerCase().trim())) {
                 users.add(user);
             }
         }
-        
-        if(users.size() > 0) {
-        	return users;
+
+        if (users.size() > 0) {
+            return users;
         } else {
-        	return null;
+            return null;
         }
     }
 }

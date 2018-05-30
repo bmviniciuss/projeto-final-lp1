@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
+import social.Database;
 import social.User;
 
 /**
@@ -13,12 +9,14 @@ import social.User;
  */
 public class MainView extends javax.swing.JFrame {
     private User currentUser;
+    private Database db;
 
     /**
      * Creates new form MainView
      */
     public MainView() {
         initComponents();
+        this.db = new Database();
         this.currentUser = null;
         setVisible(true);
     }
@@ -91,8 +89,8 @@ public class MainView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MainView mv= new MainView();
-                mv.setVisible(false);
+                MainView mv = new MainView();
+                mv.setVisible(true);
                 mv.runApp();
                 
             }
@@ -107,7 +105,7 @@ public class MainView extends javax.swing.JFrame {
     
     public void runApp(){
         if(this.currentUser == null) {
-            new PublicView().setVisible(true);
+            new PublicView(this.db).setVisible(true);
         }
     }
 
