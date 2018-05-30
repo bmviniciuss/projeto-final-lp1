@@ -184,11 +184,11 @@ public class Database implements Serializable {
      * @param firstName
      * @return A list of Users with given name
      */
-    public ArrayList<User> getUsersByName(String firstName) {
+    public ArrayList<User> getUsersByName(String name) {
     	ArrayList<User> users = new ArrayList<User>();
         for (String key : this.users.keySet()) {
             User user = this.users.get(key);
-            if (user.getFirstName().toLowerCase().startsWith(firstName.toLowerCase().trim())) {
+            if (user.getName().toLowerCase().startsWith(name.toLowerCase().trim())) {
                 users.add(user);
             }
         }

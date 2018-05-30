@@ -9,7 +9,8 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Listeners.LoginListener;
-// CONSTANTS
+import Listeners.CreateAccountListener;
+import social.User;
 
 /**
  *
@@ -25,7 +26,7 @@ public class PublicView extends javax.swing.JFrame {
 
         LoginPanel loginPanel = new LoginPanel();
         contentPanel.add(Constans.LOGIN, loginPanel);
-        
+
         loginPanel.setListener(new LoginListener() {
             @Override
             public void sendLoginCredentials(String email, String password) {
@@ -36,7 +37,16 @@ public class PublicView extends javax.swing.JFrame {
 
         CreateAccountPanel createAccountPanel = new CreateAccountPanel();
         contentPanel.add(Constans.CREATE_ACCOUNT, createAccountPanel);
-        
+
+        createAccountPanel.setListener(new CreateAccountListener() {
+            @Override
+            public void sendUser(User user) {
+                System.out.println("Name: " + user.getName());
+                System.out.println("Email: " + user.getEmail());
+                System.out.println("Password: " + user.getPassword());
+            }
+        });
+
         // LOGIN BUTTON LISTENER
         loginButton.addActionListener(new ActionListener() {
             @Override

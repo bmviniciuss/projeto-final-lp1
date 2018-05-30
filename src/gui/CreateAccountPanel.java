@@ -5,17 +5,27 @@
  */
 package gui;
 
+import javax.swing.JOptionPane;
+import Listeners.CreateAccountListener;
+import social.User;
+
 /**
  *
  * @author bmvin
  */
 public class CreateAccountPanel extends javax.swing.JPanel {
 
+    private CreateAccountListener listener;
+    
     /**
      * Creates new form CreateAccountPanel
      */
     public CreateAccountPanel() {
         initComponents();
+    }
+    
+    public void setListener(CreateAccountListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -42,17 +52,16 @@ public class CreateAccountPanel extends javax.swing.JPanel {
 
         emailLabel.setText("Email:");
 
-        emailField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailFieldActionPerformed(evt);
-            }
-        });
-
         passwordLabel.setText("Password:");
 
         passwordConfirmationLabel.setText("Password Confirmation:");
 
         okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -112,13 +121,52 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void emailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_emailFieldActionPerformed
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
+        // CLEAR ALL FIELD
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        // TODO add your handling code here:
+        String name = "", email = "", password = "", passwordConfirmation = "";
+        String warnings = "";
+        
+        // name validation
+        name = nameField.getText().trim();
+        if(!Validators.checkNotEmptyStringNotNull(name)) {
+            warnings += "Name must not be empty.\n";
+        }
+        
+        // validate email
+        email = emailField.getText().trim();
+        if(!Validators.validEmail(email)) {
+            warnings += "Email must be valid.\n";
+        }
+        
+        // validate password
+        password = passwordField.getText().trim();
+        if(!Validators.checkNotEmptyStringNotNull(password)) {
+            warnings += "Password must be not empty.\n";
+        }
+        
+        // validate confirm password
+        passwordConfirmation = passwordConfirmationField.getText().trim();
+        if(!Validators.checkNotEmptyStringNotNull(passwordConfirmation)) {
+            warnings += "Password Confirmation must be not empty.\n";
+        }
+        if(!Validators.passwordsMatches(password, passwordConfirmation)) {
+            warnings += "Passwords must match.\n";
+        }
+        
+        if(!warnings.isEmpty()) {
+            JOptionPane.showMessageDialog(this, warnings, "Erros", JOptionPane.WARNING_MESSAGE);
+        } else {
+            // everything is great
+            User user = new User(name, email, password);
+            listener.sendUser(user);
+        }
+        
+    }//GEN-LAST:event_okButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

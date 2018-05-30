@@ -15,49 +15,19 @@ import java.util.HashMap;
  */
 public class User extends Unique implements Serializable {
 
-    private String firstName;
-    private String lastName;
+    private String name;
     private String email;
     private String password;
     private boolean publicProfile;
     private HashMap<String, User> friends;
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String name, String email, String password) {
         super();
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.publicProfile = true;
         this.friends = new HashMap<String, User>();
-    }
-
-    /**
-     * @return the firstName
-     */
-    public String getFirstName() {
-        return firstName;
-    }
-
-    /**
-     * @param firstName the firstName to set
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    /**
-     * @return the lastName
-     */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * @param lastName the lastName to set
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     /**
@@ -90,7 +60,7 @@ public class User extends Unique implements Serializable {
 
     @Override
     public String toString() {
-        return this.firstName + " " + this.lastName;
+        return this.name;
     }
 
     /**
@@ -127,6 +97,13 @@ public class User extends Unique implements Serializable {
      */
     public void addFriend(User friend) {
         this.friends.put(friend.getUuid(), friend);
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
