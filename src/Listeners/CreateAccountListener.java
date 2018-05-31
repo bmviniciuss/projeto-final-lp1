@@ -12,5 +12,5 @@ import social.User;
  * @author bmvin
  */
 public interface CreateAccountListener {
-    public void sendUser(User user);
+    public void sendUser(User user, String password);
 }

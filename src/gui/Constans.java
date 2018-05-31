@@ -12,4 +12,5 @@ package gui;
 public class Constans {
     public static final String LOGIN = "LOGIN";
     public static final String CREATE_ACCOUNT = "CREATE_ACCOUNT";
+    public static final String PUBLIC_VIEW = "PUBLIC_VIEW";
 }

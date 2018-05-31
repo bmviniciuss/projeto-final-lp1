@@ -5,27 +5,26 @@
  */
 package gui;
 
+import Listeners.CreateAccountListener;
+import Listeners.LoginListener;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import Listeners.LoginListener;
-import Listeners.CreateAccountListener;
 import social.Database;
 import social.User;
 
-/**
+/*
  *
  * @author bmvin
  */
 public class PublicView extends javax.swing.JFrame {
     private Database db;
     /**
-     * Creates new form PublicView
+     * Creates new form PublicVIew
      */
     public PublicView(Database db) {
         initComponents();
         this.db = db;
-
         LoginPanel loginPanel = new LoginPanel();
         contentPanel.add(Constans.LOGIN, loginPanel);
 
@@ -42,11 +41,14 @@ public class PublicView extends javax.swing.JFrame {
 
         createAccountPanel.setListener(new CreateAccountListener() {
             @Override
-            public void sendUser(User user) {
+            public void sendUser(User user, String password) {
                 System.out.println("Name: " + user.getName());
                 System.out.println("Email: " + user.getEmail());
-                System.out.println("Password: " + user.getPassword());
-                db.addUser(user);
+                System.out.println("Password: " + password);
+                db.addUserToDatabase(user, password);
+                AuthView auth = new AuthView(user);
+                auth.setVisible(true);
+                dispose();
             }
         });
 
@@ -88,11 +90,9 @@ public class PublicView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        menuPanel.setBackground(new java.awt.Color(142, 68, 173));
-
         loginButton.setText("Login");
 
-        createAccountButton.setText("Create Account");
+        createAccountButton.setText("New Account");
 
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -116,11 +116,11 @@ public class PublicView extends javax.swing.JFrame {
         menuPanelLayout.setVerticalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuPanelLayout.createSequentialGroup()
-                .addGap(97, 97, 97)
+                .addGap(103, 103, 103)
                 .addComponent(loginButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(createAccountButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
                 .addComponent(exitButton)
                 .addContainerGap())
         );
@@ -134,7 +134,7 @@ public class PublicView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,11 +145,9 @@ public class PublicView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        // TODO add your handling code here:
-        this.db.serializeData();
+        this.db.serializeAllData();
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;

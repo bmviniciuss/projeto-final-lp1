@@ -17,15 +17,13 @@ public class User extends Unique implements Serializable {
 
     private String name;
     private String email;
-    private String password;
     private boolean publicProfile;
     private HashMap<String, User> friends;
 
-    public User(String name, String email, String password) {
+    public User(String name, String email) {
         super();
         this.name = name;
         this.email = email;
-        this.password = password;
         this.publicProfile = true;
         this.friends = new HashMap<String, User>();
     }
@@ -42,20 +40,6 @@ public class User extends Unique implements Serializable {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /**
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @param password the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override

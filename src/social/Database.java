@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import utils.DataSerializer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,69 +23,46 @@ import java.util.Iterator;
  */
 public class Database implements Serializable {
 
-    private static final String DBNAME = "database.ser";
+    private static final String USERS_DATA = "users_data.ser";
+    private static final String AUTHENTICATION_DATA = "authentication_data.ser";
 
     private HashMap<String, User> users;
+    private HashMap<String, String> authentication;
 
     public Database() {
         this.users = new HashMap<String, User>();
-        this.retriveData();
+        this.authentication = new HashMap<String, String>();
     }
 
-    /**
-     * Serialize the database info
-     */
-    public void serializeData() {
-        try {
-            FileOutputStream fos = new FileOutputStream(DBNAME);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
+    // USERS DATA
+    public void serializeUsersData() {
+        DataSerializer.serializeData(Database.USERS_DATA, this.users);
+    }
 
-            oos.writeObject(this.users);
-            oos.close();
-            fos.close();
-
-//            System.out.println("Database was serialize");
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void deserializeUsersData() {
+        HashMap<String, User> data = null;
+        data = DataSerializer.desirializeUsersData(Database.USERS_DATA);
+        if (data != null) {
+            setUsers(data);
         }
     }
 
-    /*
-     * Read Database File and set to Users field
-     */
-    private void retriveData() {
-        HashMap<String, User> map = null;
-        File f = new File(DBNAME);
-        if (f.exists() && !f.isDirectory()) {
-            try {
-                FileInputStream fis = new FileInputStream(DBNAME);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                map = (HashMap) ois.readObject();
-                ois.close();
-                fis.close();
-
-                setUsers(map);
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            } catch (ClassNotFoundException c) {
-//                System.out.println("Class not found");
-                c.printStackTrace();
-
-            }
-        } else {
-            setUsers(new HashMap<String, User>());
+    // AUTHENTICATION DATA
+    public void serializeAuthentication() {
+        DataSerializer.serializeData(Database.AUTHENTICATION_DATA, this.authentication);
+    }
+    
+    public void desirializeAuthentication() {
+        HashMap<String, String> data = null;
+        data = DataSerializer.desirializeAuthenticationData(Database.AUTHENTICATION_DATA);
+        if(data != null) {
+            setAuthentication(data);
         }
     }
-
-    /**
-     * Add user to the collection
-     *
-     * @param User to add to the collection
-     */
-    public void addUser(User user) {
-        this.users.put(user.getUuid(), user);
-        System.out.println("ADD USER: " + user);
+    
+    public void serializeAllData() {
+        serializeUsersData();
+        serializeAuthentication();
     }
 
     /**
@@ -94,113 +72,35 @@ public class Database implements Serializable {
         return users;
     }
 
-    /*
-     * Iterate over all users and print then to the screen
-     */
-    public void listAllUsers() {
-        this.users.keySet().forEach((key) -> {
-            User u = getUserByKey(key);
-            System.out.println(u);
-        });
-    }
-
-    /*
-     * @return number of users
-     */
-    public int numberOfUsers() {
-        return users.size();
-    }
-
     /**
-     * Searches for a specific user's by a given email.
-     *
-     * @param email
-     * @return user's email key if exists. or null
-     */
-    public String getUserKeyByEmail(String email) {
-        for (String key : this.users.keySet()) {
-            User user = this.users.get(key);
-            if (user.getEmail().equalsIgnoreCase(email.trim())) {
-                return key;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Validate login with given email and password.
-     *
-     * @param email
-     * @param password
-     * @return User if sign in is valid. or null
-     */
-    public User validateSignIn(String email, String password) {
-        String key = getUserKeyByEmail(email);
-        if ((key != null)) {
-            User user = getUserByKey(key);
-            if (passwordMatch(key, password.trim())) {
-                return user;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Set users.
-     *
-     * @param users
+     * @param users the users to set
      */
     private void setUsers(HashMap<String, User> users) {
-        if (users != null) {
-            this.users = users;
-        }
+        this.users = users;
     }
 
     /**
-     * Get user with specific key
-     *
-     * @param key
-     * @return User with given key
+     * @return the authentication
      */
-    public User getUserByKey(String key) {
-        if (this.users.containsKey(key)) {
-            return this.users.get(key);
-        }
-        return null;
+    private HashMap<String, String> getAuthentication() {
+        return authentication;
     }
 
     /**
-     * Check if given password match user's password
-     *
-     * @param basePassword
-     * @param toCheckPassword
-     * @return True if passwords match.
+     * @param authentication the authentication to set
      */
-    private boolean passwordMatch(String basePassword, String toCheckPassword) {
-        return basePassword.equals(toCheckPassword.trim());
+    private void setAuthentication(HashMap<String, String> authentication) {
+        this.authentication = authentication;
     }
-
-    /**
-     * Search in the database for users with given name.
-     *
-     * @param firstName
-     * @return A list of Users with given name
-     */
-    public ArrayList<User> getUsersByName(String name) {
-        ArrayList<User> users = new ArrayList<User>();
-        for (String key : this.users.keySet()) {
-            User user = this.users.get(key);
-            if (user.getName().toLowerCase().startsWith(name.toLowerCase().trim())) {
-                users.add(user);
-            }
-        }
-
-        if (users.size() > 0) {
-            return users;
-        } else {
-            return null;
+    
+    public void addUserToDatabase(User user, String password) {
+        String key = user.getUuid();
+        if(!this.users.containsKey(key) && !this.authentication.containsKey(key)) {
+            this.users.put(key, user);
+            this.authentication.put(key, password);
         }
     }
+
+    
+
 }

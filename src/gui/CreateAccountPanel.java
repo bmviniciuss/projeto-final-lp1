@@ -5,6 +5,7 @@
  */
 package gui;
 
+import utils.Validators;
 import javax.swing.JOptionPane;
 import Listeners.CreateAccountListener;
 import social.User;
@@ -157,8 +158,8 @@ public class CreateAccountPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, warnings, "Erros", JOptionPane.WARNING_MESSAGE);
         } else {
             // everything is great
-            User user = new User(name, email, password);
-            listener.sendUser(user);
+            User user = new User(name, email);
+            listener.sendUser(user, password);
         }
         
     }//GEN-LAST:event_okButtonActionPerformed
