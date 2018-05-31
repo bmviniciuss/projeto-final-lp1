@@ -174,4 +174,24 @@ public class Database implements Serializable {
         return null;
     }
 
+    public HashMap<String, User> searchUsersByName(String queryName) {
+        HashMap<String, User> result = new HashMap<String, User>();
+
+        for (String key : this.users.keySet()) {
+            User u = this.users.get(key);
+
+            if (u.getName().toLowerCase().trim().startsWith(queryName.toLowerCase().trim())) {
+                result.put(u.getUuid(), u);
+            }
+
+        }
+
+        if (!result.isEmpty()) {
+            return result;
+
+        } else {
+            return null;
+        }
+
+    }
 }

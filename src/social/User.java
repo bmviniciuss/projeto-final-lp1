@@ -3,6 +3,7 @@ package social;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import javax.swing.ImageIcon;
 
 /*
@@ -19,6 +20,9 @@ public class User extends Unique implements Serializable {
     private String name;
     private String email;
     private ImageIcon profilePicture;
+    private HashSet<String> friends;
+    private HashSet<String> requests;
+    private HashSet<String> blockedUsers;
     private boolean publicProfile;
 
     public User(String name, String email) {
@@ -27,6 +31,9 @@ public class User extends Unique implements Serializable {
         this.email = email;
         this.profilePicture = null;
         this.publicProfile = true;
+        this.friends = new HashSet<String>();
+        this.requests = new HashSet<String>();
+        this.blockedUsers = new HashSet<String>();
     }
 
     /**
@@ -74,6 +81,35 @@ public class User extends Unique implements Serializable {
      */
     public void setProfilePicture(ImageIcon profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    /**
+     * @return the friends
+     */
+    public HashSet<String> getFriends() {
+        return friends;
+    }
+
+    public boolean userIsBlocked(String key) {
+        return this.blockedUsers.contains(key);
+    }
+
+    public void blockUser(String key) {
+        if (!this.blockedUsers.contains(key)) {
+            this.blockedUsers.add(key);
+        }
+    }
+
+    public void sendRequest(String originUser) {
+        if (!this.friends.contains(originUser) && !this.blockedUsers.contains(originUser) && !this.requests.contains(originUser)) {
+            this.requests.add(originUser);
+        }
+    }
+
+    public void addFriend(String key) {
+        if (this.requests.contains(key) && !this.friends.contains(key)) {
+            this.friends.add(key);
+        }
     }
 
 }
