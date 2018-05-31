@@ -63,7 +63,7 @@ public class DataSerializer {
         return map;
     }
 
-    public static HashMap<String, String> desirializeAuthenticationData(String fileName) {
+    public static HashMap<String, String> deserializeAuthenticationData(String fileName) {
         HashMap<String, String> map = null;
         map = desirializeData(fileName);
         return map;

@@ -1,6 +1,5 @@
 package social;
 
-
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -18,14 +17,12 @@ public class User extends Unique implements Serializable {
     private String name;
     private String email;
     private boolean publicProfile;
-    private HashMap<String, User> friends;
 
     public User(String name, String email) {
         super();
         this.name = name;
         this.email = email;
         this.publicProfile = true;
-        this.friends = new HashMap<String, User>();
     }
 
     /**
@@ -44,43 +41,14 @@ public class User extends Unique implements Serializable {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.getName() + " - " + this.email;
     }
 
     /**
-     * @return User's name
+     * @return the name
      */
     public String getName() {
-        return toString();
-    }
-
-
-    /**
-     * @return User's friends
-     */
-    public HashMap<String, User> getFriends() {
-        return this.friends;
-    }
-
-    /**
-     * Get a user's friends if exists.
-     * @param key
-     * @return A friend from user if exists.
-     */
-    public User getFriend(String key) {
-        if (this.friends.containsKey(key)) {
-            return this.friends.get(key);
-        } else {
-            return null;
-        }
-    }
-    
-    /**
-     * Add a friend
-     * @param friend
-     */
-    public void addFriend(User friend) {
-        this.friends.put(friend.getUuid(), friend);
+        return name;
     }
 
     /**

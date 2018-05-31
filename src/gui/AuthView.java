@@ -5,6 +5,9 @@
  */
 package gui;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import social.Database;
 import social.User;
 
 /**
@@ -14,15 +17,28 @@ import social.User;
 public class AuthView extends javax.swing.JFrame {
     
     private User currentUser;
+    private Database db;
     
     /**
      * Creates new form AuthView
      */
-    public AuthView(User user) {
+    public AuthView(User user, Database db) {
         initComponents();
         if(user != null) {
             this.currentUser = user;
         }
+        this.db = db;
+        
+        // EXIT LISTENER
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                System.out.println("CLOSE PUBLIC");
+                db.serializeAllData();
+                dispose();
+            }
+            
+        });
     }
 
     /**

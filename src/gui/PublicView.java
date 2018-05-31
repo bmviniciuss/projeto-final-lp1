@@ -10,6 +10,9 @@ import Listeners.LoginListener;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JOptionPane;
 import social.Database;
 import social.User;
 
@@ -18,13 +21,16 @@ import social.User;
  * @author bmvin
  */
 public class PublicView extends javax.swing.JFrame {
+
     private Database db;
+
     /**
      * Creates new form PublicVIew
      */
     public PublicView(Database db) {
         initComponents();
         this.db = db;
+        this.db.listAllUsers();
         LoginPanel loginPanel = new LoginPanel();
         contentPanel.add(Constans.LOGIN, loginPanel);
 
@@ -42,13 +48,17 @@ public class PublicView extends javax.swing.JFrame {
         createAccountPanel.setListener(new CreateAccountListener() {
             @Override
             public void sendUser(User user, String password) {
-                System.out.println("Name: " + user.getName());
-                System.out.println("Email: " + user.getEmail());
-                System.out.println("Password: " + password);
-                db.addUserToDatabase(user, password);
-                AuthView auth = new AuthView(user);
-                auth.setVisible(true);
-                dispose();
+                // CHECK IF EMAIL IS FREE
+                if (!db.hasUserWithEmail(user.getEmail())) {
+                    db.addUserToDatabase(user, password);
+                    db.serializeAllData();
+                    AuthView auth = new AuthView(user, db);
+                    auth.setVisible(true);
+                    dispose();
+                    db.listAllUsers();
+                } else {
+                    JOptionPane.showMessageDialog(createAccountPanel, "Already exists a user with that email. try another one", "Email", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
 
@@ -67,6 +77,16 @@ public class PublicView extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent ae) {
                 CardLayout layout = (CardLayout) contentPanel.getLayout();
                 layout.show(contentPanel, Constans.CREATE_ACCOUNT);
+            }
+
+        });
+
+        // EXIT LISTENER
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                db.serializeAllData();
+                dispose();
             }
 
         });
