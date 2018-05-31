@@ -86,6 +86,13 @@ public class Database implements Serializable {
         return users;
     }
 
+    public User getUserById(String key) {
+        if (this.users.containsKey(key)) {
+            return this.users.get(key);
+        }
+        return null;
+    }
+
     /**
      * @param users the users to set
      */

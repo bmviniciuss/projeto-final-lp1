@@ -89,6 +89,10 @@ public class User extends Unique implements Serializable {
     public HashSet<String> getFriends() {
         return friends;
     }
+    
+    public HashSet<String> getRequests() {
+        return this.requests;
+    }
 
     public boolean userIsBlocked(String key) {
         return this.blockedUsers.contains(key);
@@ -99,6 +103,12 @@ public class User extends Unique implements Serializable {
             this.blockedUsers.add(key);
         }
     }
+    
+    public void unblockUser(String key) {
+        if(this.blockedUsers.contains(key)) {
+            this.blockedUsers.remove(key);
+        }
+    }
 
     public void sendRequest(String originUser) {
         if (!this.friends.contains(originUser) && !this.blockedUsers.contains(originUser) && !this.requests.contains(originUser)) {
@@ -106,9 +116,10 @@ public class User extends Unique implements Serializable {
         }
     }
 
-    public void addFriend(String key) {
+    private void addFriend(String key) {
         if (this.requests.contains(key) && !this.friends.contains(key)) {
             this.friends.add(key);
+            this.requests.remove(key);
         }
     }
 

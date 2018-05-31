@@ -5,23 +5,35 @@
  */
 package gui;
 
+import social.Database;
 import social.User;
 
 /**
  *
  * @author bmvin
  */
-public class PublicProfile extends javax.swing.JFrame {
-    private User currentUser;
+public class PublicProfile extends javax.swing.JDialog {
+
+    private User targetUser;
+    private User originUser;
+    private Database db;
+
     /**
      * Creates new form PublicProfile
      */
-    public PublicProfile(User user) {
+    public PublicProfile(java.awt.Frame parent, boolean modal, User target, User origin, Database db) {
+        super(parent, modal);
         initComponents();
-        this.currentUser = user;
-        
-        setTitle("Social App - " + currentUser.getName());
-        nameLabel.setText(currentUser.getName());
+        this.targetUser = target;
+        this.originUser = origin;
+        this.db = db;
+        setLocationRelativeTo(parent);
+        setTitle("Social App - " + this.targetUser.getName());
+        nameLabel.setText(this.targetUser.getName());
+
+        showInfo();
+
+        setVisible(true);
     }
 
     /**
@@ -33,54 +45,125 @@ public class PublicProfile extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        contentPanel = new javax.swing.JPanel();
-        profilePicture = new javax.swing.JLabel();
+        profilePic = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
+        addFriendButton = new javax.swing.JButton();
+        blockUserButton = new javax.swing.JButton();
+        unblockUserButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        profilePicture.setText("PROFILE PICTURE");
+        profilePic.setText("PROFILE PIC");
 
         nameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
-        javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
-        contentPanel.setLayout(contentPanelLayout);
-        contentPanelLayout.setHorizontalGroup(
-            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(contentPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(profilePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE))
-        );
-        contentPanelLayout.setVerticalGroup(
-            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(contentPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(profilePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(171, Short.MAX_VALUE))
-        );
+        addFriendButton.setText("Add as Friend");
+        addFriendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFriendButtonActionPerformed(evt);
+            }
+        });
+
+        blockUserButton.setText("Block User");
+        blockUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                blockUserButtonActionPerformed(evt);
+            }
+        });
+
+        unblockUserButton.setText("Unblock User");
+        unblockUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unblockUserButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(contentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addFriendButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(blockUserButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(unblockUserButton)
+                        .addGap(0, 227, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(contentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addFriendButton)
+                            .addComponent(blockUserButton)
+                            .addComponent(unblockUserButton)))
+                    .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void showInfo() {
+        // already sent request
+
+        // person block 
+        if (this.originUser.userIsBlocked(this.targetUser.getUuid())) {
+            blockUserButton.setVisible(false);
+            addFriendButton.setVisible(false);
+            unblockUserButton.setVisible(true);
+        } else {
+            if (this.targetUser.getRequests().contains(this.originUser.getUuid())) {
+                addFriendButton.setVisible(false);
+            } else {
+                addFriendButton.setVisible(true);
+            }
+            blockUserButton.setVisible(true);
+            unblockUserButton.setVisible(false);
+        }
+        // blocked by person
+        if (this.targetUser.userIsBlocked(this.originUser.getUuid())) {
+            addFriendButton.setVisible(false);
+            blockUserButton.setVisible(false);
+            unblockUserButton.setVisible(false);
+        }
+    }
+
+    private void addFriendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendButtonActionPerformed
+        // TODO add your handling code here:
+        this.targetUser.sendRequest(this.originUser.getUuid());
+        showInfo();
+    }//GEN-LAST:event_addFriendButtonActionPerformed
+
+    private void blockUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blockUserButtonActionPerformed
+        // TODO add your handling code here:
+        this.originUser.blockUser(this.targetUser.getUuid());
+        showInfo();
+    }//GEN-LAST:event_blockUserButtonActionPerformed
+
+    private void unblockUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unblockUserButtonActionPerformed
+        // TODO add your handling code here:
+        this.originUser.unblockUser(this.targetUser.getUuid());
+        showInfo();
+    }//GEN-LAST:event_unblockUserButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel contentPanel;
+    private javax.swing.JButton addFriendButton;
+    private javax.swing.JButton blockUserButton;
     private javax.swing.JLabel nameLabel;
-    private javax.swing.JLabel profilePicture;
+    private javax.swing.JLabel profilePic;
+    private javax.swing.JButton unblockUserButton;
     // End of variables declaration//GEN-END:variables
 }

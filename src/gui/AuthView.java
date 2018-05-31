@@ -6,6 +6,7 @@
 package gui;
 
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
@@ -56,8 +57,18 @@ public class AuthView extends javax.swing.JFrame {
         } else {
             imageLabel.setText("No Profile picture\n found!");
         }
+        // NOTIFICATION PANEL
 
-        // FRIENDS PANEL
+        DefaultListModel<User> requests = new DefaultListModel<User>();
+        for (String key : this.user.getRequests()) {
+            User u = this.db.getUserById(key);
+            if(u != null) {
+                requests.addElement(u);
+            }
+        }
+        
+        requetsList.setModel(requests);
+
         // EXIT LISTENER
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -88,6 +99,9 @@ public class AuthView extends javax.swing.JFrame {
         editBioButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         Posts = new javax.swing.JLabel();
+        Notifications = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        requetsList = new javax.swing.JList<>();
         friendsPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         friendsList = new javax.swing.JList<>();
@@ -171,6 +185,27 @@ public class AuthView extends javax.swing.JFrame {
 
         tabPane.addTab("Profile", profilePanel);
 
+        jScrollPane5.setViewportView(requetsList);
+
+        javax.swing.GroupLayout NotificationsLayout = new javax.swing.GroupLayout(Notifications);
+        Notifications.setLayout(NotificationsLayout);
+        NotificationsLayout.setHorizontalGroup(
+            NotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(NotificationsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        NotificationsLayout.setVerticalGroup(
+            NotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(NotificationsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tabPane.addTab("Notifications", Notifications);
+
         jScrollPane4.setViewportView(friendsList);
 
         javax.swing.GroupLayout friendsPanelLayout = new javax.swing.GroupLayout(friendsPanel);
@@ -207,6 +242,12 @@ public class AuthView extends javax.swing.JFrame {
 
         nameSearchLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         nameSearchLabel.setText("Search:");
+
+        nameSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                nameSearchFieldKeyPressed(evt);
+            }
+        });
 
         nameSearchButton.setText("Search");
         nameSearchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -323,8 +364,7 @@ public class AuthView extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
 
-    private void nameSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearchButtonActionPerformed
-
+    private void doNameSearch() {
         String nameSearch = "";
 
         clearSearchFriendsList();
@@ -349,6 +389,10 @@ public class AuthView extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, Messages.NO_USERS_FOUND_WITH_THAT_NAME, "Users Not Found", JOptionPane.WARNING_MESSAGE);
             }
         }
+    }
+
+    private void nameSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearchButtonActionPerformed
+        doNameSearch();
     }//GEN-LAST:event_nameSearchButtonActionPerformed
 
     private void clearSearchFriendsList() {
@@ -362,16 +406,22 @@ public class AuthView extends javax.swing.JFrame {
         if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
             int index = list.locationToIndex(evt.getPoint());
             User selectedUser = (User) list.getModel().getElementAt(index);
-            if(selectedUser != null) {
-                PublicProfile pp = new PublicProfile(selectedUser);
-                pp.setLocationRelativeTo(this);
-                pp.setVisible(true);
+            if (selectedUser != null) {
+                PublicProfile pp = new PublicProfile(this, true, selectedUser, this.user, this.db);
             }
         }
     }//GEN-LAST:event_searchFriendsListMouseClicked
 
+    private void nameSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameSearchFieldKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            doNameSearch();
+        }
+    }//GEN-LAST:event_nameSearchFieldKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel Notifications;
     private javax.swing.JLabel Posts;
     private javax.swing.JTextArea bioArea;
     private javax.swing.JLabel bioLabel;
@@ -387,6 +437,7 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JButton logoutButton;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JButton nameSearchButton;
@@ -394,6 +445,7 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JLabel nameSearchLabel;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JPanel profilePanel;
+    private javax.swing.JList<User> requetsList;
     private javax.swing.JList<User> searchFriendsList;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabPane;
