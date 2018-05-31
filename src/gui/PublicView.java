@@ -31,6 +31,7 @@ public class PublicView extends javax.swing.JFrame {
      */
     public PublicView(Database db) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.db = db;
         LoginPanel loginPanel = new LoginPanel();
         contentPanel.add(Constans.LOGIN, loginPanel);

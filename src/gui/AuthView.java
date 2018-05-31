@@ -5,8 +5,11 @@
  */
 package gui;
 
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import social.Database;
 import social.User;
 
@@ -15,22 +18,30 @@ import social.User;
  * @author bmvin
  */
 public class AuthView extends javax.swing.JFrame {
-    
+
     private User user;
     private Database db;
-    
+
     /**
      * Creates new form AuthView
      */
     public AuthView(User user, Database db) {
         initComponents();
-        if(user != null) {
+        this.setLocationRelativeTo(null);
+        if (user != null) {
             this.user = user;
         }
         this.db = db;
         setTitle("Social App - " + this.user.getName());
         nameLabel.setText(this.user.getName());
-        
+
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("vinicius_profile.jpg"));
+        Image img = imageIcon.getImage();
+        Image newImg = img.getScaledInstance(133,175, java.awt.Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(newImg);
+        imageLabel.setIcon(icon);
+        imageLabel.setText(null);
+
         // EXIT LISTENER
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -38,7 +49,7 @@ public class AuthView extends javax.swing.JFrame {
                 db.serializeAllData();
                 dispose();
             }
-            
+
         });
     }
 
@@ -54,34 +65,44 @@ public class AuthView extends javax.swing.JFrame {
         tabPane = new javax.swing.JTabbedPane();
         profilePanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
+        imageLabel = new javax.swing.JLabel();
+        bioLabel = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        bioArea = new javax.swing.JTextArea();
+        editBioButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        Posts = new javax.swing.JLabel();
         friendsPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        groupsPanel = new javax.swing.JPanel();
+        optionsPanel = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        logoutButton = new javax.swing.JButton();
+        exitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         nameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        nameLabel.setText("Vinicius Barbosa de Medeiros");
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane1.setViewportView(jTextArea2);
+        imageLabel.setText("PROFILE PICTURE");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        bioLabel.setText("Bio:");
 
-        jButton1.setText("Post");
+        bioArea.setColumns(20);
+        bioArea.setRows(5);
+        jScrollPane3.setViewportView(bioArea);
 
-        jLabel1.setText("Bio:");
+        editBioButton.setText("Edit");
+        editBioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBioButtonActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Edit");
+        Posts.setText("POSTS");
+        jScrollPane1.setViewportView(Posts);
 
         javax.swing.GroupLayout profilePanelLayout = new javax.swing.GroupLayout(profilePanel);
         profilePanel.setLayout(profilePanelLayout);
@@ -90,38 +111,38 @@ public class AuthView extends javax.swing.JFrame {
             .addGroup(profilePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(profilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(profilePanelLayout.createSequentialGroup()
-                        .addGroup(profilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(profilePanelLayout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2)))
-                        .addGap(18, 18, 18)
+                        .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(profilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3)
+                            .addGroup(profilePanelLayout.createSequentialGroup()
+                                .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 16, Short.MAX_VALUE))
+                            .addGroup(profilePanelLayout.createSequentialGroup()
+                                .addComponent(bioLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(editBioButton)))))
                 .addContainerGap())
         );
         profilePanelLayout.setVerticalGroup(
             profilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(profilePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(profilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(profilePanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addContainerGap(20, Short.MAX_VALUE))
-                    .addGroup(profilePanelLayout.createSequentialGroup()
                         .addGroup(profilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
+                            .addComponent(bioLabel)
+                            .addComponent(editBioButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tabPane.addTab("Profile", profilePanel);
@@ -135,17 +156,54 @@ public class AuthView extends javax.swing.JFrame {
             .addGroup(friendsPanelLayout.createSequentialGroup()
                 .addGap(158, 158, 158)
                 .addComponent(jLabel2)
-                .addContainerGap(276, Short.MAX_VALUE))
+                .addContainerGap(565, Short.MAX_VALUE))
         );
         friendsPanelLayout.setVerticalGroup(
             friendsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(friendsPanelLayout.createSequentialGroup()
                 .addGap(86, 86, 86)
                 .addComponent(jLabel2)
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addContainerGap(407, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Friends", friendsPanel);
+
+        javax.swing.GroupLayout groupsPanelLayout = new javax.swing.GroupLayout(groupsPanel);
+        groupsPanel.setLayout(groupsPanelLayout);
+        groupsPanelLayout.setHorizontalGroup(
+            groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 758, Short.MAX_VALUE)
+        );
+        groupsPanelLayout.setVerticalGroup(
+            groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 507, Short.MAX_VALUE)
+        );
+
+        tabPane.addTab("Groups", groupsPanel);
+
+        optionsPanel.setLayout(new java.awt.GridBagLayout());
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(logoutButton, java.awt.BorderLayout.PAGE_START);
+
+        exitButton.setText("Exit");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(exitButton, java.awt.BorderLayout.PAGE_END);
+
+        optionsPanel.add(jPanel1, new java.awt.GridBagConstraints());
+
+        tabPane.addTab("Options", optionsPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,19 +219,41 @@ public class AuthView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
+    private void editBioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBioButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editBioButtonActionPerformed
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        // TODO add your handling code here:
+        this.db.serializeAllData();
+        PublicView pv = new PublicView(this.db);
+        pv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        // TODO add your handling code here:
+        this.db.serializeAllData();
+        System.exit(0);
+    }//GEN-LAST:event_exitButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Posts;
+    private javax.swing.JTextArea bioArea;
+    private javax.swing.JLabel bioLabel;
+    private javax.swing.JButton editBioButton;
+    private javax.swing.JButton exitButton;
     private javax.swing.JPanel friendsPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel groupsPanel;
+    private javax.swing.JLabel imageLabel;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton logoutButton;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JPanel optionsPanel;
     private javax.swing.JPanel profilePanel;
     private javax.swing.JTabbedPane tabPane;
     // End of variables declaration//GEN-END:variables

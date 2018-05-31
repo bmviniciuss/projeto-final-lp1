@@ -1,7 +1,9 @@
 package social;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import javax.swing.ImageIcon;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,12 +18,14 @@ public class User extends Unique implements Serializable {
 
     private String name;
     private String email;
+    private ImageIcon profilePicture;
     private boolean publicProfile;
 
     public User(String name, String email) {
         super();
         this.name = name;
         this.email = email;
+        this.profilePicture = null;
         this.publicProfile = true;
     }
 
@@ -56,6 +60,20 @@ public class User extends Unique implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the profilePicture
+     */
+    public ImageIcon getProfilePicture() {
+        return new ImageIcon(getClass().getResource("vinicius_profile.jpg"));
+    }
+
+    /**
+     * @param profilePicture the profilePicture to set
+     */
+    public void setProfilePicture(ImageIcon profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
 }
