@@ -30,7 +30,7 @@ public class PublicView extends javax.swing.JFrame {
     public PublicView(Database db) {
         initComponents();
         this.db = db;
-        this.db.listAllUsers();
+        db.listAllUsers();
         LoginPanel loginPanel = new LoginPanel();
         contentPanel.add(Constans.LOGIN, loginPanel);
 
@@ -39,6 +39,13 @@ public class PublicView extends javax.swing.JFrame {
             public void sendLoginCredentials(String email, String password) {
                 System.out.println("Email: " + email);
                 System.out.println("Password: " + password);
+                // MAKE LOGIN
+                User user = db.validateLogin(email, password);
+                if(user != null){
+                    AuthView auth = new AuthView(user, db);
+                    auth.setVisible(true);
+                    dispose();
+                }
             }
         });
 
@@ -52,12 +59,9 @@ public class PublicView extends javax.swing.JFrame {
                 if (!db.hasUserWithEmail(user.getEmail())) {
                     db.addUserToDatabase(user, password);
                     db.serializeAllData();
-                    AuthView auth = new AuthView(user, db);
-                    auth.setVisible(true);
-                    dispose();
-                    db.listAllUsers();
+                    JOptionPane.showMessageDialog(createAccountPanel, "Account created", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(createAccountPanel, "Already exists a user with that email. try another one", "Email", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(createAccountPanel, "Already exists a user with that email. try another one", "EmailError", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -109,6 +113,7 @@ public class PublicView extends javax.swing.JFrame {
         contentPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Social App");
 
         loginButton.setText("Login");
 

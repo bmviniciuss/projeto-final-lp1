@@ -3,6 +3,7 @@ package social;
 import java.io.Serializable;
 import java.util.HashMap;
 import utils.DataSerializer;
+import utils.Validators;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -75,7 +76,7 @@ public class Database implements Serializable {
 
     public void deserializeAllData() {
         this.deserializeUsersData();
-        this.deserializeUsersData();
+        this.deserializeAuthentication();
     }
 
     /**
@@ -107,16 +108,16 @@ public class Database implements Serializable {
     }
 
     public boolean hasUserWithEmail(String email) {
-        for(String key: this.users.keySet()) {
+        for (String key : this.users.keySet()) {
             User user = this.users.get(key);
-            if(user.getEmail().trim().equals(email.trim())) {
+            if (user.getEmail().trim().equals(email.trim())) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Add a User to database. Add to User's Hash and Authentication Hash
      *
@@ -127,18 +128,55 @@ public class Database implements Serializable {
         String key = user.getUuid();
         if (!this.users.containsKey(key) && !this.authentication.containsKey(key) && !hasUserWithEmail(user.getEmail())) {
             this.users.put(key, user);
+            System.out.println("Add to users");
+            System.out.println("USER: " + this.users.get(key));
+
             this.authentication.put(key, password);
+            System.out.println("ADD TO AUTH");
+            System.out.println("AUTH: " + this.authentication.get(key));
         }
     }
 
     // DEBUG
     public void listAllUsers() {
         int i = 1;
+        System.out.println("USERS");
         for (String key : this.users.keySet()) {
             User user = this.users.get(key);
             System.out.println(i + " - " + key + " " + user);
             i++;
         }
+        i = 0;
+        System.out.println("PASS");
+        for (String key : this.authentication.keySet()) {
+            String pass = this.authentication.get(key);
+            System.out.println(i + " - " + key + " " + pass);
+            i++;
+        }
+
+    }
+
+    public String getUserIdByEmail(String email) {
+        for (String key : this.users.keySet()) {
+            User u = this.users.get(key);
+            if (u.getEmail().trim().equals(email.trim())) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    public User validateLogin(String email, String password) {
+        String key = getUserIdByEmail(email);
+        if (key != null) {
+            String pass = this.authentication.get(key);
+            if (Validators.passwordsMatches(pass, password)) {
+                User user = this.users.get(key);
+                return user;
+            }
+        }
+
+        return null;
     }
 
 }
