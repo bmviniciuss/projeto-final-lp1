@@ -5,6 +5,7 @@
  */
 package gui;
 
+import utils.Constans;
 import Listeners.CreateAccountListener;
 import Listeners.LoginListener;
 import java.awt.CardLayout;
@@ -15,6 +16,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import social.Database;
 import social.User;
+import utils.Messages;
 
 /*
  *
@@ -30,21 +32,21 @@ public class PublicView extends javax.swing.JFrame {
     public PublicView(Database db) {
         initComponents();
         this.db = db;
-        db.listAllUsers();
         LoginPanel loginPanel = new LoginPanel();
         contentPanel.add(Constans.LOGIN, loginPanel);
 
         loginPanel.setListener(new LoginListener() {
             @Override
             public void sendLoginCredentials(String email, String password) {
-                System.out.println("Email: " + email);
-                System.out.println("Password: " + password);
                 // MAKE LOGIN
                 User user = db.validateLogin(email, password);
-                if(user != null){
+                if (user != null) {
                     AuthView auth = new AuthView(user, db);
                     auth.setVisible(true);
                     dispose();
+                } else {
+                    JOptionPane.showMessageDialog(loginPanel, Messages.INVALID_LOGIN, Messages.INVALID_LOGIN_ERROR, JOptionPane.WARNING_MESSAGE);
+
                 }
             }
         });
@@ -59,9 +61,10 @@ public class PublicView extends javax.swing.JFrame {
                 if (!db.hasUserWithEmail(user.getEmail())) {
                     db.addUserToDatabase(user, password);
                     db.serializeAllData();
-                    JOptionPane.showMessageDialog(createAccountPanel, "Account created", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(createAccountPanel, Messages.CREATE_ACCOUNT_SUCCESS, Messages.ACCOUNT_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                    createAccountPanel.clearFields();
                 } else {
-                    JOptionPane.showMessageDialog(createAccountPanel, "Already exists a user with that email. try another one", "EmailError", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(createAccountPanel, Messages.ALREADY_EXISTS_EMAIL_ERROR, Messages.EMAIL_ERROR, JOptionPane.WARNING_MESSAGE);
                 }
             }
         });

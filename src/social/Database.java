@@ -128,12 +128,7 @@ public class Database implements Serializable {
         String key = user.getUuid();
         if (!this.users.containsKey(key) && !this.authentication.containsKey(key) && !hasUserWithEmail(user.getEmail())) {
             this.users.put(key, user);
-            System.out.println("Add to users");
-            System.out.println("USER: " + this.users.get(key));
-
             this.authentication.put(key, password);
-            System.out.println("ADD TO AUTH");
-            System.out.println("AUTH: " + this.authentication.get(key));
         }
     }
 

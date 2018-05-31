@@ -9,6 +9,7 @@ import utils.Validators;
 import javax.swing.JOptionPane;
 import Listeners.CreateAccountListener;
 import social.User;
+import utils.Messages;
 
 /**
  *
@@ -17,14 +18,14 @@ import social.User;
 public class CreateAccountPanel extends javax.swing.JPanel {
 
     private CreateAccountListener listener;
-    
+
     /**
      * Creates new form CreateAccountPanel
      */
     public CreateAccountPanel() {
         initComponents();
     }
-    
+
     public void setListener(CreateAccountListener listener) {
         this.listener = listener;
     }
@@ -126,53 +127,56 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         String name = "", email = "", password = "", passwordConfirmation = "";
         String warnings = "";
-        
+
         // name validation
         name = nameField.getText().trim();
-        if(!Validators.checkNotEmptyStringNotNull(name)) {
-            warnings += "Name must not be empty.\n";
+        if (!Validators.checkNotEmptyStringNotNull(name)) {
+            warnings += Messages.EMPTY_NAME_ERROR;
         }
-        
+
         // validate email
         email = emailField.getText().trim();
-        if(!Validators.validEmail(email)) {
-            warnings += "Email must be valid.\n";
+        if (!Validators.validEmail(email)) {
+            warnings += Messages.INVALID_EMAIL_ERROR;
         }
-        
+
         // validate password
         password = passwordField.getText().trim();
-        if(!Validators.checkNotEmptyStringNotNull(password)) {
-            warnings += "Password must be not empty.\n";
+        if (!Validators.checkNotEmptyStringNotNull(password)) {
+            warnings += Messages.EMPTY_PASSWORD_ERROR;
         }
-        
+
         // validate confirm password
         passwordConfirmation = passwordConfirmationField.getText().trim();
-        if(!Validators.checkNotEmptyStringNotNull(passwordConfirmation)) {
-            warnings += "Password Confirmation must be not empty.\n";
+        if (!Validators.checkNotEmptyStringNotNull(passwordConfirmation)) {
+            warnings += Messages.EMPTY_PASSWORD_CONFIRMATION_ERROR;
         }
-        if(!Validators.passwordsMatches(password, passwordConfirmation)) {
-            warnings += "Passwords must match.\n";
+        if (!Validators.passwordsMatches(password, passwordConfirmation)) {
+            warnings += Messages.PASSWORDS_DONT_MATCH_ERROR;
         }
-        
-        if(!warnings.isEmpty()) {
-            JOptionPane.showMessageDialog(this, warnings, "Erros", JOptionPane.WARNING_MESSAGE);
+
+        if (!warnings.isEmpty()) {
+            JOptionPane.showMessageDialog(this, warnings, Messages.CREATE_ACCOUNT_ERROR, JOptionPane.WARNING_MESSAGE);
         } else {
             // everything is great
             User user = new User(name, email);
             listener.sendUser(user, password);
         }
-        
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
-         // CLEAR ALL FIELDS
+        // CLEAR ALL FIELDS
+        clearFields();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    public void clearFields() {
         nameField.setText("");
         emailField.setText("");
         passwordField.setText("");
         passwordConfirmationField.setText("");
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

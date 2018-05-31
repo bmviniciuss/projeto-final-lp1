@@ -9,6 +9,7 @@ package gui;
 import utils.Validators;
 import javax.swing.JOptionPane;
 import Listeners.LoginListener;
+import utils.Messages;
 
 /**
  *
@@ -113,22 +114,22 @@ public class LoginPanel extends javax.swing.JPanel {
         email = emailField.getText().trim();
         
         if(!Validators.checkNotEmptyStringNotNull(email)) {
-            warnings += "Email must be not empty.\n";
+            warnings += Messages.EMPTY_EMAIL_ERROR;
         }
         // check email validation
         if(!Validators.validEmail(email)) {
-            warnings += "Email must be valid.\n" ;
+            warnings += Messages.INVALID_EMAIL_ERROR;
         }
         
         // verify password
         password = passwordField.getText().trim();
         
         if(!Validators.checkNotEmptyStringNotNull(password)) {
-            warnings += "Password must be not empty.\n";
+            warnings += Messages.EMPTY_PASSWORD_ERROR;
         }
         
         if(!warnings.isEmpty()) {
-            JOptionPane.showMessageDialog(this, warnings, "Errors", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, warnings, Messages.LOGIN_ERROR, JOptionPane.WARNING_MESSAGE);
         } else {
             // SEND UP TO VALIDATE LOGIN
             if(this.loginListener != null) {
