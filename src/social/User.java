@@ -23,6 +23,7 @@ public class User extends Unique implements Serializable {
     private HashSet<String> friends;
     private HashSet<String> requests;
     private HashSet<String> blockedUsers;
+    private HashSet<String> pendingRequests;
     private boolean publicProfile;
 
     public User(String name, String email) {
@@ -34,6 +35,7 @@ public class User extends Unique implements Serializable {
         this.friends = new HashSet<String>();
         this.requests = new HashSet<String>();
         this.blockedUsers = new HashSet<String>();
+        this.pendingRequests = new HashSet<String>();
     }
 
     /**
@@ -116,11 +118,37 @@ public class User extends Unique implements Serializable {
         }
     }
 
-    private void addFriend(String key) {
-        if (this.requests.contains(key) && !this.friends.contains(key)) {
-            this.friends.add(key);
-            this.requests.remove(key);
+    public void acceptRequest(String originKey) {
+        if (this.requests.contains(originKey) && !this.friends.contains(originKey)) {
+            this.friends.add(originKey);
+            this.requests.remove(originKey);
         }
     }
+    
+    public void addFriend(String targetKey) {
+        if(!this.friends.contains(targetKey)) {
+            this.friends.add(targetKey);
+        }
+    }
+    
+    public HashSet<String> getPendingRequests(){
+        return this.pendingRequests;
+    }
+    
+    public boolean isPending(String key) {
+        return this.pendingRequests.contains(key);
+    }
+    
+    public void addRequestToPending(String targetKey) {
+        if(!this.pendingRequests.contains(targetKey)) {
+            this.pendingRequests.add(targetKey);
+        }
+    }
+    
+   public void removeFromPending(String targetKey) {
+       if(isPending(targetKey)) {
+           this.pendingRequests.remove(targetKey);
+       }
+   }
 
 }

@@ -7,6 +7,7 @@ package gui;
 
 import social.Database;
 import social.User;
+import social.FriendshipManager;
 
 /**
  *
@@ -139,11 +140,15 @@ public class PublicProfile extends javax.swing.JDialog {
             blockUserButton.setVisible(false);
             unblockUserButton.setVisible(false);
         }
+        if(this.originUser.getFriends().contains(this.targetUser.getUuid())) {
+            addFriendButton.setVisible(false);
+        }
     }
 
     private void addFriendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendButtonActionPerformed
         // TODO add your handling code here:
-        this.targetUser.sendRequest(this.originUser.getUuid());
+        FriendshipManager.sendRequest(this.originUser, this.targetUser);
+//        this.targetUser.sendRequest(this.originUser.getUuid());
         showInfo();
     }//GEN-LAST:event_addFriendButtonActionPerformed
 

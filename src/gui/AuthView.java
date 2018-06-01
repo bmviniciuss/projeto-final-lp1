@@ -15,8 +15,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import social.Database;
 import social.User;
 import utils.Messages;
@@ -37,11 +35,15 @@ public class AuthView extends javax.swing.JFrame {
     public AuthView(User user, Database db) {
         initComponents();
         this.setLocationRelativeTo(null);
+
         if (user != null) {
             this.user = user;
         }
+
         this.db = db;
         setTitle("Social App - " + this.user.getName());
+
+        updateNotificationPanel();
 
         nameLabel.setText(this.user.getName());
 
@@ -57,17 +59,9 @@ public class AuthView extends javax.swing.JFrame {
         } else {
             imageLabel.setText("No Profile picture\n found!");
         }
-        // NOTIFICATION PANEL
 
-        DefaultListModel<User> requests = new DefaultListModel<User>();
-        for (String key : this.user.getRequests()) {
-            User u = this.db.getUserById(key);
-            if(u != null) {
-                requests.addElement(u);
-            }
-        }
-        
-        requetsList.setModel(requests);
+        // FRIENDS PANEL
+        showFriendsPanel();
 
         // EXIT LISTENER
         this.addWindowListener(new WindowAdapter() {
@@ -99,7 +93,7 @@ public class AuthView extends javax.swing.JFrame {
         editBioButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         Posts = new javax.swing.JLabel();
-        Notifications = new javax.swing.JPanel();
+        notificationPanel = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         requetsList = new javax.swing.JList<>();
         friendsPanel = new javax.swing.JPanel();
@@ -185,26 +179,31 @@ public class AuthView extends javax.swing.JFrame {
 
         tabPane.addTab("Profile", profilePanel);
 
+        requetsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                requetsListMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(requetsList);
 
-        javax.swing.GroupLayout NotificationsLayout = new javax.swing.GroupLayout(Notifications);
-        Notifications.setLayout(NotificationsLayout);
-        NotificationsLayout.setHorizontalGroup(
-            NotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(NotificationsLayout.createSequentialGroup()
+        javax.swing.GroupLayout notificationPanelLayout = new javax.swing.GroupLayout(notificationPanel);
+        notificationPanel.setLayout(notificationPanelLayout);
+        notificationPanelLayout.setHorizontalGroup(
+            notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(notificationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        NotificationsLayout.setVerticalGroup(
-            NotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(NotificationsLayout.createSequentialGroup()
+        notificationPanelLayout.setVerticalGroup(
+            notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(notificationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        tabPane.addTab("Notifications", Notifications);
+        tabPane.addTab("Notifications", notificationPanel);
 
         jScrollPane4.setViewportView(friendsList);
 
@@ -419,9 +418,47 @@ public class AuthView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_nameSearchFieldKeyPressed
 
+    private void updateNotificationPanel() {
+        int nNotifications = this.user.getRequests().size();
+        tabPane.setTitleAt(1, "Notifications (" + nNotifications + ")");
+
+        DefaultListModel<User> requests = new DefaultListModel<User>();
+        for (String key : this.user.getRequests()) {
+            User u = this.db.getUserById(key);
+            if (u != null) {
+                requests.addElement(u);
+            }
+        }
+
+        requetsList.setModel(requests);
+    }
+
+    private void requetsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_requetsListMouseClicked
+        JList list = (JList) evt.getSource();
+        if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
+            int index = list.locationToIndex(evt.getPoint());
+            User selectedUser = (User) list.getModel().getElementAt(index);
+            if (selectedUser != null) {
+                RequestDialog rd = new RequestDialog(this, true, selectedUser, this.user);
+            }
+        }
+        updateNotificationPanel();
+        showFriendsPanel();
+    }//GEN-LAST:event_requetsListMouseClicked
+
+    private void showFriendsPanel() {
+        DefaultListModel<User> friends = new DefaultListModel<>();
+
+        for (String key : this.user.getFriends()) {
+            User u = this.db.getUserById(key);
+            friends.addElement(u);
+        }
+
+        friendsList.setModel(friends);
+        tabPane.setTitleAt(2, "Friends (" + this.user.getFriends().size() + ")");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel Notifications;
     private javax.swing.JLabel Posts;
     private javax.swing.JTextArea bioArea;
     private javax.swing.JLabel bioLabel;
@@ -443,6 +480,7 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JButton nameSearchButton;
     private javax.swing.JTextField nameSearchField;
     private javax.swing.JLabel nameSearchLabel;
+    private javax.swing.JPanel notificationPanel;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JPanel profilePanel;
     private javax.swing.JList<User> requetsList;
