@@ -1,25 +1,22 @@
 package gui;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import social.Database;
-import social.User;
+import utils.DataSerializer;
 
 /**
  *
  * @author bmvin
  */
 public class MainView extends javax.swing.JFrame {
-    private User currentUser;
+
     private Database db;
 
     /**
      * Creates new form MainView
      */
-    public MainView() {
+    public MainView(Database db) {
         initComponents();
-        this.db = new Database();
-        this.currentUser = null;
+        this.db = db;
         this.setVisible(false);
         this.setLocationRelativeTo(null);
     }
@@ -89,26 +86,20 @@ public class MainView extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        Database db = DataSerializer.deserializeDatabase(Database.APPLICATION_DATA);
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MainView mv = new MainView();
+                MainView mv = new MainView(db);
                 mv.runApp();
-                
+
             }
         });
     }
-    
-    public void setCurrentUser(User user) {
-        if(user != null) {
-            this.currentUser = user;
-        }
-    }
-    
-    public void runApp(){
-        if(this.currentUser == null) {
-            new PublicView(this.db).setVisible(true);
-        }
+
+    public void runApp() {
+        new PublicView(this.db).setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

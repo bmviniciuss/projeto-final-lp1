@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import utils.Constans;
@@ -28,41 +23,54 @@ public class PublicView extends javax.swing.JFrame {
 
     /**
      * Creates new form PublicVIew
+     *
+     * @param db Reference to App's Database
      */
     public PublicView(Database db) {
         initComponents();
+
         this.setLocationRelativeTo(null);
         this.db = db;
+
+        // LoginPanel
         LoginPanel loginPanel = new LoginPanel();
         contentPanel.add(Constans.LOGIN, loginPanel);
-
         loginPanel.setListener(new LoginListener() {
             @Override
             public void sendLoginCredentials(String email, String password) {
                 // MAKE LOGIN
                 User user = db.validateLogin(email, password);
                 if (user != null) {
+                    // If valid login
+                    // Create AuthView and dispose this PublicView
                     AuthView auth = new AuthView(user, db);
                     auth.setVisible(true);
-                    dispose();
+                    dispose(); // dispose this PublicView
                 } else {
                     JOptionPane.showMessageDialog(loginPanel, Messages.INVALID_LOGIN, Messages.INVALID_LOGIN_ERROR, JOptionPane.WARNING_MESSAGE);
-
                 }
             }
         });
 
+        // CreateAccountPanel
         CreateAccountPanel createAccountPanel = new CreateAccountPanel();
         contentPanel.add(Constans.CREATE_ACCOUNT, createAccountPanel);
 
+        // CreateAccountPanel Listener
+        // Listen for an OkButton Click and sends input data
         createAccountPanel.setListener(new CreateAccountListener() {
             @Override
             public void sendUser(User user, String password) {
                 // CHECK IF EMAIL IS FREE
                 if (!db.hasUserWithEmail(user.getEmail())) {
+                    // if there isn't any users with that email.
+                    // Add Users to Database, and serialize database to backup
                     db.addUserToDatabase(user, password);
-                    db.serializeAllData();
+                    db.serializeData();
+
+                    // Show a confirmation Message.
                     JOptionPane.showMessageDialog(createAccountPanel, Messages.CREATE_ACCOUNT_SUCCESS, Messages.ACCOUNT_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                    // Clear fields
                     createAccountPanel.clearFields();
                 } else {
                     JOptionPane.showMessageDialog(createAccountPanel, Messages.ALREADY_EXISTS_EMAIL_ERROR, Messages.EMAIL_ERROR, JOptionPane.WARNING_MESSAGE);
@@ -70,6 +78,7 @@ public class PublicView extends javax.swing.JFrame {
             }
         });
 
+        // MenuPanel Buttons Buttons Listeners
         // LOGIN BUTTON LISTENER
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -93,7 +102,7 @@ public class PublicView extends javax.swing.JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
-                db.serializeAllData();
+                db.serializeData();
                 dispose();
             }
 
@@ -174,7 +183,7 @@ public class PublicView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        this.db.serializeAllData();
+        this.db.serializeData();
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
 

@@ -5,19 +5,14 @@ import java.util.HashMap;
 import utils.DataSerializer;
 import utils.Validators;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 /**
  *
  * @author bmviniciuss
  */
 public class Database implements Serializable {
-
-    private static final String USERS_DATA = "users_data.ser";
-    private static final String AUTHENTICATION_DATA =  "authentication_data.ser";
+    
+    public static final String APPLICATION_DATA = "application_data.ser";
 
     private HashMap<String, User> users;
     private HashMap<String, String> authentication;
@@ -25,60 +20,12 @@ public class Database implements Serializable {
     public Database() {
         this.users = new HashMap<String, User>();
         this.authentication = new HashMap<String, String>();
-        this.deserializeAllData();
     }
-
-    // USERS DATA
-    /**
-     * Serialize User's data
-     */
-    public void serializeUsersData() {
-        DataSerializer.serializeData(Database.USERS_DATA, this.users);
+    
+    public void serializeData() {
+        DataSerializer.serializeDatabase(Database.APPLICATION_DATA, this);
     }
-
-    /**
-     * Deserialize User's data
-     */
-    public void deserializeUsersData() {
-        HashMap<String, User> data = null;
-        data = DataSerializer.desirializeUsersData(Database.USERS_DATA);
-        if (data != null) {
-            setUsers(data);
-        }
-    }
-
-    // AUTHENTICATION DATA
-    /**
-     * Serialize Authentication data
-     */
-    public void serializeAuthentication() {
-        DataSerializer.serializeData(Database.AUTHENTICATION_DATA, this.authentication);
-    }
-
-    /**
-     * Desirialize Authentication Data
-     */
-    public void deserializeAuthentication() {
-        HashMap<String, String> data = null;
-        data = DataSerializer.deserializeAuthenticationData(Database.AUTHENTICATION_DATA);
-        if (data != null) {
-            setAuthentication(data);
-        }
-    }
-
-    /**
-     * Helper method to serialize both HashMaps at once
-     */
-    public void serializeAllData() {
-        serializeUsersData();
-        serializeAuthentication();
-    }
-
-    public void deserializeAllData() {
-        this.deserializeUsersData();
-        this.deserializeAuthentication();
-    }
-
+    
     /**
      * @return the users
      */
@@ -139,7 +86,9 @@ public class Database implements Serializable {
         }
     }
 
-    // DEBUG
+    /*
+     * FOR DEBUG ONLYYYYYYYYYYYYY
+    */
     public void listAllUsers() {
         int i = 1;
         System.out.println("USERS");

@@ -7,12 +7,13 @@ package gui;
 
 import social.Post;
 import social.User;
+import utils.WindowTitles;
 
 /**
  *
  * @author bmvin
  */
-public class PostDialog extends javax.swing.JDialog {
+public class PostView extends javax.swing.JDialog {
 
     private Post post;
     private User owner;
@@ -20,7 +21,7 @@ public class PostDialog extends javax.swing.JDialog {
     /**
      * Creates new form PostDialog
      */
-    public PostDialog(java.awt.Frame parent, boolean modal, Post post, User owner) {
+    public PostView(java.awt.Frame parent, boolean modal, Post post, User owner) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
@@ -31,13 +32,14 @@ public class PostDialog extends javax.swing.JDialog {
         authorLabel.setText("Author: " + this.owner.getName());
         contentArea.setEditable(false);
         contentArea.setText(this.post.getContent());
-        showNumLikes();
+        updatePostLikes();
 
         setVisible(true);
     }
 
-    private void showNumLikes() {
+    private void updatePostLikes() {
         likesLabel.setText("Likes: " + this.post.numLikes());
+        setTitle(WindowTitles.postWindowTitle(post));
     }
 
     /**
@@ -119,7 +121,7 @@ public class PostDialog extends javax.swing.JDialog {
             System.out.println("DISLIKE");
         }
         
-        showNumLikes();
+        updatePostLikes();
     }//GEN-LAST:event_likeButtonActionPerformed
 
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import java.awt.Image;
@@ -19,8 +14,8 @@ import social.Database;
 import social.User;
 import utils.Messages;
 import utils.Validators;
-import Listeners.EditBioListener;
 import social.Post;
+import utils.WindowTitles;
 
 /**
  *
@@ -33,6 +28,7 @@ public class AuthView extends javax.swing.JFrame {
 
     /**
      * Creates new form AuthView
+     *
      * @param user current User
      * @param db application database reference
      */
@@ -40,26 +36,27 @@ public class AuthView extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
-        if (user != null) {
-            this.user = user;
-        }
-
+        this.user = user;
         this.db = db;
-        
-        // SET APP TITLE
-        setTitle("Social App - " + this.user.getName());
 
-        // PROFILE PANEL
-//        nameLabel.setText(this.user.getName());
+        // SET APP TITLE
+        setTitle(WindowTitles.usersNameWindowTitle(this.user.getName()));
+
+        // PROFILE PANE
+        // ProfilePanel - Handles Name, Profile Pic and Bio
         profilePanel.setUser(user);
-        populatePosts();
         
+        // Post Panel
+        // postPanel.setUser(user); // Future
+        showPostsPanel();
+
         // PROFILE PIC
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("vinicius_profile.jpg"));
-        Image img = imageIcon.getImage();
-        Image newImg = img.getScaledInstance(133, 175, java.awt.Image.SCALE_SMOOTH);
-        ImageIcon icon = new ImageIcon(newImg);
-        
+        // TO ADD TO PROFILE PANEL
+//        ImageIcon imageIcon = new ImageIcon(getClass().getResource("vinicius_profile.jpg"));
+//        Image img = imageIcon.getImage();
+//        Image newImg = img.getScaledInstance(133, 175, java.awt.Image.SCALE_SMOOTH);
+//        ImageIcon icon = new ImageIcon(newImg);
+
 ////        icon = null;
 //        if (icon != null) {
 //            imageLabel.setIcon(icon);
@@ -68,22 +65,17 @@ public class AuthView extends javax.swing.JFrame {
 //            imageLabel.setText("No Profile picture\n found!");
 //        }
 //
-//        // BIO
-//        bioArea.setEditable(false);
-//        EditBioListener listener = new EditBioListener(this.user, editBioButton, bioArea);
-//        editBioButton.addActionListener(listener);
+        // NOTIFICATION PANE
+        showNotificationPanel();
 
-        // NOTIFICATION PANEL
-        updateNotificationPanel();
-
-        // FRIENDS PANEL
+        // FRIENDS PANE
         showFriendsPanel();
 
         // EXIT LISTENER
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
-                db.serializeAllData();
+                db.serializeData();
                 dispose();
             }
 
@@ -375,7 +367,7 @@ public class AuthView extends javax.swing.JFrame {
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         // TODO add your handling code here:
-        this.db.serializeAllData();
+        this.db.serializeData();
         PublicView pv = new PublicView(this.db);
         pv.setVisible(true);
         this.dispose();
@@ -383,7 +375,7 @@ public class AuthView extends javax.swing.JFrame {
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         // TODO add your handling code here:
-        this.db.serializeAllData();
+        this.db.serializeData();
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
 
@@ -442,7 +434,7 @@ public class AuthView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_nameSearchFieldKeyPressed
 
-    private void updateNotificationPanel() {
+    private void showNotificationPanel() {
         int nNotifications = this.user.getRequests().size();
         tabPane.setTitleAt(1, "Notifications (" + nNotifications + ")");
 
@@ -466,7 +458,7 @@ public class AuthView extends javax.swing.JFrame {
                 RequestDialog rd = new RequestDialog(this, true, selectedUser, this.user);
             }
         }
-        updateNotificationPanel();
+        showNotificationPanel();
         showFriendsPanel();
     }//GEN-LAST:event_requetsListMouseClicked
 
@@ -483,21 +475,21 @@ public class AuthView extends javax.swing.JFrame {
         // verify post content
         postContent = postTextArea.getText().trim();
 
-        if(!Validators.checkNotEmptyStringNotNull(postContent)) {
+        if (!Validators.checkNotEmptyStringNotNull(postContent)) {
             warnings += "Content must be not empty.\n";
         }
 
-        if(postPublicBox.isSelected()) {
+        if (postPublicBox.isSelected()) {
             isPublic = true;
         }
 
-        if(!warnings.isEmpty()) {
+        if (!warnings.isEmpty()) {
             JOptionPane.showMessageDialog(this, warnings, "Error Make Post", JOptionPane.WARNING_MESSAGE);
         } else {
             Post post = new Post(this.user, postContent, isPublic);
             this.user.addPost(post);
             clearPostFields();
-            populatePosts();
+            showPostsPanel();
         }
     }//GEN-LAST:event_makePostButtonActionPerformed
 
@@ -508,7 +500,7 @@ public class AuthView extends javax.swing.JFrame {
             int index = list.locationToIndex(evt.getPoint());
             Post selectedPost = (Post) list.getModel().getElementAt(index);
             if (selectedPost != null) {
-                PostDialog pd = new PostDialog(this, true, selectedPost, this.user);
+                PostView pd = new PostView(this, true, selectedPost, this.user);
             }
         }
     }//GEN-LAST:event_postsListMouseClicked
@@ -517,7 +509,7 @@ public class AuthView extends javax.swing.JFrame {
         postTextArea.setText("");
         postPublicBox.setSelected(false);
     }
-    
+
     private void showFriendsPanel() {
         DefaultListModel<User> friends = new DefaultListModel<>();
 
@@ -530,20 +522,19 @@ public class AuthView extends javax.swing.JFrame {
         tabPane.setTitleAt(2, "Friends (" + this.user.getFriends().size() + ")");
     }
 
-    private void populatePosts() {
+    private void showPostsPanel() {
         DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
-        
-        for(String key: this.user.getPosts().keySet()) {
+
+        for (String key : this.user.getPosts().keySet()) {
             Post p = this.user.getPostById(key);
             postsModel.addElement(p);
         }
-        
+
         postsList.setModel(postsModel);
-        
+
     }
-    
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearPostButton;
     private javax.swing.JButton exitButton;

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils;
 
 import java.io.File;
@@ -11,22 +6,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import social.User;
+import social.Database;
 
 /**
- *
+ * Class that serializes the database, and serializes when application is closed
  * @author bmvin
  */
 public class DataSerializer {
 
-    public static void serializeData(String fileName, Object toSerialize) {
+    public static void serializeDatabase(String filename, Database database) {
         try {
-            FileOutputStream fos = new FileOutputStream(fileName);
+            FileOutputStream fos = new FileOutputStream(filename);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-            oos.writeObject(toSerialize);
+            oos.writeObject(database);
+
             oos.close();
             fos.close();
 
@@ -35,15 +29,18 @@ public class DataSerializer {
         }
     }
 
-    private static HashMap desirializeData(String filename) {
-        HashMap map = null;
+    public static Database deserializeDatabase(String filename) {
+        Database db = new Database();
+
         File file = new File(filename);
+
         if (file.exists() && !file.isDirectory()) {
             try {
                 FileInputStream fis = new FileInputStream(filename);
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
-                map = (HashMap) ois.readObject();
+                db = (Database) ois.readObject();
+
                 ois.close();
                 fis.close();
 
@@ -53,20 +50,8 @@ public class DataSerializer {
                 c.printStackTrace();
             }
         }
-        
-        return map;
-    }
 
-    public static HashMap<String, User> desirializeUsersData(String fileName) {
-        HashMap<String, User> map = null;
-        map = desirializeData(fileName);
-        return map;
-    }
-
-    public static HashMap<String, String> deserializeAuthenticationData(String fileName) {
-        HashMap<String, String> map = null;
-        map = desirializeData(fileName);
-        return map;
+        return db;
     }
 
 }

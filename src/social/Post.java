@@ -36,29 +36,37 @@ public class Post extends Uid {
     public int numComments() {
         return this.comments.size();
     }
-    
+
     public void likePost(String userKey) {
-        if(!this.likes.contains(userKey)) {
+        if (!this.likes.contains(userKey)) {
             this.likes.add(userKey);
         }
     }
-    
+
     public void removeLike(String userKey) {
-        if(this.likes.contains(userKey)) {
+        if (this.likes.contains(userKey)) {
             this.likes.remove(userKey);
         }
     }
 
     @Override
     public String toString() {
-        return this.owner.getName() + "\n " + this.content + "\n Likes: " + numLikes() + "\n Comments: " + numComments();
+        return this.owner.getName() + " - " + this.content + " - Likes: " + numLikes() + " - Comments: " + numComments();
     }
-    
+
     public String getContent() {
         return this.content;
     }
-    
+
     public boolean hasLiked(String key) {
         return this.likes.contains(key);
+    }
+
+    public User getOwner() {
+        return this.owner;
+    }
+    
+    public boolean isPublic() {
+        return this.isPublic;
     }
 }

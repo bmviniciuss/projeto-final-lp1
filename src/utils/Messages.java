@@ -15,13 +15,13 @@ public class Messages {
     public static final String CREATE_ACCOUNT_SUCCESS = "Account created successfully.\n";
     public static final String ALREADY_EXISTS_EMAIL_ERROR = "Already exists a user with the same email. Try login or another email.\n";
     // CONSTANTS
-    public static final String ACCOUNT_SUCCESS = "CreateAccountSuccess";
-    public static final String EMAIL_ERROR = "EmailError";
+    public static final String ACCOUNT_SUCCESS = "Create Account";
+    public static final String EMAIL_ERROR = "Email Error";
 
     // LOGIN LISTENER MESSAGES
     public static final String INVALID_LOGIN = "Email or password is wrong.\n";
     // CONSTANTS
-    public static final String INVALID_LOGIN_ERROR = "InvalidLogin";
+    public static final String INVALID_LOGIN_ERROR = "Invalid Login";
 
     // LOGIN PANEL AND CREATE ACCOUNT PANEL MESSAGES
     public static final String EMPTY_EMAIL_ERROR = "Email must be not empty.\n";
@@ -32,7 +32,7 @@ public class Messages {
     public static final String EMPTY_NAME_ERROR = "Name must not be empty.\n";
 
     // CONSTANTS
-    public static final String LOGIN_ERROR = "loginError";
+    public static final String LOGIN_ERROR = "Login Error";
     public static final String CREATE_ACCOUNT_ERROR = "createAccountError";
 
     // NAME SEARCH
