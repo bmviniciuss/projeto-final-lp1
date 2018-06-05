@@ -17,7 +17,7 @@ import utils.Validators;
 public class Database implements Serializable {
 
     private static final String USERS_DATA = "users_data.ser";
-    private static final String AUTHENTICATION_DATA = "authentication_data.ser";
+    private static final String AUTHENTICATION_DATA =  "authentication_data.ser";
 
     private HashMap<String, User> users;
     private HashMap<String, String> authentication;

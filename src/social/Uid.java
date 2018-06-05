@@ -4,10 +4,10 @@ package social;
 import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class Unique implements Serializable {
+public abstract class Uid implements Serializable {
     private final String uuid;
     
-    public Unique(){
+    public Uid(){
         this.uuid = UUID.randomUUID().toString();
     }
 

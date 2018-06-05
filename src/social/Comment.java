@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Listeners;
-
+package social;
 
 /**
  *
  * @author bmvin
  */
-public interface LoginListener {
-    public void sendLoginCredentials(String email, String password);
+public class Comment {
     
 }

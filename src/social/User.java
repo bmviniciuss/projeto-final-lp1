@@ -15,27 +15,41 @@ import javax.swing.ImageIcon;
  *
  * @author bmviniciuss
  */
-public class User extends Unique implements Serializable {
+public class User extends Uid implements Serializable {
 
     private String name;
     private String email;
+    private String bio;
     private ImageIcon profilePicture;
     private HashSet<String> friends;
     private HashSet<String> requests;
     private HashSet<String> blockedUsers;
     private HashSet<String> pendingRequests;
+    private HashMap<String, Post> posts;
     private boolean publicProfile;
 
     public User(String name, String email) {
         super();
         this.name = name;
         this.email = email;
+        this.bio = null;
         this.profilePicture = null;
         this.publicProfile = true;
         this.friends = new HashSet<String>();
         this.requests = new HashSet<String>();
         this.blockedUsers = new HashSet<String>();
         this.pendingRequests = new HashSet<String>();
+        this.posts = new HashMap<String, Post>();
+    }
+
+    public String getBio() {
+        return this.bio;
+    }
+
+    public void setBio(String bio) {
+        if (bio != null && !bio.equals("")) {
+            this.bio = bio;
+        }
     }
 
     /**
@@ -91,7 +105,7 @@ public class User extends Unique implements Serializable {
     public HashSet<String> getFriends() {
         return friends;
     }
-    
+
     public HashSet<String> getRequests() {
         return this.requests;
     }
@@ -105,9 +119,9 @@ public class User extends Unique implements Serializable {
             this.blockedUsers.add(key);
         }
     }
-    
+
     public void unblockUser(String key) {
-        if(this.blockedUsers.contains(key)) {
+        if (this.blockedUsers.contains(key)) {
             this.blockedUsers.remove(key);
         }
     }
@@ -124,31 +138,48 @@ public class User extends Unique implements Serializable {
             this.requests.remove(originKey);
         }
     }
-    
+
     public void addFriend(String targetKey) {
-        if(!this.friends.contains(targetKey)) {
+        if (!this.friends.contains(targetKey)) {
             this.friends.add(targetKey);
         }
     }
-    
-    public HashSet<String> getPendingRequests(){
+
+    public HashSet<String> getPendingRequests() {
         return this.pendingRequests;
     }
-    
+
     public boolean isPending(String key) {
         return this.pendingRequests.contains(key);
     }
-    
+
     public void addRequestToPending(String targetKey) {
-        if(!this.pendingRequests.contains(targetKey)) {
+        if (!this.pendingRequests.contains(targetKey)) {
             this.pendingRequests.add(targetKey);
         }
     }
-    
-   public void removeFromPending(String targetKey) {
-       if(isPending(targetKey)) {
-           this.pendingRequests.remove(targetKey);
-       }
-   }
+
+    public void removeFromPending(String targetKey) {
+        if (isPending(targetKey)) {
+            this.pendingRequests.remove(targetKey);
+        }
+    }
+
+    public HashMap<String, Post> getPosts() {
+        return this.posts;
+    }
+
+    public void addPost(Post post) {
+        if (!this.posts.containsKey(post.getUuid())) {
+            this.posts.put(post.getUuid(), post);
+        }
+    }
+
+    public Post getPostById(String key) {
+        if (this.posts.containsKey(key)) {
+            return this.posts.get(key);
+        }
+        return null;
+    }
 
 }
