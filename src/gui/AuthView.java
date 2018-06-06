@@ -48,7 +48,7 @@ public class AuthView extends javax.swing.JFrame {
         
         // Post Panel
         // postPanel.setUser(user); // Future
-        showPostsPanel();
+        updatePostsPanel();
 
         // PROFILE PIC
         // TO ADD TO PROFILE PANEL
@@ -123,7 +123,6 @@ public class AuthView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 486));
-        setPreferredSize(new java.awt.Dimension(800, 486));
 
         postsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         postsList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -225,6 +224,11 @@ public class AuthView extends javax.swing.JFrame {
 
         tabPane.addTab("Notifications", notificationPanel);
 
+        friendsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                friendsListMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(friendsList);
 
         javax.swing.GroupLayout friendsPanelLayout = new javax.swing.GroupLayout(friendsPanel);
@@ -489,7 +493,7 @@ public class AuthView extends javax.swing.JFrame {
             Post post = new Post(this.user, postContent, isPublic);
             this.user.addPost(post);
             clearPostFields();
-            showPostsPanel();
+            updatePostsPanel();
         }
     }//GEN-LAST:event_makePostButtonActionPerformed
 
@@ -500,10 +504,23 @@ public class AuthView extends javax.swing.JFrame {
             int index = list.locationToIndex(evt.getPoint());
             Post selectedPost = (Post) list.getModel().getElementAt(index);
             if (selectedPost != null) {
-                PostView pd = new PostView(this, true, selectedPost, this.user);
+                PostView pd = new PostView(this, true, selectedPost, this.user, this.user);
+                updatePostsPanel();
             }
         }
     }//GEN-LAST:event_postsListMouseClicked
+
+    private void friendsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_friendsListMouseClicked
+        // TODO add your handling code here:
+        JList list = (JList) evt.getSource();
+        if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
+            int index = list.locationToIndex(evt.getPoint());
+            User selectedUser = (User) list.getModel().getElementAt(index);
+            if (selectedUser != null) {
+                PublicProfile pp = new PublicProfile(this, true, selectedUser, this.user, this.db);
+            }
+        }
+    }//GEN-LAST:event_friendsListMouseClicked
 
     private void clearPostFields() {
         postTextArea.setText("");
@@ -522,7 +539,7 @@ public class AuthView extends javax.swing.JFrame {
         tabPane.setTitleAt(2, "Friends (" + this.user.getFriends().size() + ")");
     }
 
-    private void showPostsPanel() {
+    private void updatePostsPanel() {
         DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
 
         for (String key : this.user.getPosts().keySet()) {

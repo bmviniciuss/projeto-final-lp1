@@ -5,9 +5,12 @@
  */
 package gui;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import social.Database;
 import social.User;
 import social.FriendshipManager;
+import social.Post;
 
 /**
  *
@@ -28,6 +31,7 @@ public class PublicProfile extends javax.swing.JDialog {
         this.targetUser = target;
         this.originUser = origin;
         this.db = db;
+        
         setLocationRelativeTo(parent);
         setTitle("Social App - " + this.targetUser.getName());
         nameLabel.setText(this.targetUser.getName());
@@ -35,6 +39,7 @@ public class PublicProfile extends javax.swing.JDialog {
         showInfo();
 
         setVisible(true);
+        
     }
 
     /**
@@ -52,7 +57,7 @@ public class PublicProfile extends javax.swing.JDialog {
         blockUserButton = new javax.swing.JButton();
         unblockUserButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        postsList = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -81,8 +86,13 @@ public class PublicProfile extends javax.swing.JDialog {
             }
         });
 
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jList1);
+        postsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        postsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                postsListMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(postsList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -153,6 +163,9 @@ public class PublicProfile extends javax.swing.JDialog {
         if(this.originUser.getFriends().contains(this.targetUser.getUuid())) {
             addFriendButton.setVisible(false);
         }
+        
+        // show posts
+        updatePostsPanel();
     }
 
     private void addFriendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendButtonActionPerformed
@@ -174,12 +187,41 @@ public class PublicProfile extends javax.swing.JDialog {
         showInfo();
     }//GEN-LAST:event_unblockUserButtonActionPerformed
 
+    private void postsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postsListMouseClicked
+        // TODO add your handling code here:
+        JList list = (JList) evt.getSource();
+        if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
+            int index = list.locationToIndex(evt.getPoint());
+            Post selectedPost = (Post) list.getModel().getElementAt(index);
+            if (selectedPost != null) {
+                PostView pd = new PostView(null, true, selectedPost, this.targetUser, this.originUser);
+                updatePostsPanel();
+            }
+        }
+    }//GEN-LAST:event_postsListMouseClicked
+
+    private void updatePostsPanel() {
+        DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
+
+        for (String key : this.targetUser.getPosts().keySet()) {
+            Post p = this.targetUser.getPostById(key);
+            // checar se é amigo
+            //if(p.isPublic()){
+                postsModel.addElement(p);
+            //}
+        }
+
+        postsList.setModel(postsModel);
+
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendButton;
     private javax.swing.JButton blockUserButton;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JList<Post> postsList;
     private javax.swing.JLabel profilePic;
     private javax.swing.JButton unblockUserButton;
     // End of variables declaration//GEN-END:variables

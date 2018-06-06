@@ -174,6 +174,12 @@ public class User extends Uid implements Serializable {
             this.posts.put(post.getUuid(), post);
         }
     }
+    
+    public void removePost(Post post) {
+        if(this.posts.containsKey(post.getUuid())) {
+            this.posts.remove(post.getUuid());
+        }
+    }
 
     public Post getPostById(String key) {
         if (this.posts.containsKey(key)) {

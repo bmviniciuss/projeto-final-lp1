@@ -7,6 +7,7 @@ package gui;
 
 import social.Post;
 import social.User;
+import social.UserInteraction;
 import utils.WindowTitles;
 
 /**
@@ -17,17 +18,26 @@ public class PostView extends javax.swing.JDialog {
 
     private Post post;
     private User owner;
+    private User currentUser;
 
     /**
      * Creates new form PostDialog
      */
-    public PostView(java.awt.Frame parent, boolean modal, Post post, User owner) {
+    public PostView(java.awt.Frame parent, boolean modal, Post post, User owner, User currentUser) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
 
+        deletePostButton.setVisible(false);
+        if (isOwner()) {
+            deletePostButton.setVisible(true);
+        }
+
         this.post = post;
         this.owner = owner;
+        this.currentUser = currentUser;
+
+        updateLikeButtonVisibility();
 
         authorLabel.setText("Author: " + this.owner.getName());
         contentArea.setEditable(false);
@@ -54,9 +64,10 @@ public class PostView extends javax.swing.JDialog {
         authorLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         contentArea = new javax.swing.JTextArea();
-        likeButton = new javax.swing.JToggleButton();
         commentButton = new javax.swing.JButton();
         likesLabel = new javax.swing.JLabel();
+        deletePostButton = new javax.swing.JButton();
+        likeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -66,14 +77,21 @@ public class PostView extends javax.swing.JDialog {
         contentArea.setRows(5);
         jScrollPane1.setViewportView(contentArea);
 
+        commentButton.setText("Coment");
+
+        deletePostButton.setText("Delete Post");
+        deletePostButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deletePostButtonActionPerformed(evt);
+            }
+        });
+
         likeButton.setText("Like");
         likeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 likeButtonActionPerformed(evt);
             }
         });
-
-        commentButton.setText("Coment");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -83,11 +101,15 @@ public class PostView extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(authorLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(77, 77, 77))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(likeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(commentButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deletePostButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(likesLabel)
                         .addGap(28, 28, 28)))
@@ -102,25 +124,59 @@ public class PostView extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(likeButton)
                     .addComponent(commentButton)
-                    .addComponent(likesLabel))
+                    .addComponent(likesLabel)
+                    .addComponent(deletePostButton)
+                    .addComponent(likeButton))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void deletePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePostButtonActionPerformed
+        // TODO add your handling code here:
+
+        UserInteraction.deletePost(owner, post);
+        dispose();
+    }//GEN-LAST:event_deletePostButtonActionPerformed
+
+    private String getId() {
+        String id = "";
+        if (isOwner()) {
+            id = this.owner.getUuid();
+        } else {
+            id = this.currentUser.getUuid();
+        }
+
+        return id;
+    }
+
+    private boolean isOwner() {
+        return currentUser == owner;
+    }
+
+    private void updateLikeButtonVisibility() {
+        String id = getId();
+
+        likeButton.setVisible(true);
+
+        if (!id.equals("")) {
+            if (post.hasLiked(id)) {
+                likeButton.setVisible(false);
+            }
+        }
+
+    }
+
     private void likeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_likeButtonActionPerformed
         // TODO add your handling code here:
-        if (likeButton.isSelected()) {
-            if (!this.post.hasLiked(this.owner.getUuid())) {
-                this.post.likePost(this.owner.getUuid());
-            }
-        } else {
-            System.out.println("DISLIKE");
+        String id = getId();
+
+        if (!id.equals("")) {
+            this.post.likePost(id);
         }
-        
+        updateLikeButtonVisibility();
         updatePostLikes();
     }//GEN-LAST:event_likeButtonActionPerformed
 
@@ -129,8 +185,9 @@ public class PostView extends javax.swing.JDialog {
     private javax.swing.JLabel authorLabel;
     private javax.swing.JButton commentButton;
     private javax.swing.JTextArea contentArea;
+    private javax.swing.JButton deletePostButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton likeButton;
+    private javax.swing.JButton likeButton;
     private javax.swing.JLabel likesLabel;
     // End of variables declaration//GEN-END:variables
 

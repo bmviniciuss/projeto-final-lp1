@@ -27,11 +27,16 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" alignment="1" pref="380" max="32767" attributes="0"/>
-                  <Component id="authorLabel" alignment="1" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="authorLabel" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
+                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="likeButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="commentButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="deletePostButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="likesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
@@ -50,9 +55,10 @@
               <Component id="jScrollPane1" min="-2" pref="195" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="likeButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="commentButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="likesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="deletePostButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="likeButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="16" max="32767" attributes="0"/>
           </Group>
@@ -82,20 +88,28 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JToggleButton" name="likeButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Like"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="likeButtonActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JButton" name="commentButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Coment"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="likesLabel">
+    </Component>
+    <Component class="javax.swing.JButton" name="deletePostButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Delete Post"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deletePostButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="likeButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Like"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="likeButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

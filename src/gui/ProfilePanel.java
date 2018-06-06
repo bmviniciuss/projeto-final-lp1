@@ -45,8 +45,8 @@ public class ProfilePanel extends javax.swing.JPanel {
     }
 
     private void setNameLabel(String name) {
-        if (!Validators.checkNotEmptyStringNotNull(name)) {
-            nameLabel.setName(name);
+        if (Validators.checkNotEmptyStringNotNull(name)) {
+            nameLabel.setText(name);
 
         }
     }
@@ -80,7 +80,6 @@ public class ProfilePanel extends javax.swing.JPanel {
 
         nameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        nameLabel.setText("Vinicius Barbosa de Medeiros");
 
         imageLabel.setText("PROFILE PICTURE");
 
