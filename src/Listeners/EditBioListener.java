@@ -7,6 +7,9 @@ package Listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileFilter;
+import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import social.User;
@@ -38,5 +41,9 @@ public class EditBioListener implements ActionListener {
             String text = this.textArea.getText();
             this.user.setBio(text);
         }
+        
+        textArea.setText(this.user.getBio());
+        
+        
     }
 }

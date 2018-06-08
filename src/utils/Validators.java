@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class Validators {
 
     public static boolean checkNotEmptyStringNotNull(String text) {
-        return ((text.length() > 0) && (!text.equals("")) && (text != null));
+        return ((text != null) && (text.length() > 0) && (!text.equals("")));
     }
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX
@@ -25,7 +25,7 @@ public class Validators {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find();
     }
-    
+
     public static boolean passwordsMatches(String base, String target) {
         return base.trim().equals(target.trim());
     }

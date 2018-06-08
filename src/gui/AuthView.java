@@ -1,13 +1,16 @@
 package gui;
 
+import Listeners.EditBioListener;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.HashMap;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import social.Database;
@@ -15,15 +18,17 @@ import social.User;
 import utils.Messages;
 import utils.Validators;
 import social.Post;
+import utils.Images;
 import utils.WindowTitles;
+import utils.Wrapers;
 
 /**
  *
  * @author bmvin
  */
 public class AuthView extends javax.swing.JFrame {
-
-    private User user;
+    
+    private User currentUser;
     private Database db;
 
     /**
@@ -35,35 +40,22 @@ public class AuthView extends javax.swing.JFrame {
     public AuthView(User user, Database db) {
         initComponents();
         this.setLocationRelativeTo(null);
-
-        this.user = user;
+        
+        this.currentUser = user;
         this.db = db;
 
         // SET APP TITLE
-        setTitle(WindowTitles.usersNameWindowTitle(this.user.getName()));
+        setTitle(WindowTitles.usersNameWindowTitle(this.currentUser.getName()));
 
         // PROFILE PANE
         // ProfilePanel - Handles Name, Profile Pic and Bio
-        profilePanel.setUser(user);
-        
-        // Post Panel
-        // postPanel.setUser(user); // Future
-        updatePostsPanel();
+        updateProfilePanel();
 
+        // Post Panel
+        // postPanel.setUser(currentUser); // Future
+//        updatePostsPanel();
         // PROFILE PIC
         // TO ADD TO PROFILE PANEL
-//        ImageIcon imageIcon = new ImageIcon(getClass().getResource("vinicius_profile.jpg"));
-//        Image img = imageIcon.getImage();
-//        Image newImg = img.getScaledInstance(133, 175, java.awt.Image.SCALE_SMOOTH);
-//        ImageIcon icon = new ImageIcon(newImg);
-
-////        icon = null;
-//        if (icon != null) {
-//            imageLabel.setIcon(icon);
-//            imageLabel.setText(null);
-//        } else {
-//            imageLabel.setText("No Profile picture\n found!");
-//        }
 //
         // NOTIFICATION PANE
         showNotificationPanel();
@@ -78,7 +70,7 @@ public class AuthView extends javax.swing.JFrame {
                 db.serializeData();
                 dispose();
             }
-
+            
         });
     }
 
@@ -93,15 +85,21 @@ public class AuthView extends javax.swing.JFrame {
 
         tabPane = new javax.swing.JTabbedPane();
         profilePane = new javax.swing.JPanel();
+        nameLabel = new javax.swing.JLabel();
+        bioLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        postsList = new javax.swing.JList<>();
+        bioTextArea = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        postList = new javax.swing.JList<>();
+        makePostLabel = new javax.swing.JLabel();
+        clearPostButton = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         postTextArea = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
         makePostButton = new javax.swing.JButton();
-        clearPostButton = new javax.swing.JButton();
-        postPublicBox = new javax.swing.JCheckBox();
-        profilePanel = new gui.ProfilePanel();
+        addPhotoButton = new javax.swing.JButton();
+        publicPostToggle = new javax.swing.JCheckBox();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        profilePic = new javax.swing.JLabel();
         notificationPanel = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         requetsList = new javax.swing.JList<>();
@@ -122,38 +120,48 @@ public class AuthView extends javax.swing.JFrame {
         exitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(800, 486));
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
+        setSize(new java.awt.Dimension(800, 600));
 
-        postsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        postsList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                postsListMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(postsList);
+        tabPane.setMinimumSize(new java.awt.Dimension(0, 0));
+        tabPane.setPreferredSize(new java.awt.Dimension(800, 600));
+
+        nameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+
+        bioLabel.setText("Bio:");
+
+        bioTextArea.setColumns(20);
+        bioTextArea.setRows(5);
+        jScrollPane1.setViewportView(bioTextArea);
+
+        postList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane3.setViewportView(postList);
+
+        makePostLabel.setText("Make a Post:");
+
+        clearPostButton.setText("Clear");
 
         postTextArea.setColumns(20);
         postTextArea.setRows(5);
         jScrollPane6.setViewportView(postTextArea);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setText("Make a Post:");
-
         makePostButton.setText("Make Post");
-        makePostButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                makePostButtonActionPerformed(evt);
+
+        addPhotoButton.setText("Add Photo");
+
+        publicPostToggle.setText("Public Post");
+
+        jToggleButton1.setText("Edit");
+
+        profilePic.setMaximumSize(new java.awt.Dimension(150, 200));
+        profilePic.setMinimumSize(new java.awt.Dimension(150, 200));
+        profilePic.setPreferredSize(new java.awt.Dimension(150, 200));
+        profilePic.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                profilePicMouseClicked(evt);
             }
         });
-
-        clearPostButton.setText("Clear");
-        clearPostButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearPostButtonActionPerformed(evt);
-            }
-        });
-
-        postPublicBox.setText("Public");
 
         javax.swing.GroupLayout profilePaneLayout = new javax.swing.GroupLayout(profilePane);
         profilePane.setLayout(profilePaneLayout);
@@ -162,37 +170,61 @@ public class AuthView extends javax.swing.JFrame {
             .addGroup(profilePaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(profilePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(profilePaneLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, profilePaneLayout.createSequentialGroup()
+                            .addGroup(profilePaneLayout.createSequentialGroup()
+                                .addComponent(makePostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                                .addComponent(clearPostButton))
+                            .addComponent(jScrollPane6)
+                            .addGroup(profilePaneLayout.createSequentialGroup()
                                 .addComponent(makePostButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(clearPostButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                                .addComponent(postPublicBox)))))
+                                .addComponent(addPhotoButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(publicPostToggle))))
+                    .addGroup(profilePaneLayout.createSequentialGroup()
+                        .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(profilePaneLayout.createSequentialGroup()
+                                .addComponent(bioLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jToggleButton1))
+                            .addComponent(jScrollPane1))))
                 .addContainerGap())
         );
         profilePaneLayout.setVerticalGroup(
             profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(profilePaneLayout.createSequentialGroup()
-                .addComponent(profilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
-                .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(profilePaneLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane6)
+                        .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bioLabel)
+                            .addComponent(jToggleButton1))
+                        .addGap(9, 9, 9)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(profilePic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addGroup(profilePaneLayout.createSequentialGroup()
+                        .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(makePostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(clearPostButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(makePostButton)
-                            .addComponent(clearPostButton)
-                            .addComponent(postPublicBox))))
+                            .addComponent(addPhotoButton)
+                            .addComponent(publicPostToggle))))
                 .addContainerGap())
         );
 
@@ -211,14 +243,14 @@ public class AuthView extends javax.swing.JFrame {
             notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notificationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
                 .addContainerGap())
         );
         notificationPanelLayout.setVerticalGroup(
             notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notificationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -237,14 +269,14 @@ public class AuthView extends javax.swing.JFrame {
             friendsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(friendsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
                 .addContainerGap())
         );
         friendsPanelLayout.setVerticalGroup(
             friendsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(friendsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -254,11 +286,11 @@ public class AuthView extends javax.swing.JFrame {
         groupsPanel.setLayout(groupsPanelLayout);
         groupsPanelLayout.setHorizontalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 795, Short.MAX_VALUE)
+            .addGap(0, 721, Short.MAX_VALUE)
         );
         groupsPanelLayout.setVerticalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 458, Short.MAX_VALUE)
+            .addGap(0, 469, Short.MAX_VALUE)
         );
 
         tabPane.addTab("Groups", groupsPanel);
@@ -302,7 +334,7 @@ public class AuthView extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(nameSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)))
+                        .addComponent(nameSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -314,7 +346,7 @@ public class AuthView extends javax.swing.JFrame {
                     .addComponent(nameSearchField)
                     .addComponent(nameSearchLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -359,11 +391,11 @@ public class AuthView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabPane)
+            .addComponent(tabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 726, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabPane)
+            .addComponent(tabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
         );
 
         pack();
@@ -382,15 +414,15 @@ public class AuthView extends javax.swing.JFrame {
         this.db.serializeData();
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
-
+    
     private void doNameSearch() {
         String nameSearch = "";
-
+        
         clearSearchFriendsList();
 
         //validate input
         nameSearch = nameSearchField.getText().trim();
-
+        
         if (!Validators.checkNotEmptyStringNotNull(nameSearch)) {
             JOptionPane.showMessageDialog(this, Messages.EMPTY_NAME_SEARCH_FIELD, "Empty name", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -398,9 +430,9 @@ public class AuthView extends javax.swing.JFrame {
             if (searchResult != null) {
                 DefaultListModel<User> dlm = new DefaultListModel<User>();
                 for (String key : searchResult.keySet()) {
-                    if (!key.equals(this.user.getUuid())) {
+                    if (!key.equals(this.currentUser.getUuid())) {
                         dlm.addElement(searchResult.get(key));
-
+                        
                     }
                 }
                 searchFriendsList.setModel(dlm);
@@ -413,7 +445,7 @@ public class AuthView extends javax.swing.JFrame {
     private void nameSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearchButtonActionPerformed
         doNameSearch();
     }//GEN-LAST:event_nameSearchButtonActionPerformed
-
+    
     private void clearSearchFriendsList() {
         DefaultListModel<User> dlm = new DefaultListModel<User>();
         searchFriendsList.setModel(dlm);
@@ -426,7 +458,7 @@ public class AuthView extends javax.swing.JFrame {
             int index = list.locationToIndex(evt.getPoint());
             User selectedUser = (User) list.getModel().getElementAt(index);
             if (selectedUser != null) {
-                PublicProfile pp = new PublicProfile(this, true, selectedUser, this.user, this.db);
+                PublicProfile pp = new PublicProfile(this, true, selectedUser, this.currentUser, this.db);
             }
         }
     }//GEN-LAST:event_searchFriendsListMouseClicked
@@ -437,19 +469,19 @@ public class AuthView extends javax.swing.JFrame {
             doNameSearch();
         }
     }//GEN-LAST:event_nameSearchFieldKeyPressed
-
+    
     private void showNotificationPanel() {
-        int nNotifications = this.user.getRequests().size();
+        int nNotifications = this.currentUser.getRequests().size();
         tabPane.setTitleAt(1, "Notifications (" + nNotifications + ")");
-
+        
         DefaultListModel<User> requests = new DefaultListModel<User>();
-        for (String key : this.user.getRequests()) {
+        for (String key : this.currentUser.getRequests()) {
             User u = this.db.getUserById(key);
             if (u != null) {
                 requests.addElement(u);
             }
         }
-
+        
         requetsList.setModel(requests);
     }
 
@@ -459,56 +491,12 @@ public class AuthView extends javax.swing.JFrame {
             int index = list.locationToIndex(evt.getPoint());
             User selectedUser = (User) list.getModel().getElementAt(index);
             if (selectedUser != null) {
-                RequestDialog rd = new RequestDialog(this, true, selectedUser, this.user);
+                RequestDialog rd = new RequestDialog(this, true, selectedUser, this.currentUser);
             }
         }
         showNotificationPanel();
         showFriendsPanel();
     }//GEN-LAST:event_requetsListMouseClicked
-
-    private void clearPostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPostButtonActionPerformed
-        clearPostFields();
-    }//GEN-LAST:event_clearPostButtonActionPerformed
-
-    private void makePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePostButtonActionPerformed
-        // TODO add your handling code here:
-        String postContent = "";
-        boolean isPublic = false;
-        String warnings = "";
-
-        // verify post content
-        postContent = postTextArea.getText().trim();
-
-        if (!Validators.checkNotEmptyStringNotNull(postContent)) {
-            warnings += "Content must be not empty.\n";
-        }
-
-        if (postPublicBox.isSelected()) {
-            isPublic = true;
-        }
-
-        if (!warnings.isEmpty()) {
-            JOptionPane.showMessageDialog(this, warnings, "Error Make Post", JOptionPane.WARNING_MESSAGE);
-        } else {
-            Post post = new Post(this.user, postContent, isPublic);
-            this.user.addPost(post);
-            clearPostFields();
-            updatePostsPanel();
-        }
-    }//GEN-LAST:event_makePostButtonActionPerformed
-
-    private void postsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postsListMouseClicked
-        // TODO add your handling code here:
-        JList list = (JList) evt.getSource();
-        if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
-            int index = list.locationToIndex(evt.getPoint());
-            Post selectedPost = (Post) list.getModel().getElementAt(index);
-            if (selectedPost != null) {
-                PostView pd = new PostView(this, true, selectedPost, this.user, this.user);
-                updatePostsPanel();
-            }
-        }
-    }//GEN-LAST:event_postsListMouseClicked
 
     private void friendsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_friendsListMouseClicked
         // TODO add your handling code here:
@@ -517,70 +505,113 @@ public class AuthView extends javax.swing.JFrame {
             int index = list.locationToIndex(evt.getPoint());
             User selectedUser = (User) list.getModel().getElementAt(index);
             if (selectedUser != null) {
-                PublicProfile pp = new PublicProfile(this, true, selectedUser, this.user, this.db);
+                PublicProfile pp = new PublicProfile(this, true, selectedUser, this.currentUser, this.db);
             }
         }
     }//GEN-LAST:event_friendsListMouseClicked
 
-    private void clearPostFields() {
-        postTextArea.setText("");
-        postPublicBox.setSelected(false);
-    }
+    private void profilePicMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePicMouseClicked
+        // TODO add your handling code here:
+        if (!Validators.checkNotEmptyStringNotNull(this.currentUser.getProfilePic())) {
+            System.out.println("N TEM FOTO QUER ADD UMA");
+            JFileChooser fc = new JFileChooser();
+            fc.showOpenDialog(this);
+            File file = fc.getSelectedFile();
+            String path = file.getAbsolutePath();
+            System.out.println("PATH: " + path);
+            this.currentUser.setProfilePicture(path);
+            showProfilePic();
+        }        
+    }//GEN-LAST:event_profilePicMouseClicked
 
+//    private void clearPostFields() {
+//        postTextArea.setText("");
+//        postPublicBox.setSelected(false);
+//    }
     private void showFriendsPanel() {
         DefaultListModel<User> friends = new DefaultListModel<>();
-
-        for (String key : this.user.getFriends()) {
+        
+        for (String key : this.currentUser.getFriends()) {
             User u = this.db.getUserById(key);
             friends.addElement(u);
         }
-
+        
         friendsList.setModel(friends);
-        tabPane.setTitleAt(2, "Friends (" + this.user.getFriends().size() + ")");
+        tabPane.setTitleAt(2, "Friends (" + this.currentUser.getFriends().size() + ")");
     }
 
-    private void updatePostsPanel() {
-        DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
-
-        for (String key : this.user.getPosts().keySet()) {
-            Post p = this.user.getPostById(key);
-            postsModel.addElement(p);
-        }
-
-        postsList.setModel(postsModel);
-
-    }
-
+//    private void updatePostsPanel() {
+//        DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
+//        
+//        
+//        
+//        for (String key : this.currentUser.getPosts().keySet()) {
+//            Post p = this.currentUser.getPostById(key);
+//            postsModel.addElement(p);
+//        }
+//
+//        postsList.setModel(postsModel);
+//
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addPhotoButton;
+    private javax.swing.JLabel bioLabel;
+    private javax.swing.JTextArea bioTextArea;
     private javax.swing.JButton clearPostButton;
     private javax.swing.JButton exitButton;
     private javax.swing.JList<User> friendsList;
     private javax.swing.JPanel friendsPanel;
     private javax.swing.JPanel groupsPanel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton makePostButton;
+    private javax.swing.JLabel makePostLabel;
+    private javax.swing.JLabel nameLabel;
     private javax.swing.JButton nameSearchButton;
     private javax.swing.JTextField nameSearchField;
     private javax.swing.JLabel nameSearchLabel;
     private javax.swing.JPanel notificationPanel;
     private javax.swing.JPanel optionsPanel;
-    private javax.swing.JCheckBox postPublicBox;
+    private javax.swing.JList<Post> postList;
     private javax.swing.JTextArea postTextArea;
-    private javax.swing.JList<Post> postsList;
     private javax.swing.JPanel profilePane;
-    private gui.ProfilePanel profilePanel;
+    private javax.swing.JLabel profilePic;
+    private javax.swing.JCheckBox publicPostToggle;
     private javax.swing.JList<User> requetsList;
     private javax.swing.JList<User> searchFriendsList;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabPane;
     // End of variables declaration//GEN-END:variables
+
+    // PROFILE PANE METHODS
+    private void updateProfilePanel() {
+        // Name Label
+        nameLabel.setText(this.currentUser.getName());
+
+        // Bio Text Area
+        bioTextArea.setEditable(false);
+        EditBioListener listener = new EditBioListener(currentUser, jToggleButton1, bioTextArea);
+        jToggleButton1.addActionListener(listener);
+
+        // Profile Pic
+        showProfilePic();
+    }
+    
+    public void showProfilePic() {
+        if (!Validators.checkNotEmptyStringNotNull(this.currentUser.getProfilePic())) {
+            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. \n Click Here to add one."));
+        } else {
+            profilePic.setIcon(Images.profilePic(this.currentUser.getProfilePic()));
+            profilePic.setText(null);
+        }
+    }
 }

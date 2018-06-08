@@ -5,9 +5,10 @@
  */
 package gui;
 
-import Listeners.EditBioListener;
+import javax.swing.JFrame;
+import social.Database;
+import social.Post;
 import social.User;
-import utils.Validators;
 
 /**
  *
@@ -15,47 +16,18 @@ import utils.Validators;
  */
 public class ProfilePanel extends javax.swing.JPanel {
 
-    private User user;
+    private JFrame parent;
+    private User currentUser;
+    private Database db;
 
     /**
      * Creates new form ProfilePanel
      */
     public ProfilePanel() {
-        this.user = user;
         initComponents();
-        setVisible(true);
-
-    }
-
-    /*
-     * @param user User's reference
-    */
-    public void setUser(User user) {
-        if (user != null) {
-            this.user = user;
-            
-            /* BIO AREA
-             * Set up Edit Button Listener
-            */
-            bioArea.setEditable(false);
-            EditBioListener listener = new EditBioListener(this.user, editBioButton, bioArea);
-            editBioButton.addActionListener(listener);
-            updateInfo();
-        }
-    }
-
-    private void setNameLabel(String name) {
-        if (Validators.checkNotEmptyStringNotNull(name)) {
-            nameLabel.setText(name);
-
-        }
-    }
-
-    private void updateInfo() {
-        setNameLabel(this.user.getName());
-        // bio
-        bioArea.setText(this.user.getBio());
-        // profile pic goes here
+        
+        updateProfilePic();
+        updateProfileName();
     }
 
     /**
@@ -67,74 +39,160 @@ public class ProfilePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        profilePic = new gui.ProfilePic();
         nameLabel = new javax.swing.JLabel();
-        imageLabel = new javax.swing.JLabel();
         bioLabel = new javax.swing.JLabel();
+        editBioButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        bioTextArea = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        postList = new javax.swing.JList<>();
+        makePostLabel = new javax.swing.JLabel();
+        clearPostButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        bioArea = new javax.swing.JTextArea();
-        editBioButton = new javax.swing.JToggleButton();
-
-        setAlignmentX(0.0F);
-        setAlignmentY(0.0F);
-        setPreferredSize(new java.awt.Dimension(750, 197));
+        postTextArea = new javax.swing.JTextArea();
+        makePostButton = new javax.swing.JButton();
+        addPhotoButton = new javax.swing.JButton();
+        publicPostToggle = new javax.swing.JCheckBox();
 
         nameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-
-        imageLabel.setText("PROFILE PICTURE");
 
         bioLabel.setText("Bio:");
 
-        bioArea.setColumns(20);
-        bioArea.setRows(5);
-        jScrollPane3.setViewportView(bioArea);
-
         editBioButton.setText("Edit");
+
+        bioTextArea.setColumns(20);
+        bioTextArea.setRows(5);
+        jScrollPane1.setViewportView(bioTextArea);
+
+        postList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(postList);
+
+        makePostLabel.setText("Make a Post:");
+
+        clearPostButton.setText("Clear");
+
+        postTextArea.setColumns(20);
+        postTextArea.setRows(5);
+        jScrollPane3.setViewportView(postTextArea);
+
+        makePostButton.setText("Make Post");
+
+        addPhotoButton.setText("Add Photo");
+
+        publicPostToggle.setText("Public Post");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(bioLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(editBioButton))
-                    .addComponent(jScrollPane3)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(makePostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                                .addComponent(clearPostButton))
+                            .addComponent(jScrollPane3)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(makePostButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addPhotoButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(publicPostToggle))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(bioLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(editBioButton))
+                            .addComponent(jScrollPane1))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 2, Short.MAX_VALUE)
-                        .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(bioLabel)
                             .addComponent(editBioButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(makePostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(clearPostButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(makePostButton)
+                            .addComponent(addPhotoButton)
+                            .addComponent(publicPostToggle))))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea bioArea;
+    private javax.swing.JButton addPhotoButton;
     private javax.swing.JLabel bioLabel;
-    private javax.swing.JToggleButton editBioButton;
-    private javax.swing.JLabel imageLabel;
+    private javax.swing.JTextArea bioTextArea;
+    private javax.swing.JButton clearPostButton;
+    private javax.swing.JButton editBioButton;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton makePostButton;
+    private javax.swing.JLabel makePostLabel;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JList<Post> postList;
+    private javax.swing.JTextArea postTextArea;
+    private gui.ProfilePic profilePic;
+    private javax.swing.JCheckBox publicPostToggle;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(JFrame parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * @param currentUser the currentUser to set
+     */
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    /**
+     * @param db the db to set
+     */
+    public void setDb(Database db) {
+        this.db = db;
+    }
+
+    private void updateProfilePic() {
+        profilePic.setUsers(currentUser, currentUser);
+    }
+
+    private void updateProfileName() {
+        nameLabel.setName(this.currentUser.getName());
+    }
 }

@@ -20,7 +20,7 @@ public class User extends Uid implements Serializable {
     private String name;
     private String email;
     private String bio;
-    private ImageIcon profilePicture;
+    private String profilePicture;
     private HashSet<String> friends;
     private HashSet<String> requests;
     private HashSet<String> blockedUsers;
@@ -86,17 +86,14 @@ public class User extends Uid implements Serializable {
     }
 
     /**
-     * @return the profilePicture
-     */
-    public ImageIcon getProfilePicture() {
-        return new ImageIcon(getClass().getResource("vinicius_profile.jpg"));
-    }
-
-    /**
      * @param profilePicture the profilePicture to set
      */
-    public void setProfilePicture(ImageIcon profilePicture) {
+    public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getProfilePic() {
+        return this.profilePicture;
     }
 
     /**
@@ -174,9 +171,9 @@ public class User extends Uid implements Serializable {
             this.posts.put(post.getUuid(), post);
         }
     }
-    
+
     public void removePost(Post post) {
-        if(this.posts.containsKey(post.getUuid())) {
+        if (this.posts.containsKey(post.getUuid())) {
             this.posts.remove(post.getUuid());
         }
     }
@@ -188,4 +185,7 @@ public class User extends Uid implements Serializable {
         return null;
     }
 
+    public boolean isFriendWith(String id) {
+        return this.friends.contains(id);
+    }
 }

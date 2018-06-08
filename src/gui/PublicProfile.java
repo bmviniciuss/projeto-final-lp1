@@ -1,21 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import social.Database;
 import social.User;
-import social.FriendshipManager;
 import social.Post;
+import social.UserInteraction;
+import utils.Images;
+import utils.Validators;
+import utils.Wrapers;
 
-/**
- *
- * @author bmvin
- */
 public class PublicProfile extends javax.swing.JDialog {
 
     private User targetUser;
@@ -24,6 +18,12 @@ public class PublicProfile extends javax.swing.JDialog {
 
     /**
      * Creates new form PublicProfile
+     *
+     * @param parent
+     * @param modal
+     * @param target User's information
+     * @param origin From where the 'request' is from
+     * @param db Database instace
      */
     public PublicProfile(java.awt.Frame parent, boolean modal, User target, User origin, Database db) {
         super(parent, modal);
@@ -31,15 +31,14 @@ public class PublicProfile extends javax.swing.JDialog {
         this.targetUser = target;
         this.originUser = origin;
         this.db = db;
-        
+
         setLocationRelativeTo(parent);
         setTitle("Social App - " + this.targetUser.getName());
         nameLabel.setText(this.targetUser.getName());
 
         showInfo();
-
         setVisible(true);
-        
+
     }
 
     /**
@@ -51,17 +50,17 @@ public class PublicProfile extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        profilePic = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
         addFriendButton = new javax.swing.JButton();
         blockUserButton = new javax.swing.JButton();
         unblockUserButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         postsList = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        bioArea = new javax.swing.JTextArea();
+        profilePic = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        profilePic.setText("PROFILE PIC");
 
         nameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
@@ -94,6 +93,14 @@ public class PublicProfile extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(postsList);
 
+        bioArea.setColumns(20);
+        bioArea.setRows(5);
+        jScrollPane2.setViewportView(bioArea);
+
+        profilePic.setMaximumSize(new java.awt.Dimension(150, 200));
+        profilePic.setMinimumSize(new java.awt.Dimension(150, 200));
+        profilePic.setPreferredSize(new java.awt.Dimension(150, 200));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,36 +108,39 @@ public class PublicProfile extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(addFriendButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(blockUserButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(unblockUserButton)
-                                .addGap(0, 252, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(addFriendButton)
                             .addComponent(blockUserButton)
-                            .addComponent(unblockUserButton)))
-                    .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                            .addComponent(unblockUserButton))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -138,9 +148,33 @@ public class PublicProfile extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void showInfo() {
-        // already sent request
+        // set bio if exists.
+        setBioArea();
 
-        // person block 
+        // addFriend, Block and Unblock buttons logic.
+        setAddFriendBlockFriendButtons();
+
+        // users posts.
+        setUsersPosts();
+    }
+
+    public void setBioArea() {
+        bioArea.setEditable(false);
+        String bio = targetUser.getBio();
+        if (Validators.checkNotEmptyStringNotNull(bio)) {
+            bioArea.setText(bio);
+        }
+
+        if (!Validators.checkNotEmptyStringNotNull(this.targetUser.getProfilePic())) {
+            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. \n Click Here to add one."));
+        } else {
+            profilePic.setIcon(Images.profilePic(this.targetUser.getProfilePic()));
+            profilePic.setText(null);
+        }
+    }
+
+    public void setAddFriendBlockFriendButtons() {
+        // addFriend, blockUser buttons logic
         if (this.originUser.userIsBlocked(this.targetUser.getUuid())) {
             blockUserButton.setVisible(false);
             addFriendButton.setVisible(false);
@@ -160,17 +194,14 @@ public class PublicProfile extends javax.swing.JDialog {
             blockUserButton.setVisible(false);
             unblockUserButton.setVisible(false);
         }
-        if(this.originUser.getFriends().contains(this.targetUser.getUuid())) {
+        if (this.originUser.getFriends().contains(this.targetUser.getUuid())) {
             addFriendButton.setVisible(false);
         }
-        
-        // show posts
-        updatePostsPanel();
     }
 
     private void addFriendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendButtonActionPerformed
         // TODO add your handling code here:
-        FriendshipManager.sendRequest(this.originUser, this.targetUser);
+        UserInteraction.sendRequest(this.originUser, this.targetUser);
 //        this.targetUser.sendRequest(this.originUser.getUuid());
         showInfo();
     }//GEN-LAST:event_addFriendButtonActionPerformed
@@ -195,31 +226,37 @@ public class PublicProfile extends javax.swing.JDialog {
             Post selectedPost = (Post) list.getModel().getElementAt(index);
             if (selectedPost != null) {
                 PostView pd = new PostView(null, true, selectedPost, this.targetUser, this.originUser);
-                updatePostsPanel();
+                setUsersPosts();
             }
         }
     }//GEN-LAST:event_postsListMouseClicked
 
-    private void updatePostsPanel() {
+    private void setUsersPosts() {
         DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
 
         for (String key : this.targetUser.getPosts().keySet()) {
             Post p = this.targetUser.getPostById(key);
-            // checar se é amigo
-            //if(p.isPublic()){
+            // is friend. show everything
+            if (targetUser.isFriendWith(originUser.getUuid())) {
                 postsModel.addElement(p);
-            //}
+            } else {
+                if (p.isPublic()) {
+                    postsModel.addElement(p);
+                }
+            }
         }
 
         postsList.setModel(postsModel);
 
     }
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendButton;
+    private javax.swing.JTextArea bioArea;
     private javax.swing.JButton blockUserButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JList<Post> postsList;
     private javax.swing.JLabel profilePic;

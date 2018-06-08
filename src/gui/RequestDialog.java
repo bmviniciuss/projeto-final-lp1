@@ -7,7 +7,7 @@ package gui;
 
 import social.User;
 import utils.Messages;
-import social.FriendshipManager;
+import social.UserInteraction;
 
 /**
  *
@@ -99,7 +99,7 @@ public class RequestDialog extends javax.swing.JDialog {
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
         // TODO add your handling code here:
-        FriendshipManager.acceptRequest(this.origin, this.target);
+        UserInteraction.acceptRequest(this.origin, this.target);
         this.dispose();
     }//GEN-LAST:event_acceptButtonActionPerformed
 
