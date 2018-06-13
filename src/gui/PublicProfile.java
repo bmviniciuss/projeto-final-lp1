@@ -165,12 +165,12 @@ public class PublicProfile extends javax.swing.JDialog {
             bioArea.setText(bio);
         }
 
-        if (!Validators.checkNotEmptyStringNotNull(this.targetUser.getProfilePic())) {
-            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. \n Click Here to add one."));
-        } else {
-            profilePic.setIcon(Images.profilePic(this.targetUser.getProfilePic()));
-            profilePic.setText(null);
-        }
+//        if (!Validators.checkNotEmptyStringNotNull(this.targetUser.getProfilePic())) {
+//            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. \n Click Here to add one."));
+//        } else {
+//            profilePic.setIcon(Images.profilePic(this.targetUser.getProfilePic()));
+//            profilePic.setText(null);
+//        }
     }
 
     public void setAddFriendBlockFriendButtons() {

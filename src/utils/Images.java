@@ -6,8 +6,13 @@
 package utils;
 
 import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import social.User;
 
 /**
  *
@@ -15,8 +20,49 @@ import javax.swing.ImageIcon;
  */
 public class Images {
 
-    public static Icon profilePic(String path) {
-        ImageIcon imageIcon =  new ImageIcon(path);
+    public static final String ROOT_PATH = "./images/";
+
+    private static String getUserPath(User user) {
+        return ROOT_PATH + user.getUuid() + "/";
+    }
+
+    private static void createUserFolder(User user) {
+        String userPath = getUserPath(user);
+        File userFolder = new File(userPath);
+        if (!userFolder.exists()) {
+            userFolder.mkdirs();
+        }
+    }
+
+    public static void uploadUserImage(File image, User user) {
+        String userPath = getUserPath(user);
+        File userFolder = new File(userPath);
+        createUserFolder(user);
+        copyFile(image, user);
+
+    }
+
+    private static void copyFile(File image, User user) {
+        String userPath = getUserPath(user);
+
+        // image destination
+        String imgPath = userPath + image.getName();
+        File imgDest = new File(imgPath);
+        if (!imgDest.exists()) {
+            Path source = image.toPath();
+            Path destination = imgDest.toPath();
+            try {
+                Files.copy(source, destination);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public static Icon profilePic(File file) {
+        ImageIcon imageIcon = new ImageIcon(file.getPath());
         Image img = imageIcon.getImage();
         Image newImg = img.getScaledInstance(150, 200, Image.SCALE_SMOOTH);
         return new ImageIcon(newImg);

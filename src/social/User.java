@@ -4,23 +4,14 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import javax.swing.ImageIcon;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author bmviniciuss
- */
+
 public class User extends Uid implements Serializable {
 
     private String name;
     private String email;
     private String bio;
-    private String profilePicture;
+    private File profilePicture;
     private HashSet<String> friends;
     private HashSet<String> requests;
     private HashSet<String> blockedUsers;
@@ -88,11 +79,11 @@ public class User extends Uid implements Serializable {
     /**
      * @param profilePicture the profilePicture to set
      */
-    public void setProfilePicture(String profilePicture) {
+    public void setProfilePicture(File profilePicture) {
         this.profilePicture = profilePicture;
     }
 
-    public String getProfilePic() {
+    public File getProfilePic() {
         return this.profilePicture;
     }
 

@@ -1,18 +1,16 @@
 package gui;
 
 import Listeners.EditBioListener;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.HashMap;
 import javax.swing.DefaultListModel;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import social.Database;
 import social.User;
 import utils.Messages;
@@ -22,12 +20,8 @@ import utils.Images;
 import utils.WindowTitles;
 import utils.Wrapers;
 
-/**
- *
- * @author bmvin
- */
 public class AuthView extends javax.swing.JFrame {
-    
+
     private User currentUser;
     private Database db;
 
@@ -40,7 +34,7 @@ public class AuthView extends javax.swing.JFrame {
     public AuthView(User user, Database db) {
         initComponents();
         this.setLocationRelativeTo(null);
-        
+
         this.currentUser = user;
         this.db = db;
 
@@ -70,7 +64,7 @@ public class AuthView extends javax.swing.JFrame {
                 db.serializeData();
                 dispose();
             }
-            
+
         });
     }
 
@@ -414,15 +408,15 @@ public class AuthView extends javax.swing.JFrame {
         this.db.serializeData();
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
-    
+
     private void doNameSearch() {
         String nameSearch = "";
-        
+
         clearSearchFriendsList();
 
         //validate input
         nameSearch = nameSearchField.getText().trim();
-        
+
         if (!Validators.checkNotEmptyStringNotNull(nameSearch)) {
             JOptionPane.showMessageDialog(this, Messages.EMPTY_NAME_SEARCH_FIELD, "Empty name", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -432,7 +426,7 @@ public class AuthView extends javax.swing.JFrame {
                 for (String key : searchResult.keySet()) {
                     if (!key.equals(this.currentUser.getUuid())) {
                         dlm.addElement(searchResult.get(key));
-                        
+
                     }
                 }
                 searchFriendsList.setModel(dlm);
@@ -445,7 +439,7 @@ public class AuthView extends javax.swing.JFrame {
     private void nameSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearchButtonActionPerformed
         doNameSearch();
     }//GEN-LAST:event_nameSearchButtonActionPerformed
-    
+
     private void clearSearchFriendsList() {
         DefaultListModel<User> dlm = new DefaultListModel<User>();
         searchFriendsList.setModel(dlm);
@@ -469,11 +463,11 @@ public class AuthView extends javax.swing.JFrame {
             doNameSearch();
         }
     }//GEN-LAST:event_nameSearchFieldKeyPressed
-    
+
     private void showNotificationPanel() {
         int nNotifications = this.currentUser.getRequests().size();
         tabPane.setTitleAt(1, "Notifications (" + nNotifications + ")");
-        
+
         DefaultListModel<User> requests = new DefaultListModel<User>();
         for (String key : this.currentUser.getRequests()) {
             User u = this.db.getUserById(key);
@@ -481,7 +475,7 @@ public class AuthView extends javax.swing.JFrame {
                 requests.addElement(u);
             }
         }
-        
+
         requetsList.setModel(requests);
     }
 
@@ -512,16 +506,16 @@ public class AuthView extends javax.swing.JFrame {
 
     private void profilePicMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profilePicMouseClicked
         // TODO add your handling code here:
-        if (!Validators.checkNotEmptyStringNotNull(this.currentUser.getProfilePic())) {
-            System.out.println("N TEM FOTO QUER ADD UMA");
-            JFileChooser fc = new JFileChooser();
-            fc.showOpenDialog(this);
-            File file = fc.getSelectedFile();
-            String path = file.getAbsolutePath();
-            System.out.println("PATH: " + path);
-            this.currentUser.setProfilePicture(path);
+        if (this.currentUser != null) {
+            File file = new social.ImagePicker(this).pickImage();
+            
+            if (file != null) {
+                Images.uploadUserImage(file, currentUser);
+                this.currentUser.setProfilePicture(file);
+            }
+
             showProfilePic();
-        }        
+        }
     }//GEN-LAST:event_profilePicMouseClicked
 
 //    private void clearPostFields() {
@@ -530,12 +524,12 @@ public class AuthView extends javax.swing.JFrame {
 //    }
     private void showFriendsPanel() {
         DefaultListModel<User> friends = new DefaultListModel<>();
-        
+
         for (String key : this.currentUser.getFriends()) {
             User u = this.db.getUserById(key);
             friends.addElement(u);
         }
-        
+
         friendsList.setModel(friends);
         tabPane.setTitleAt(2, "Friends (" + this.currentUser.getFriends().size() + ")");
     }
@@ -605,10 +599,10 @@ public class AuthView extends javax.swing.JFrame {
         // Profile Pic
         showProfilePic();
     }
-    
+
     public void showProfilePic() {
-        if (!Validators.checkNotEmptyStringNotNull(this.currentUser.getProfilePic())) {
-            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. \n Click Here to add one."));
+        if (this.currentUser.getProfilePic() == null) {
+            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. <br> Click Here to add one."));
         } else {
             profilePic.setIcon(Images.profilePic(this.currentUser.getProfilePic()));
             profilePic.setText(null);
