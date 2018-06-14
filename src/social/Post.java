@@ -5,9 +5,9 @@
  */
 package social;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import social.Comment;
 
 /**
  *
@@ -19,6 +19,7 @@ public class Post extends Uid {
     private boolean isPublic;
     private String content;
     private HashMap<String, Comment> comments;
+    private ArrayList<String> sortedComments;
     private HashSet<String> likes;
 
     public Post(User owner, String content, boolean isPublic) {
@@ -27,6 +28,7 @@ public class Post extends Uid {
         this.isPublic = isPublic;
         this.likes = new HashSet<String>();
         this.comments = new HashMap<String, Comment>();
+        this.sortedComments = new ArrayList<String>();
     }
 
     public int numLikes() {
@@ -65,8 +67,40 @@ public class Post extends Uid {
     public User getOwner() {
         return this.owner;
     }
-    
+
     public boolean isPublic() {
         return this.isPublic;
+    }
+
+    public void addComment(Comment comment) {
+        if (!this.comments.containsKey(comment.getUuid()) && !isInSortedComments(comment.getUuid())) {
+            this.comments.put(comment.getUuid(), comment);
+            this.sortedComments.add(comment.getUuid());
+        }
+    }
+
+    public boolean isInSortedComments(String key) {
+        for (String id : this.sortedComments) {
+            if (id.equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return the sortedComments
+     */
+    public ArrayList<String> getSortedComments() {
+        return sortedComments;
+    }
+
+    public Comment getCommentById(String id) {
+        if (this.comments.containsKey(id)) {
+            return this.comments.get(id);
+        }
+        
+        return null;
     }
 }

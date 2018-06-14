@@ -44,9 +44,9 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         emailLabel = new javax.swing.JLabel();
         emailField = new javax.swing.JTextField();
         passwordLabel = new javax.swing.JLabel();
-        passwordField = new javax.swing.JTextField();
+        passwordField = new javax.swing.JPasswordField();
         passwordConfirmationLabel = new javax.swing.JLabel();
-        passwordConfirmationField = new javax.swing.JTextField();
+        passwordConfirmationField = new javax.swing.JPasswordField();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
@@ -81,19 +81,19 @@ public class CreateAccountPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(nameField)
                     .addComponent(emailField)
-                    .addComponent(passwordConfirmationField)
                     .addComponent(passwordField)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nameLabel)
                             .addComponent(emailLabel)
                             .addComponent(passwordLabel)
-                            .addComponent(passwordConfirmationLabel)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(okButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cancelButton)))
-                        .addGap(0, 261, Short.MAX_VALUE)))
+                                .addComponent(cancelButton))
+                            .addComponent(passwordConfirmationLabel))
+                        .addGap(0, 261, Short.MAX_VALUE))
+                    .addComponent(passwordConfirmationField))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -115,7 +115,7 @@ public class CreateAccountPanel extends javax.swing.JPanel {
                 .addComponent(passwordConfirmationLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(passwordConfirmationField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
@@ -141,13 +141,13 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         }
 
         // validate password
-        password = passwordField.getText().trim();
+        password = new String(passwordField.getPassword()).trim();
         if (!Validators.checkNotEmptyStringNotNull(password)) {
             warnings += Messages.EMPTY_PASSWORD_ERROR;
         }
 
         // validate confirm password
-        passwordConfirmation = passwordConfirmationField.getText().trim();
+        passwordConfirmation = new String(passwordConfirmationField.getPassword()).trim();
         if (!Validators.checkNotEmptyStringNotNull(passwordConfirmation)) {
             warnings += Messages.EMPTY_PASSWORD_CONFIRMATION_ERROR;
         }
@@ -185,9 +185,9 @@ public class CreateAccountPanel extends javax.swing.JPanel {
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JButton okButton;
-    private javax.swing.JTextField passwordConfirmationField;
+    private javax.swing.JPasswordField passwordConfirmationField;
     private javax.swing.JLabel passwordConfirmationLabel;
-    private javax.swing.JTextField passwordField;
+    private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     // End of variables declaration//GEN-END:variables
 }

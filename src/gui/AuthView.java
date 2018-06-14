@@ -7,10 +7,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.HashMap;
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import social.Database;
 import social.User;
 import utils.Messages;
@@ -546,6 +544,7 @@ public class AuthView extends javax.swing.JFrame {
         Post post = new Post(currentUser, content, isPublic);
         this.currentUser.addPost(post);
         updatePostsPanel();
+        clearPostFields();
     }//GEN-LAST:event_makePostButtonActionPerformed
 
     private void clearPostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPostButtonActionPerformed
@@ -638,7 +637,6 @@ public class AuthView extends javax.swing.JFrame {
         if (pic == null || !pic.exists()) {
             profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. <br> Click Here to add one."));
         } else {
-            System.out.println("PIC: " + currentUser.getProfilePic());
             profilePic.setIcon(Images.profilePic(pic));
             profilePic.setText(null);
         }

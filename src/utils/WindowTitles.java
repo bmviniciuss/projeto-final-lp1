@@ -35,7 +35,6 @@ public class WindowTitles {
         if(Validators.checkNotEmptyStringNotNull(content)) {
             title += " - " + content;
         }
-        System.out.println(title);
         return title;
     }
 }

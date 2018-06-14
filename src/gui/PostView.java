@@ -5,6 +5,13 @@
  */
 package gui;
 
+import java.awt.Frame;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import social.Comment;
 import social.Post;
 import social.User;
 import social.UserInteraction;
@@ -19,6 +26,7 @@ public class PostView extends javax.swing.JDialog {
     private Post post;
     private User owner;
     private User currentUser;
+    private Frame parent;
 
     /**
      * Creates new form PostDialog
@@ -36,13 +44,17 @@ public class PostView extends javax.swing.JDialog {
         this.post = post;
         this.owner = owner;
         this.currentUser = currentUser;
+        this.parent = parent;
 
         updateLikeButtonVisibility();
 
         authorLabel.setText("Author: " + this.owner.getName());
         contentArea.setEditable(false);
         contentArea.setText(this.post.getContent());
+
+        commentsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         updatePostLikes();
+        updateCommentsSection();
 
         setVisible(true);
     }
@@ -64,10 +76,12 @@ public class PostView extends javax.swing.JDialog {
         authorLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         contentArea = new javax.swing.JTextArea();
-        commentButton = new javax.swing.JButton();
         likesLabel = new javax.swing.JLabel();
         deletePostButton = new javax.swing.JButton();
         likeButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        commentsTree = new javax.swing.JTree();
+        makeCommentButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -76,8 +90,6 @@ public class PostView extends javax.swing.JDialog {
         contentArea.setColumns(20);
         contentArea.setRows(5);
         jScrollPane1.setViewportView(contentArea);
-
-        commentButton.setText("Coment");
 
         deletePostButton.setText("Delete Post");
         deletePostButton.addActionListener(new java.awt.event.ActionListener() {
@@ -93,6 +105,24 @@ public class PostView extends javax.swing.JDialog {
             }
         });
 
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Comments");
+        commentsTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        commentsTree.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        commentsTree.setToggleClickCount(20);
+        commentsTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                commentsTreeMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(commentsTree);
+
+        makeCommentButton.setText("Make Comment");
+        makeCommentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                makeCommentButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,35 +130,43 @@ public class PostView extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(77, 77, 77))
+                    .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 1, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(likeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(commentButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deletePostButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(likesLabel)
-                        .addGap(28, 28, 28)))
-                .addContainerGap())
+                        .addComponent(likesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(makeCommentButton))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(authorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(commentButton)
-                    .addComponent(likesLabel)
-                    .addComponent(deletePostButton)
-                    .addComponent(likeButton))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(makeCommentButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(authorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(likeButton)
+                                .addComponent(deletePostButton))
+                            .addComponent(likesLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
 
         pack();
@@ -180,15 +218,83 @@ public class PostView extends javax.swing.JDialog {
         updatePostLikes();
     }//GEN-LAST:event_likeButtonActionPerformed
 
+    private void makeCommentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeCommentButtonActionPerformed
+        AddComment ac = new AddComment(parent, true, currentUser, post);
+        updateCommentsSection();
+    }//GEN-LAST:event_makeCommentButtonActionPerformed
+
+    private void commentsTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_commentsTreeMouseClicked
+        if ( evt.getClickCount() == 2 && post.getSortedComments().size() > 0) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) commentsTree.getLastSelectedPathComponent();
+            if(node != null) {
+                Comment c = (Comment) node.getUserObject();
+                ReplyComment cm = new ReplyComment(parent, true, c, currentUser);
+                
+            }
+        }
+
+        updateCommentsSection();
+    }//GEN-LAST:event_commentsTreeMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
-    private javax.swing.JButton commentButton;
+    private javax.swing.JTree commentsTree;
     private javax.swing.JTextArea contentArea;
     private javax.swing.JButton deletePostButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton likeButton;
     private javax.swing.JLabel likesLabel;
+    private javax.swing.JButton makeCommentButton;
     // End of variables declaration//GEN-END:variables
+
+    private void expandAllNodes(JTree tree, int startingIndex, int rowCount) {
+        for (int i = startingIndex; i < rowCount; ++i) {
+            tree.expandRow(i);
+        }
+
+        if (tree.getRowCount() != rowCount) {
+            expandAllNodes(tree, rowCount, tree.getRowCount());
+        }
+    }
+
+    private void replies(Comment c, DefaultMutableTreeNode node) {
+        if (c.getReponses().isEmpty()) {
+            node.add(new DefaultMutableTreeNode(c));
+        } else {
+            for (Comment comment : c.getReponses()) {
+                DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(comment);
+                if (!comment.getReponses().isEmpty()) {
+
+                    replies(comment, newNode);
+                }
+                node.add(newNode);
+            }
+        }
+
+    }
+
+    private void updateCommentsSection() {
+        boolean flag = false;
+
+        DefaultTreeModel model = (DefaultTreeModel) commentsTree.getModel();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        root.removeAllChildren();
+
+        for (String key : post.getSortedComments()) {
+            Comment c = post.getCommentById(key);
+            DefaultMutableTreeNode commentNode = new DefaultMutableTreeNode(c);
+
+            if (!c.getReponses().isEmpty()) {
+                replies(c, commentNode);
+            }
+
+            root.add(commentNode);
+        }
+        model.reload();
+        expandAllNodes(commentsTree, 0, commentsTree.getRowCount());
+
+    }
 
 }

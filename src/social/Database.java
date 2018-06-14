@@ -86,26 +86,6 @@ public class Database implements Serializable {
         }
     }
 
-    /*
-     * FOR DEBUG ONLYYYYYYYYYYYYY
-    */
-    public void listAllUsers() {
-        int i = 1;
-        System.out.println("USERS");
-        for (String key : this.users.keySet()) {
-            User user = this.users.get(key);
-            System.out.println(i + " - " + key + " " + user);
-            i++;
-        }
-        i = 0;
-        System.out.println("PASS");
-        for (String key : this.authentication.keySet()) {
-            String pass = this.authentication.get(key);
-            System.out.println(i + " - " + key + " " + pass);
-            i++;
-        }
-
-    }
 
     public String getUserIdByEmail(String email) {
         for (String key : this.users.keySet()) {

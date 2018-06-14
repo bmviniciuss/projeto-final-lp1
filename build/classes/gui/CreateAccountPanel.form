@@ -21,22 +21,22 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="nameField" max="32767" attributes="0"/>
                   <Component id="emailField" alignment="0" max="32767" attributes="0"/>
-                  <Component id="passwordConfirmationField" alignment="0" max="32767" attributes="0"/>
                   <Component id="passwordField" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="emailLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="passwordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="passwordConfirmationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="okButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="passwordConfirmationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="261" max="32767" attributes="0"/>
                   </Group>
+                  <Component id="passwordConfirmationField" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -61,7 +61,7 @@
               <Component id="passwordConfirmationLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="passwordConfirmationField" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="22" max="32767" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -91,14 +91,14 @@
         <Property name="text" type="java.lang.String" value="Password:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="passwordField">
+    <Component class="javax.swing.JPasswordField" name="passwordField">
     </Component>
     <Component class="javax.swing.JLabel" name="passwordConfirmationLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Password Confirmation:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="passwordConfirmationField">
+    <Component class="javax.swing.JPasswordField" name="passwordConfirmationField">
     </Component>
     <Component class="javax.swing.JButton" name="okButton">
       <Properties>
