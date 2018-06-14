@@ -2,9 +2,9 @@ package social;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
 
 public class User extends Uid implements Serializable {
 
@@ -16,6 +16,7 @@ public class User extends Uid implements Serializable {
     private HashSet<String> requests;
     private HashSet<String> blockedUsers;
     private HashSet<String> pendingRequests;
+    private ArrayList<String> sortedPosts;
     private HashMap<String, Post> posts;
     private boolean publicProfile;
 
@@ -30,6 +31,7 @@ public class User extends Uid implements Serializable {
         this.requests = new HashSet<String>();
         this.blockedUsers = new HashSet<String>();
         this.pendingRequests = new HashSet<String>();
+        this.sortedPosts = new ArrayList<String>();
         this.posts = new HashMap<String, Post>();
     }
 
@@ -158,14 +160,16 @@ public class User extends Uid implements Serializable {
     }
 
     public void addPost(Post post) {
-        if (!this.posts.containsKey(post.getUuid())) {
+        if (!this.posts.containsKey(post.getUuid()) && !isInSorted(post.getUuid())) {
             this.posts.put(post.getUuid(), post);
+            this.sortedPosts.add(0, post.getUuid());
         }
     }
 
     public void removePost(Post post) {
-        if (this.posts.containsKey(post.getUuid())) {
+        if (this.posts.containsKey(post.getUuid()) && isInSorted(post.getUuid())) {
             this.posts.remove(post.getUuid());
+            this.sortedPosts.remove(post.getUuid());
         }
     }
 
@@ -178,5 +182,22 @@ public class User extends Uid implements Serializable {
 
     public boolean isFriendWith(String id) {
         return this.friends.contains(id);
+    }
+
+    public boolean isInSorted(String id) {
+        for (String postId : this.sortedPosts) {
+            if (postId.equals(id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return the sortedPosts
+     */
+    public ArrayList<String> getSortedPosts() {
+        return sortedPosts;
     }
 }

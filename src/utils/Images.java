@@ -22,7 +22,7 @@ public class Images {
 
     public static final String ROOT_PATH = "./images/";
 
-    private static String getUserPath(User user) {
+    public static String getUserPath(User user) {
         return ROOT_PATH + user.getUuid() + "/";
     }
 

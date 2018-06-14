@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import social.Database;
@@ -8,6 +9,7 @@ import social.Post;
 import social.UserInteraction;
 import utils.Images;
 import utils.Validators;
+import utils.WindowTitles;
 import utils.Wrapers;
 
 public class PublicProfile extends javax.swing.JDialog {
@@ -33,8 +35,7 @@ public class PublicProfile extends javax.swing.JDialog {
         this.db = db;
 
         setLocationRelativeTo(parent);
-        setTitle("Social App - " + this.targetUser.getName());
-        nameLabel.setText(this.targetUser.getName());
+        setTitle(WindowTitles.usersNameWindowTitle(targetUser.getName()));
 
         showInfo();
         setVisible(true);
@@ -148,6 +149,10 @@ public class PublicProfile extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void showInfo() {
+        nameLabel.setText(this.targetUser.getName());
+        
+        showProfilePicture();
+
         // set bio if exists.
         setBioArea();
 
@@ -164,13 +169,6 @@ public class PublicProfile extends javax.swing.JDialog {
         if (Validators.checkNotEmptyStringNotNull(bio)) {
             bioArea.setText(bio);
         }
-
-//        if (!Validators.checkNotEmptyStringNotNull(this.targetUser.getProfilePic())) {
-//            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. \n Click Here to add one."));
-//        } else {
-//            profilePic.setIcon(Images.profilePic(this.targetUser.getProfilePic()));
-//            profilePic.setText(null);
-//        }
     }
 
     public void setAddFriendBlockFriendButtons() {
@@ -232,9 +230,10 @@ public class PublicProfile extends javax.swing.JDialog {
     }//GEN-LAST:event_postsListMouseClicked
 
     private void setUsersPosts() {
+        if(!targetUser.userIsBlocked(originUser.getUuid())) {
         DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
 
-        for (String key : this.targetUser.getPosts().keySet()) {
+        for (String key : this.targetUser.getSortedPosts()) {
             Post p = this.targetUser.getPostById(key);
             // is friend. show everything
             if (targetUser.isFriendWith(originUser.getUuid())) {
@@ -247,6 +246,10 @@ public class PublicProfile extends javax.swing.JDialog {
         }
 
         postsList.setModel(postsModel);
+        }
+        
+        
+        
 
     }
 
@@ -262,4 +265,14 @@ public class PublicProfile extends javax.swing.JDialog {
     private javax.swing.JLabel profilePic;
     private javax.swing.JButton unblockUserButton;
     // End of variables declaration//GEN-END:variables
+
+    private void showProfilePicture() {
+        File pic = targetUser.getProfilePic();
+        if (pic == null || !pic.exists()) {
+            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found."));
+        } else {
+            profilePic.setIcon(Images.profilePic(pic));
+            profilePic.setText(null);
+        }
+    }
 }

@@ -45,12 +45,8 @@ public class AuthView extends javax.swing.JFrame {
         // ProfilePanel - Handles Name, Profile Pic and Bio
         updateProfilePanel();
 
-        // Post Panel
-        // postPanel.setUser(currentUser); // Future
-//        updatePostsPanel();
-        // PROFILE PIC
-        // TO ADD TO PROFILE PANEL
-//
+        updatePostsPanel();
+
         // NOTIFICATION PANE
         showNotificationPanel();
 
@@ -84,7 +80,7 @@ public class AuthView extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         bioTextArea = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        postList = new javax.swing.JList<>();
+        postsList = new javax.swing.JList<>();
         makePostLabel = new javax.swing.JLabel();
         clearPostButton = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -92,7 +88,7 @@ public class AuthView extends javax.swing.JFrame {
         makePostButton = new javax.swing.JButton();
         addPhotoButton = new javax.swing.JButton();
         publicPostToggle = new javax.swing.JCheckBox();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        editBioButton = new javax.swing.JToggleButton();
         profilePic = new javax.swing.JLabel();
         notificationPanel = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -129,24 +125,39 @@ public class AuthView extends javax.swing.JFrame {
         bioTextArea.setRows(5);
         jScrollPane1.setViewportView(bioTextArea);
 
-        postList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane3.setViewportView(postList);
+        postsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        postsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                postsListMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(postsList);
 
         makePostLabel.setText("Make a Post:");
 
         clearPostButton.setText("Clear");
+        clearPostButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearPostButtonActionPerformed(evt);
+            }
+        });
 
         postTextArea.setColumns(20);
         postTextArea.setRows(5);
         jScrollPane6.setViewportView(postTextArea);
 
         makePostButton.setText("Make Post");
+        makePostButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                makePostButtonActionPerformed(evt);
+            }
+        });
 
         addPhotoButton.setText("Add Photo");
 
         publicPostToggle.setText("Public Post");
 
-        jToggleButton1.setText("Edit");
+        editBioButton.setText("Edit");
 
         profilePic.setMaximumSize(new java.awt.Dimension(150, 200));
         profilePic.setMinimumSize(new java.awt.Dimension(150, 200));
@@ -187,7 +198,7 @@ public class AuthView extends javax.swing.JFrame {
                             .addGroup(profilePaneLayout.createSequentialGroup()
                                 .addComponent(bioLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jToggleButton1))
+                                .addComponent(editBioButton))
                             .addComponent(jScrollPane1))))
                 .addContainerGap())
         );
@@ -201,7 +212,7 @@ public class AuthView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(bioLabel)
-                            .addComponent(jToggleButton1))
+                            .addComponent(editBioButton))
                         .addGap(9, 9, 9)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(profilePic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -508,20 +519,56 @@ public class AuthView extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (this.currentUser != null) {
             File file = new social.ImagePicker(this).pickImage();
-            
+
             if (file != null) {
                 Images.uploadUserImage(file, currentUser);
-                this.currentUser.setProfilePicture(file);
+                File profilePhoto;
+                profilePhoto = new File(Images.getUserPath(currentUser) + file.getName());
+                this.currentUser.setProfilePicture(profilePhoto);
             }
 
             showProfilePic();
         }
     }//GEN-LAST:event_profilePicMouseClicked
 
-//    private void clearPostFields() {
-//        postTextArea.setText("");
-//        postPublicBox.setSelected(false);
-//    }
+    private void makePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePostButtonActionPerformed
+        // TODO add your handling code here:
+        String content = "";
+        boolean isPublic = false;
+
+        if (publicPostToggle.isSelected()) {
+            isPublic = true;
+        }
+
+        content = postTextArea.getText();
+
+        // add post
+        Post post = new Post(currentUser, content, isPublic);
+        this.currentUser.addPost(post);
+        updatePostsPanel();
+    }//GEN-LAST:event_makePostButtonActionPerformed
+
+    private void clearPostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPostButtonActionPerformed
+        clearPostFields();
+    }//GEN-LAST:event_clearPostButtonActionPerformed
+
+    private void postsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postsListMouseClicked
+        JList list = (JList) evt.getSource();
+        if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
+            int index = list.locationToIndex(evt.getPoint());
+            Post selectedPost = (Post) list.getModel().getElementAt(index);
+            if (selectedPost != null) {
+                PostView pv = new PostView(this, true, selectedPost, currentUser, currentUser);
+                updatePostsPanel();
+            }
+    }//GEN-LAST:event_postsListMouseClicked
+    }
+
+    private void clearPostFields() {
+        postTextArea.setText("");
+        publicPostToggle.setSelected(false);
+    }
+
     private void showFriendsPanel() {
         DefaultListModel<User> friends = new DefaultListModel<>();
 
@@ -534,25 +581,12 @@ public class AuthView extends javax.swing.JFrame {
         tabPane.setTitleAt(2, "Friends (" + this.currentUser.getFriends().size() + ")");
     }
 
-//    private void updatePostsPanel() {
-//        DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
-//        
-//        
-//        
-//        for (String key : this.currentUser.getPosts().keySet()) {
-//            Post p = this.currentUser.getPostById(key);
-//            postsModel.addElement(p);
-//        }
-//
-//        postsList.setModel(postsModel);
-//
-//    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPhotoButton;
     private javax.swing.JLabel bioLabel;
     private javax.swing.JTextArea bioTextArea;
     private javax.swing.JButton clearPostButton;
+    private javax.swing.JToggleButton editBioButton;
     private javax.swing.JButton exitButton;
     private javax.swing.JList<User> friendsList;
     private javax.swing.JPanel friendsPanel;
@@ -565,7 +599,6 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton makePostButton;
     private javax.swing.JLabel makePostLabel;
@@ -575,8 +608,8 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JLabel nameSearchLabel;
     private javax.swing.JPanel notificationPanel;
     private javax.swing.JPanel optionsPanel;
-    private javax.swing.JList<Post> postList;
     private javax.swing.JTextArea postTextArea;
+    private javax.swing.JList<Post> postsList;
     private javax.swing.JPanel profilePane;
     private javax.swing.JLabel profilePic;
     private javax.swing.JCheckBox publicPostToggle;
@@ -593,19 +626,32 @@ public class AuthView extends javax.swing.JFrame {
 
         // Bio Text Area
         bioTextArea.setEditable(false);
-        EditBioListener listener = new EditBioListener(currentUser, jToggleButton1, bioTextArea);
-        jToggleButton1.addActionListener(listener);
+        EditBioListener listener = new EditBioListener(currentUser, editBioButton, bioTextArea);
+        editBioButton.addActionListener(listener);
 
         // Profile Pic
         showProfilePic();
     }
 
     public void showProfilePic() {
-        if (this.currentUser.getProfilePic() == null) {
+        File pic = currentUser.getProfilePic();
+        if (pic == null || !pic.exists()) {
             profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found. <br> Click Here to add one."));
         } else {
-            profilePic.setIcon(Images.profilePic(this.currentUser.getProfilePic()));
+            System.out.println("PIC: " + currentUser.getProfilePic());
+            profilePic.setIcon(Images.profilePic(pic));
             profilePic.setText(null);
         }
+    }
+
+    private void updatePostsPanel() {
+        DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
+
+        for (String key : this.currentUser.getSortedPosts()) {
+            Post p = this.currentUser.getPostById(key);
+            postsModel.addElement(p);
+        }
+
+        postsList.setModel(postsModel);
     }
 }

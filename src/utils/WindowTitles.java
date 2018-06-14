@@ -7,6 +7,10 @@ import social.Post;
  * @author bmvin
  */
 public class WindowTitles {
+    
+    public static String requestTitle(String name) {
+        return "Social App - Request - " + name.trim();
+    }
 
     public static String usersNameWindowTitle(String name) {
         if (Validators.checkNotEmptyStringNotNull(name)) {

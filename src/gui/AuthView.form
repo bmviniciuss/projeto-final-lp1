@@ -96,7 +96,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="bioLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="jToggleButton1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="editBioButton" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                               </Group>
@@ -116,7 +116,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="bioLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jToggleButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="editBioButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                               <Component id="jScrollPane1" min="-2" pref="127" max="-2" attributes="0"/>
@@ -181,13 +181,16 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="postList">
+                <Component class="javax.swing.JList" name="postsList">
                   <Properties>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                       <StringArray count="0"/>
                     </Property>
                     <Property name="selectionMode" type="int" value="0"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="postsListMouseClicked"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Post&gt;"/>
                   </AuxValues>
@@ -203,6 +206,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Clear"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearPostButtonActionPerformed"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane6">
               <AuxValues>
@@ -223,6 +229,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Make Post"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="makePostButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="addPhotoButton">
               <Properties>
@@ -234,7 +243,7 @@
                 <Property name="text" type="java.lang.String" value="Public Post"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JToggleButton" name="jToggleButton1">
+            <Component class="javax.swing.JToggleButton" name="editBioButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Edit"/>
               </Properties>
