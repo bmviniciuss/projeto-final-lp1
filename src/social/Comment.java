@@ -1,18 +1,44 @@
 package social;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Comment extends Uid {
-
+    
     private final User owner;
-    private String content;
-    private ArrayList<Comment> reponses;
-
-    public Comment(User owner, String content) {
+    private final String parentId;
+    private final String content;
+    private HashSet<String> reponses;
+    
+    public Comment(User owner, String content, String parentId) {
         super();
+        this.parentId = parentId;
         this.owner = owner;
         this.content = content;
-        this.reponses = new ArrayList<Comment>();
+        this.reponses = new HashSet<String>();
+    }
+    
+    public boolean hasResponses() {
+        return !this.reponses.isEmpty();
+    }
+    
+    public void clearResponses() {
+        this.reponses = new HashSet<String>();
+    }
+    
+    public void removeResponse(String id) {
+        if(this.reponses.contains(id)) {
+            this.reponses.remove(id);
+        }
+    }
+    
+    public void addResponse(Comment comment) {
+        if (!this.reponses.contains(comment.getUuid())) {
+            this.reponses.add(comment.getUuid());
+        }
+    }
+    
+    public HashSet<String> getReponses() {
+        return this.reponses;
     }
 
     /**
@@ -28,44 +54,14 @@ public class Comment extends Uid {
     public String getContent() {
         return content;
     }
-
-    /**
-     * @return the reponses
-     */
-    public ArrayList<Comment> getReponses() {
-        return reponses;
+    
+    public String getParentId() {
+        return this.parentId;
     }
-
-    public boolean hasResponseId(String key) {
-        for (Comment c : this.reponses) {
-            if (c.getUuid().equals(key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public Comment getCommentById(String id) {
-        if (hasResponseId(id)) {
-            for (Comment c : this.reponses) {
-                if (c.getUuid().equals(id)) {
-                    return c;
-                }
-            }
-        }
-
-        return null;
-
-    }
-
-    public void addResponse(Comment comment) {
-        this.reponses.add(comment);
-    }
-
+    
     @Override
     public String toString() {
         return this.owner.getName() + " - " + this.content;
     }
-
+    
 }

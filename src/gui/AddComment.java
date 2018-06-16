@@ -103,7 +103,7 @@ public class AddComment extends javax.swing.JDialog {
             System.out.println("EMPTY");
         }
         
-        Comment comment = new Comment(currentUser, content);
+        Comment comment = new Comment(currentUser, content, null);
         
         currentPost.addComment(comment);
         this.dispose();

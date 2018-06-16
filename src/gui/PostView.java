@@ -6,6 +6,7 @@
 package gui;
 
 import java.awt.Frame;
+import java.util.Enumeration;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -30,6 +31,12 @@ public class PostView extends javax.swing.JDialog {
 
     /**
      * Creates new form PostDialog
+     *
+     * @param parent
+     * @param modal
+     * @param post
+     * @param currentUser
+     * @param owner
      */
     public PostView(java.awt.Frame parent, boolean modal, Post post, User owner, User currentUser) {
         super(parent, modal);
@@ -52,7 +59,6 @@ public class PostView extends javax.swing.JDialog {
         contentArea.setEditable(false);
         contentArea.setText(this.post.getContent());
 
-        commentsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         updatePostLikes();
         updateCommentsSection();
 
@@ -79,9 +85,9 @@ public class PostView extends javax.swing.JDialog {
         likesLabel = new javax.swing.JLabel();
         deletePostButton = new javax.swing.JButton();
         likeButton = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        commentsTree = new javax.swing.JTree();
         makeCommentButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        commentsPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -105,23 +111,15 @@ public class PostView extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Comments");
-        commentsTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        commentsTree.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        commentsTree.setToggleClickCount(20);
-        commentsTree.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                commentsTreeMouseClicked(evt);
-            }
-        });
-        jScrollPane3.setViewportView(commentsTree);
-
         makeCommentButton.setText("Make Comment");
         makeCommentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 makeCommentButtonActionPerformed(evt);
             }
         });
+
+        commentsPanel.setLayout(new javax.swing.BoxLayout(commentsPanel, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane2.setViewportView(commentsPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,40 +130,34 @@ public class PostView extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 1, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(likeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deletePostButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(likesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(makeCommentButton))
-                .addContainerGap(11, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(makeCommentButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(likesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 191, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(authorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(likeButton)
+                        .addComponent(deletePostButton)
                         .addComponent(makeCommentButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(authorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(likeButton)
-                                .addComponent(deletePostButton))
-                            .addComponent(likesLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(likesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -223,77 +215,29 @@ public class PostView extends javax.swing.JDialog {
         updateCommentsSection();
     }//GEN-LAST:event_makeCommentButtonActionPerformed
 
-    private void commentsTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_commentsTreeMouseClicked
-        if ( evt.getClickCount() == 2 && post.getSortedComments().size() > 0) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) commentsTree.getLastSelectedPathComponent();
-            if(node != null) {
-                Comment c = (Comment) node.getUserObject();
-                ReplyComment cm = new ReplyComment(parent, true, c, currentUser);
-                
-            }
-        }
-
-        updateCommentsSection();
-    }//GEN-LAST:event_commentsTreeMouseClicked
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
-    private javax.swing.JTree commentsTree;
+    private javax.swing.JPanel commentsPanel;
     private javax.swing.JTextArea contentArea;
     private javax.swing.JButton deletePostButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton likeButton;
     private javax.swing.JLabel likesLabel;
     private javax.swing.JButton makeCommentButton;
     // End of variables declaration//GEN-END:variables
 
-    private void expandAllNodes(JTree tree, int startingIndex, int rowCount) {
-        for (int i = startingIndex; i < rowCount; ++i) {
-            tree.expandRow(i);
-        }
-
-        if (tree.getRowCount() != rowCount) {
-            expandAllNodes(tree, rowCount, tree.getRowCount());
-        }
-    }
-
-    private void replies(Comment c, DefaultMutableTreeNode node) {
-        if (c.getReponses().isEmpty()) {
-            node.add(new DefaultMutableTreeNode(c));
-        } else {
-            for (Comment comment : c.getReponses()) {
-                DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(comment);
-                if (!comment.getReponses().isEmpty()) {
-
-                    replies(comment, newNode);
-                }
-                node.add(newNode);
-            }
-        }
-
-    }
-
     private void updateCommentsSection() {
-        boolean flag = false;
+        commentsPanel.removeAll();
 
-        DefaultTreeModel model = (DefaultTreeModel) commentsTree.getModel();
-        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-        root.removeAllChildren();
-
-        for (String key : post.getSortedComments()) {
-            Comment c = post.getCommentById(key);
-            DefaultMutableTreeNode commentNode = new DefaultMutableTreeNode(c);
-
-            if (!c.getReponses().isEmpty()) {
-                replies(c, commentNode);
-            }
-
-            root.add(commentNode);
+        for (Comment comment : this.post.getComments()) {
+            CommentView cv = new CommentView(comment, currentUser);
+            commentsPanel.add(cv);
         }
-        model.reload();
-        expandAllNodes(commentsTree, 0, commentsTree.getRowCount());
+        
+        commentsPanel.repaint();
+        commentsPanel.revalidate();
 
     }
 

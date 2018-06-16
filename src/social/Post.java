@@ -1,25 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package social;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
-/**
- *
- * @author bmvin
- */
 public class Post extends Uid {
 
     private User owner;
     private boolean isPublic;
     private String content;
-    private HashMap<String, Comment> comments;
-    private ArrayList<String> sortedComments;
+    private ArrayList<Comment> comments;
     private HashSet<String> likes;
 
     public Post(User owner, String content, boolean isPublic) {
@@ -27,8 +17,8 @@ public class Post extends Uid {
         this.content = content;
         this.isPublic = isPublic;
         this.likes = new HashSet<String>();
-        this.comments = new HashMap<String, Comment>();
-        this.sortedComments = new ArrayList<String>();
+        this.comments = new ArrayList<Comment>();
+
     }
 
     public int numLikes() {
@@ -72,16 +62,13 @@ public class Post extends Uid {
         return this.isPublic;
     }
 
-    public void addComment(Comment comment) {
-        if (!this.comments.containsKey(comment.getUuid()) && !isInSortedComments(comment.getUuid())) {
-            this.comments.put(comment.getUuid(), comment);
-            this.sortedComments.add(comment.getUuid());
-        }
+    public ArrayList<Comment> getComments() {
+        return this.comments;
     }
 
-    public boolean isInSortedComments(String key) {
-        for (String id : this.sortedComments) {
-            if (id.equals(key)) {
+    public boolean isInComments(Comment query) {
+        for (Comment comment : this.comments) {
+            if (comment.getUuid().equals(query.getUuid())) {
                 return true;
             }
         }
@@ -89,18 +76,42 @@ public class Post extends Uid {
         return false;
     }
 
-    /**
-     * @return the sortedComments
-     */
-    public ArrayList<String> getSortedComments() {
-        return sortedComments;
+    public void addComment(Comment comment) {
+        if (!isInComments(comment)) {
+            this.comments.add(0, comment);
+        }
+    }
+
+    public void debugComments() {
+        int i = 0;
+        for (Comment c : this.comments) {
+            System.out.println(i + " - " + c);
+            i++;
+        }
+    }
+
+    public void removeComment(Comment comment) {
+        if (isInComments(comment)) {
+            this.comments.remove(comment);
+        }
     }
 
     public Comment getCommentById(String id) {
-        if (this.comments.containsKey(id)) {
-            return this.comments.get(id);
+        for (Comment c : this.comments) {
+            if (c.getUuid().equals(id)) {
+                return c;
+            }
         }
-        
+
         return null;
     }
+
+    public int getCommentIndex(Comment comment) {
+        if (isInComments(comment)) {
+            return this.comments.indexOf(comment);
+        }
+
+        return -1;
+    }
+
 }

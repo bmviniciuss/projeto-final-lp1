@@ -28,23 +28,19 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="authorLabel" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="339" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="1" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <Component id="likeButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="deletePostButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="makeCommentButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="likesLabel" min="-2" pref="56" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="191" max="32767" attributes="0"/>
                   </Group>
+                  <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane3" min="-2" pref="315" max="-2" attributes="0"/>
-                  <Component id="makeCommentButton" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="11" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -52,28 +48,20 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="authorLabel" min="-2" pref="43" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" pref="142" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="makeCommentButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="likeButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deletePostButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="makeCommentButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="authorLabel" min="-2" pref="43" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane3" pref="0" max="32767" attributes="0"/>
-                          <Component id="jScrollPane1" pref="246" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                              <Component id="likeButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="deletePostButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="likesLabel" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <Component id="likesLabel" min="-2" pref="20" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane2" pref="280" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -120,29 +108,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="likeButtonActionPerformed"/>
       </Events>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane3">
-      <AuxValues>
-        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-      </AuxValues>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-      <SubComponents>
-        <Component class="javax.swing.JTree" name="commentsTree">
-          <Properties>
-            <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-              <TreeModel code="Comments"/>
-            </Property>
-            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Padr&#xe3;o"/>
-            </Property>
-            <Property name="toggleClickCount" type="int" value="20"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="commentsTreeMouseClicked"/>
-          </Events>
-        </Component>
-      </SubComponents>
-    </Container>
     <Component class="javax.swing.JButton" name="makeCommentButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Make Comment"/>
@@ -151,5 +116,17 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="makeCommentButtonActionPerformed"/>
       </Events>
     </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="commentsPanel">
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+            <Property name="axis" type="int" value="1"/>
+          </Layout>
+        </Container>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

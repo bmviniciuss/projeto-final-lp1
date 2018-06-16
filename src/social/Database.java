@@ -5,13 +5,12 @@ import java.util.HashMap;
 import utils.DataSerializer;
 import utils.Validators;
 
-
 /**
  *
  * @author bmviniciuss
  */
 public class Database implements Serializable {
-    
+
     public static final String APPLICATION_DATA = "application_data.ser";
 
     private HashMap<String, User> users;
@@ -21,11 +20,11 @@ public class Database implements Serializable {
         this.users = new HashMap<String, User>();
         this.authentication = new HashMap<String, String>();
     }
-    
+
     public void serializeData() {
         DataSerializer.serializeDatabase(Database.APPLICATION_DATA, this);
     }
-    
+
     /**
      * @return the users
      */
@@ -85,7 +84,6 @@ public class Database implements Serializable {
             this.authentication.put(key, password);
         }
     }
-
 
     public String getUserIdByEmail(String email) {
         for (String key : this.users.keySet()) {

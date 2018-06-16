@@ -1,31 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import social.Comment;
+import social.Post;
 import social.User;
 import utils.Validators;
 
-/**
- *
- * @author bmvin
- */
 public class ReplyComment extends javax.swing.JDialog {
 
     private Comment parentComment;
     private User currentUser;
+    private Post post;
 
     /**
      * Creates new form ReplyComment
+     *
+     * @param parent
+     * @param modal
+     * @param comment
+     * @param currentUser
+     * @param post
      */
-    public ReplyComment(java.awt.Frame parent, boolean modal, Comment comment, User currentUser) {
+    public ReplyComment(java.awt.Frame parent, boolean modal, Comment comment, User currentUser, Post post) {
         super(parent, modal);
         initComponents();
         this.currentUser = currentUser;
         this.parentComment = comment;
+        this.post = post;
+
+        parentCommentArea.setEditable(false);
+        parentCommentArea.setText(parentComment.toString());
+
+        if (currentUser != parentComment.getOwner()) {
+            deleteButton.setVisible(false);
+        }
         setLocationRelativeTo(parent);
         setVisible(true);
     }
@@ -44,6 +51,9 @@ public class ReplyComment extends javax.swing.JDialog {
         textArea = new javax.swing.JTextArea();
         replyButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        parentCommentArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -68,6 +78,18 @@ public class ReplyComment extends javax.swing.JDialog {
             }
         });
 
+        deleteButton.setText("Delete Comment");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
+        parentCommentArea.setColumns(20);
+        parentCommentArea.setLineWrap(true);
+        parentCommentArea.setRows(5);
+        jScrollPane2.setViewportView(parentCommentArea);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,26 +97,31 @@ public class ReplyComment extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(replyButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(exitButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 153, Short.MAX_VALUE)
+                        .addComponent(deleteButton))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(replyButton)
-                    .addComponent(exitButton))
+                    .addComponent(exitButton)
+                    .addComponent(deleteButton))
                 .addContainerGap())
         );
 
@@ -115,18 +142,31 @@ public class ReplyComment extends javax.swing.JDialog {
             System.out.println("EMPRY REPLY");
         }
 
-        Comment reply = new Comment(currentUser, content);
-        
+        Comment reply = new Comment(currentUser, content, parentComment.getUuid());
         parentComment.addResponse(reply);
+        post.addComment(reply);
+        
         this.dispose();
 
 
     }//GEN-LAST:event_replyButtonActionPerformed
 
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+
+//        post.removeCommentWithChilds(parentComment);
+        System.out.println("TODO");
+
+        this.dispose();
+
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton deleteButton;
     private javax.swing.JButton exitButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea parentCommentArea;
     private javax.swing.JButton replyButton;
     private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
