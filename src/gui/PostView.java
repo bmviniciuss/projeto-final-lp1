@@ -1,21 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gui;
 
 import java.awt.Frame;
-import java.util.Enumeration;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 import social.Comment;
 import social.Post;
 import social.User;
-import social.UserInteraction;
 import utils.WindowTitles;
 
 /**
@@ -44,18 +33,19 @@ public class PostView extends javax.swing.JDialog {
         setLocationRelativeTo(parent);
 
         deletePostButton.setVisible(false);
-        if (isOwner()) {
-            deletePostButton.setVisible(true);
-        }
 
         this.post = post;
         this.owner = owner;
         this.currentUser = currentUser;
         this.parent = parent;
 
+        if (isOwner()) {
+            deletePostButton.setVisible(true);
+        }
+
         updateLikeButtonVisibility();
 
-        authorLabel.setText("Author: " + this.owner.getName());
+        authorLabel.setText("Author: " + this.post.getOwner().getName());
         contentArea.setEditable(false);
         contentArea.setText(this.post.getContent());
 
@@ -165,9 +155,10 @@ public class PostView extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deletePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePostButtonActionPerformed
-        // TODO add your handling code here:
+        if (isOwner()) {
+            owner.removePost(post);
 
-        UserInteraction.deletePost(owner, post);
+        }
         dispose();
     }//GEN-LAST:event_deletePostButtonActionPerformed
 
@@ -183,7 +174,12 @@ public class PostView extends javax.swing.JDialog {
     }
 
     private boolean isOwner() {
-        return currentUser == owner;
+
+        if (owner.getUuid().equals(currentUser.getUuid()) || currentUser.getUuid().equals(post.getOwner().getUuid())) {
+            return true;
+        }
+        return false;
+
     }
 
     private void updateLikeButtonVisibility() {
@@ -232,10 +228,10 @@ public class PostView extends javax.swing.JDialog {
         commentsPanel.removeAll();
 
         for (Comment comment : this.post.getComments()) {
-            CommentView cv = new CommentView(comment, currentUser);
+            CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
             commentsPanel.add(cv);
         }
-        
+
         commentsPanel.repaint();
         commentsPanel.revalidate();
 

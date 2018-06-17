@@ -10,6 +10,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import social.Database;
+import social.Group;
 import social.User;
 import utils.Messages;
 import utils.Validators;
@@ -50,6 +51,9 @@ public class AuthView extends javax.swing.JFrame {
 
         // FRIENDS PANE
         showFriendsPanel();
+
+        // GROUPS PANE
+        showGroupPanel();
 
         // EXIT LISTENER
         this.addWindowListener(new WindowAdapter() {
@@ -95,6 +99,9 @@ public class AuthView extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         friendsList = new javax.swing.JList<>();
         groupsPanel = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        usersGroupList = new javax.swing.JList<>();
+        createGroupButton = new javax.swing.JButton();
         searchPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         nameSearchLabel = new javax.swing.JLabel();
@@ -102,6 +109,10 @@ public class AuthView extends javax.swing.JFrame {
         nameSearchButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         searchFriendsList = new javax.swing.JList<>();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        searchGroupsList = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         optionsPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         logoutButton = new javax.swing.JButton();
@@ -285,15 +296,42 @@ public class AuthView extends javax.swing.JFrame {
 
         tabPane.addTab("Friends", friendsPanel);
 
+        usersGroupList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        usersGroupList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usersGroupListMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(usersGroupList);
+
+        createGroupButton.setText("Create Group");
+        createGroupButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createGroupButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout groupsPanelLayout = new javax.swing.GroupLayout(groupsPanel);
         groupsPanel.setLayout(groupsPanelLayout);
         groupsPanelLayout.setHorizontalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 721, Short.MAX_VALUE)
+            .addGroup(groupsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+                    .addGroup(groupsPanelLayout.createSequentialGroup()
+                        .addComponent(createGroupButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         groupsPanelLayout.setVerticalGroup(
             groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 469, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, groupsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(createGroupButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tabPane.addTab("Groups", groupsPanel);
@@ -324,14 +362,28 @@ public class AuthView extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(searchFriendsList);
 
+        searchGroupsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane7.setViewportView(searchGroupsList);
+
+        jLabel1.setText("Find Friends:");
+
+        jLabel2.setText("Be part of a group:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(nameSearchLabel)
                         .addGap(18, 18, 18)
@@ -349,7 +401,13 @@ public class AuthView extends javax.swing.JFrame {
                     .addComponent(nameSearchField)
                     .addComponent(nameSearchLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
 
@@ -422,6 +480,7 @@ public class AuthView extends javax.swing.JFrame {
         String nameSearch = "";
 
         clearSearchFriendsList();
+        clearSeachGroupsList();
 
         //validate input
         nameSearch = nameSearchField.getText().trim();
@@ -442,12 +501,31 @@ public class AuthView extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, Messages.NO_USERS_FOUND_WITH_THAT_NAME, "Users Not Found", JOptionPane.WARNING_MESSAGE);
             }
+
+            HashMap<String, Group> groupSearchResult = this.db.searchGroupByName(nameSearch);
+            if (groupSearchResult != null) {
+                DefaultListModel<Group> gdlm = new DefaultListModel<Group>();
+                for (String groupKey : groupSearchResult.keySet()) {
+
+                    gdlm.addElement(groupSearchResult.get(groupKey));
+
+                }
+                searchGroupsList.setModel(gdlm);
+            } else {
+                JOptionPane.showMessageDialog(this, Messages.NO_GROUPS_FOUND_WITH_THAT_NAME, "Groups Not Found.", JOptionPane.WARNING_MESSAGE);
+            }
+
         }
     }
 
     private void nameSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearchButtonActionPerformed
         doNameSearch();
     }//GEN-LAST:event_nameSearchButtonActionPerformed
+
+    private void clearSeachGroupsList() {
+        DefaultListModel<Group> dlm = new DefaultListModel<>();
+        searchGroupsList.setModel(dlm);
+    }
 
     private void clearSearchFriendsList() {
         DefaultListModel<User> dlm = new DefaultListModel<User>();
@@ -539,12 +617,15 @@ public class AuthView extends javax.swing.JFrame {
         }
 
         content = postTextArea.getText();
+        if (Validators.checkNotEmptyStringNotNull(content)) {
+            // add post
+            Post post = new Post(currentUser, content, isPublic);
+            this.currentUser.addPost(post);
+            updatePostsPanel();
+            clearPostFields();
+        }
 
-        // add post
-        Post post = new Post(currentUser, content, isPublic);
-        this.currentUser.addPost(post);
-        updatePostsPanel();
-        clearPostFields();
+
     }//GEN-LAST:event_makePostButtonActionPerformed
 
     private void clearPostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPostButtonActionPerformed
@@ -560,8 +641,29 @@ public class AuthView extends javax.swing.JFrame {
                 PostView pv = new PostView(this, true, selectedPost, currentUser, currentUser);
                 updatePostsPanel();
             }
+        }
     }//GEN-LAST:event_postsListMouseClicked
-    }
+
+    private void createGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupButtonActionPerformed
+
+        CreateGroupDialog gd = new CreateGroupDialog(this, true, currentUser, this.db);
+        showGroupPanel();
+    }//GEN-LAST:event_createGroupButtonActionPerformed
+
+    private void usersGroupListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersGroupListMouseClicked
+
+        JList list = (JList) evt.getSource();
+        if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
+            int index = list.locationToIndex(evt.getPoint());
+            Group selectedGroup = (Group) list.getModel().getElementAt(index); 
+            if (selectedGroup != null) {
+                System.out.println("SELECTED GROUP: " + selectedGroup);
+                GroupView gv = new GroupView(this, true, selectedGroup, currentUser);
+                showGroupPanel();
+            }
+        }
+
+    }//GEN-LAST:event_usersGroupListMouseClicked
 
     private void clearPostFields() {
         postTextArea.setText("");
@@ -585,11 +687,14 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JLabel bioLabel;
     private javax.swing.JTextArea bioTextArea;
     private javax.swing.JButton clearPostButton;
+    private javax.swing.JButton createGroupButton;
     private javax.swing.JToggleButton editBioButton;
     private javax.swing.JButton exitButton;
     private javax.swing.JList<User> friendsList;
     private javax.swing.JPanel friendsPanel;
     private javax.swing.JPanel groupsPanel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -598,6 +703,8 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton makePostButton;
     private javax.swing.JLabel makePostLabel;
@@ -614,8 +721,10 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JCheckBox publicPostToggle;
     private javax.swing.JList<User> requetsList;
     private javax.swing.JList<User> searchFriendsList;
+    private javax.swing.JList<Group> searchGroupsList;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTabbedPane tabPane;
+    private javax.swing.JList<Group> usersGroupList;
     // End of variables declaration//GEN-END:variables
 
     // PROFILE PANE METHODS
@@ -651,5 +760,18 @@ public class AuthView extends javax.swing.JFrame {
         }
 
         postsList.setModel(postsModel);
+    }
+
+    private void showGroupPanel() {
+        System.out.println("GROUPS");
+        DefaultListModel<Group> groups = new DefaultListModel<>();
+
+        for (String key : this.currentUser.getGroups()) {
+            Group gp = this.db.getGroupById(key);
+            System.out.println("GP: " + gp);
+            groups.addElement(gp);
+        }
+
+        usersGroupList.setModel(groups);
     }
 }

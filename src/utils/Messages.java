@@ -37,8 +37,13 @@ public class Messages {
 
     // NAME SEARCH
     public static final String EMPTY_NAME_SEARCH_FIELD = "Search for a valid name.\n";
-    public static final String NO_USERS_FOUND_WITH_THAT_NAME = "No users found with thtat name.\n";
+    public static final String NO_USERS_FOUND_WITH_THAT_NAME = "No users found with that name.\n";
 
     // REQUESTS
     public static final String SENT_FRIEND_REQUEST = "has sent a friend request.\n";
+    
+    // POST
+    public static final String EMPTY_POST = "Empty Post";
+    public static final String EMPTY_POST_ERROR = "Post must not be empty.\n";
+    public static Object NO_GROUPS_FOUND_WITH_THAT_NAME = "No groups found with that name.\n";
 }

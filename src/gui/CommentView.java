@@ -1,45 +1,46 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gui;
 
+import javax.swing.JPanel;
 import social.Comment;
+import social.Post;
 import social.User;
 
-/**
- *
- * @author bmvin
- */
+
 public class CommentView extends javax.swing.JPanel {
-    
+
     private final Comment comment;
-    
+
     private final User origin;
+    private final Post post;
+    private final JPanel panel;
 
     /**
      * Creates new form CommentView
      *
      * @param comment
      * @param origin
+     * @param post
+     * @param panel
      */
-    public CommentView(Comment comment, User origin) {
+    public CommentView(Comment comment, User origin, Post post, JPanel panel) {
         initComponents();
         setVisible(true);
         this.comment = comment;
         this.origin = origin;
-        
+        this.post = post;
+        this.panel = panel;
+
         deleteButton.setVisible(false);
-        
+
         nameLabel.setText(comment.getOwner().getName());
         commentText.setEditable(false);
         commentText.setText(comment.getContent());
-        
+
         if (comment.getOwner().getUuid().equals(origin.getUuid())) {
             deleteButton.setVisible(true);
         }
-        
+
     }
 
     /**
@@ -61,6 +62,11 @@ public class CommentView extends javax.swing.JPanel {
         jScrollPane1.setViewportView(commentText);
 
         deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -89,6 +95,13 @@ public class CommentView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        this.post.removeComment(comment);
+        panel.remove(this);
+        panel.repaint();
+        panel.revalidate();
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea commentText;
@@ -96,4 +109,5 @@ public class CommentView extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel nameLabel;
     // End of variables declaration//GEN-END:variables
+
 }

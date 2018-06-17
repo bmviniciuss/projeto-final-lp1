@@ -26,6 +26,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="profilePic" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -33,6 +34,8 @@
                           <Component id="jScrollPane2" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="addFriendButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="postButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="blockUserButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -42,7 +45,6 @@
                           <Component id="nameLabel" alignment="0" pref="505" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="jScrollPane1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -63,6 +65,7 @@
                           <Component id="addFriendButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="blockUserButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="unblockUserButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="postButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -155,6 +158,14 @@
           <Dimension value="[150, 200]"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="postButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Post"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="postButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

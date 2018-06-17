@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Frame;
 import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -13,7 +14,7 @@ import utils.WindowTitles;
 import utils.Wrapers;
 
 public class PublicProfile extends javax.swing.JDialog {
-
+    private Frame parent;
     private User targetUser;
     private User originUser;
     private Database db;
@@ -33,6 +34,8 @@ public class PublicProfile extends javax.swing.JDialog {
         this.targetUser = target;
         this.originUser = origin;
         this.db = db;
+        this.parent = parent;
+
 
         setLocationRelativeTo(parent);
         setTitle(WindowTitles.usersNameWindowTitle(targetUser.getName()));
@@ -60,6 +63,7 @@ public class PublicProfile extends javax.swing.JDialog {
         jScrollPane2 = new javax.swing.JScrollPane();
         bioArea = new javax.swing.JTextArea();
         profilePic = new javax.swing.JLabel();
+        postButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -102,6 +106,13 @@ public class PublicProfile extends javax.swing.JDialog {
         profilePic.setMinimumSize(new java.awt.Dimension(150, 200));
         profilePic.setPreferredSize(new java.awt.Dimension(150, 200));
 
+        postButton.setText("Post");
+        postButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                postButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,6 +120,7 @@ public class PublicProfile extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -117,12 +129,13 @@ public class PublicProfile extends javax.swing.JDialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(addFriendButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(postButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(blockUserButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(unblockUserButton)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane1))
+                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -139,7 +152,8 @@ public class PublicProfile extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(addFriendButton)
                             .addComponent(blockUserButton)
-                            .addComponent(unblockUserButton))))
+                            .addComponent(unblockUserButton)
+                            .addComponent(postButton))))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
                 .addContainerGap())
@@ -150,7 +164,7 @@ public class PublicProfile extends javax.swing.JDialog {
 
     private void showInfo() {
         nameLabel.setText(this.targetUser.getName());
-        
+
         showProfilePicture();
 
         // set bio if exists.
@@ -173,27 +187,34 @@ public class PublicProfile extends javax.swing.JDialog {
 
     public void setAddFriendBlockFriendButtons() {
         // addFriend, blockUser buttons logic
+        // user is blocked
         if (this.originUser.userIsBlocked(this.targetUser.getUuid())) {
             blockUserButton.setVisible(false);
             addFriendButton.setVisible(false);
             unblockUserButton.setVisible(true);
+            postButton.setVisible(false);
         } else {
             if (this.targetUser.getRequests().contains(this.originUser.getUuid())) {
                 addFriendButton.setVisible(false);
+                postButton.setVisible(false);
             } else {
                 addFriendButton.setVisible(true);
+                postButton.setVisible(false);
             }
             blockUserButton.setVisible(true);
             unblockUserButton.setVisible(false);
+            postButton.setVisible(false);
         }
         // blocked by person
         if (this.targetUser.userIsBlocked(this.originUser.getUuid())) {
             addFriendButton.setVisible(false);
             blockUserButton.setVisible(false);
             unblockUserButton.setVisible(false);
+            postButton.setVisible(false);
         }
         if (this.originUser.getFriends().contains(this.targetUser.getUuid())) {
             addFriendButton.setVisible(false);
+            postButton.setVisible(true);
         }
     }
 
@@ -223,33 +244,37 @@ public class PublicProfile extends javax.swing.JDialog {
             int index = list.locationToIndex(evt.getPoint());
             Post selectedPost = (Post) list.getModel().getElementAt(index);
             if (selectedPost != null) {
-                PostView pd = new PostView(null, true, selectedPost, this.targetUser, this.originUser);
+                PostView pd = new PostView(parent, true, selectedPost, this.targetUser, this.originUser);
                 setUsersPosts();
             }
         }
     }//GEN-LAST:event_postsListMouseClicked
 
-    private void setUsersPosts() {
-        if(!targetUser.userIsBlocked(originUser.getUuid())) {
-        DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
+    private void postButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postButtonActionPerformed
+        // TODO add your handling code here:
+        AddPostDialog postDialog = new AddPostDialog(parent, true, originUser, targetUser);
+        setUsersPosts();
+    }//GEN-LAST:event_postButtonActionPerformed
 
-        for (String key : this.targetUser.getSortedPosts()) {
-            Post p = this.targetUser.getPostById(key);
-            // is friend. show everything
-            if (targetUser.isFriendWith(originUser.getUuid())) {
-                postsModel.addElement(p);
-            } else {
-                if (p.isPublic()) {
+    private void setUsersPosts() {
+        // ceck if user is not blocked
+        if (!targetUser.userIsBlocked(originUser.getUuid())) {
+            DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
+
+            for (String key : this.targetUser.getSortedPosts()) {
+                Post p = this.targetUser.getPostById(key);
+                // is friend. show everything
+                if (targetUser.isFriendWith(originUser.getUuid())) {
                     postsModel.addElement(p);
+                } else {
+                    if (p.isPublic()) {
+                        postsModel.addElement(p);
+                    }
                 }
             }
-        }
 
-        postsList.setModel(postsModel);
+            postsList.setModel(postsModel);
         }
-        
-        
-        
 
     }
 
@@ -261,6 +286,7 @@ public class PublicProfile extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JButton postButton;
     private javax.swing.JList<Post> postsList;
     private javax.swing.JLabel profilePic;
     private javax.swing.JButton unblockUserButton;

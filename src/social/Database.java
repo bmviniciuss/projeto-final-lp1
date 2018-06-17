@@ -15,10 +15,12 @@ public class Database implements Serializable {
 
     private HashMap<String, User> users;
     private HashMap<String, String> authentication;
+    private HashMap<String, Group> groups;
 
     public Database() {
         this.users = new HashMap<String, User>();
         this.authentication = new HashMap<String, String>();
+        this.groups = new HashMap<String, Group>();
     }
 
     public void serializeData() {
@@ -127,5 +129,51 @@ public class Database implements Serializable {
             return null;
         }
 
+    }
+
+    /**
+     * @return the groups
+     */
+    public HashMap<String, Group> getGroups() {
+        return groups;
+    }
+
+    /**
+     * @param groups the groups to set
+     */
+    public void setGroups(HashMap<String, Group> groups) {
+        this.groups = groups;
+    }
+
+    public void addGroup(Group group) {
+        if (!this.groups.containsKey(group.getUuid())) {
+            this.groups.put(group.getUuid(), group);
+            System.out.println("ADD");
+        }
+    }
+
+    public Group getGroupById(String id) {
+        if (this.groups.containsKey(id)) {
+            return this.groups.get(id);
+        }
+
+        return null;
+    }
+
+    public HashMap<String, Group> searchGroupByName(String name) {
+        HashMap<String, Group> searchResults = new HashMap<String, Group>();
+
+        for (String key : this.groups.keySet()) {
+            Group gp = getGroupById(key);
+            if (gp.getGroupName().toLowerCase().trim().startsWith(name.trim().toLowerCase())) {
+                searchResults.put(gp.getUuid(), gp);
+            }
+        }
+
+        if (!searchResults.isEmpty()) {
+            return searchResults;
+        } else {
+            return null;
+        }
     }
 }
