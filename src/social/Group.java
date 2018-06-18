@@ -43,6 +43,12 @@ public class Group extends Uid {
             this.groupMembers.put(user.getUuid(), user);
         }
     }
+    
+    public void addToRequest(User u) {
+        if(!isInRequests(u)) {
+            this.groupRequests.add(u);
+        }
+    }
 
     private void removeFromRequests(User user) {
         if (isInRequests(user)) {
@@ -142,4 +148,13 @@ public class Group extends Uid {
 
         return null;
     }
+    
+    public int numberRequests() {
+        return this.groupRequests.size();
+    }
+    
+    public HashSet<User> getRequests() {
+        return this.groupRequests;
+    }
+    
 }

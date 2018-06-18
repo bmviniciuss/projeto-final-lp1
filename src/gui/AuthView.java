@@ -363,6 +363,11 @@ public class AuthView extends javax.swing.JFrame {
         jScrollPane2.setViewportView(searchFriendsList);
 
         searchGroupsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        searchGroupsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchGroupsListMouseClicked(evt);
+            }
+        });
         jScrollPane7.setViewportView(searchGroupsList);
 
         jLabel1.setText("Find Friends:");
@@ -655,15 +660,32 @@ public class AuthView extends javax.swing.JFrame {
         JList list = (JList) evt.getSource();
         if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
             int index = list.locationToIndex(evt.getPoint());
-            Group selectedGroup = (Group) list.getModel().getElementAt(index); 
+            Group selectedGroup = (Group) list.getModel().getElementAt(index);
             if (selectedGroup != null) {
-                System.out.println("SELECTED GROUP: " + selectedGroup);
-                GroupView gv = new GroupView(this, true, selectedGroup, currentUser);
+
+                GroupView gv = new GroupView(this, true, selectedGroup, currentUser, this.db);
+
                 showGroupPanel();
             }
         }
 
     }//GEN-LAST:event_usersGroupListMouseClicked
+
+    private void searchGroupsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchGroupsListMouseClicked
+        JList list = (JList) evt.getSource();
+        if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
+            int index = list.locationToIndex(evt.getPoint());
+            Group selectedGroup = (Group) list.getModel().getElementAt(index);
+            if (selectedGroup != null) {
+                if (selectedGroup.isMember(currentUser.getUuid())) {
+                    GroupView gv = new GroupView(this, true, selectedGroup, currentUser, this.db);
+                } else {
+                    GroupRequestDialog grd = new GroupRequestDialog(this, true, selectedGroup, currentUser);
+
+                }
+            }
+        }
+    }//GEN-LAST:event_searchGroupsListMouseClicked
 
     private void clearPostFields() {
         postTextArea.setText("");
