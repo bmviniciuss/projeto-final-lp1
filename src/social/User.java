@@ -7,11 +7,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class User extends Uid implements Serializable {
-    
+
     private String name;
     private String email;
     private String bio;
     private File profilePicture;
+    private ArrayList<PhotoPost> photos;
     private HashSet<String> friends;
     private HashSet<String> requests;
     private HashSet<String> blockedUsers;
@@ -21,7 +22,7 @@ public class User extends Uid implements Serializable {
     private HashSet<String> groups;
     private HashSet<String> groupsPending;
     private boolean publicProfile;
-    
+
     public User(String name, String email) {
         super();
         this.name = name;
@@ -37,12 +38,13 @@ public class User extends Uid implements Serializable {
         this.posts = new HashMap<String, Post>();
         this.groups = new HashSet<String>();
         this.groupsPending = new HashSet<String>();
+        this.photos = new ArrayList<PhotoPost>();
     }
-    
+
     public String getBio() {
         return this.bio;
     }
-    
+
     public void setBio(String bio) {
         if (bio != null && !bio.equals("")) {
             this.bio = bio;
@@ -62,7 +64,7 @@ public class User extends Uid implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     @Override
     public String toString() {
         return this.getName() + " - " + this.email;
@@ -88,7 +90,7 @@ public class User extends Uid implements Serializable {
     public void setProfilePicture(File profilePicture) {
         this.profilePicture = profilePicture;
     }
-    
+
     public File getProfilePic() {
         return this.profilePicture;
     }
@@ -99,102 +101,102 @@ public class User extends Uid implements Serializable {
     public HashSet<String> getFriends() {
         return friends;
     }
-    
+
     public HashSet<String> getRequests() {
         return this.requests;
     }
-    
+
     public boolean userIsBlocked(String key) {
         return this.blockedUsers.contains(key);
     }
-    
+
     public void blockUser(String key) {
         if (!this.blockedUsers.contains(key)) {
             this.blockedUsers.add(key);
         }
     }
-    
+
     public void unblockUser(String key) {
         if (this.blockedUsers.contains(key)) {
             this.blockedUsers.remove(key);
         }
     }
-    
+
     public void sendRequest(String originUser) {
         if (!this.friends.contains(originUser) && !this.blockedUsers.contains(originUser) && !this.requests.contains(originUser)) {
             this.requests.add(originUser);
         }
     }
-    
+
     public void acceptRequest(String originKey) {
         if (this.requests.contains(originKey) && !this.friends.contains(originKey)) {
             this.friends.add(originKey);
             this.requests.remove(originKey);
         }
     }
-    
+
     public void addFriend(String targetKey) {
         if (!this.friends.contains(targetKey)) {
             this.friends.add(targetKey);
         }
     }
-    
+
     public HashSet<String> getPendingRequests() {
         return this.pendingRequests;
     }
-    
+
     public boolean isPending(String key) {
         return this.pendingRequests.contains(key);
     }
-    
+
     public void addRequestToPending(String targetKey) {
         if (!this.pendingRequests.contains(targetKey)) {
             this.pendingRequests.add(targetKey);
         }
     }
-    
+
     public void removeFromPending(String targetKey) {
         if (isPending(targetKey)) {
             this.pendingRequests.remove(targetKey);
         }
     }
-    
+
     public HashMap<String, Post> getPosts() {
         return this.posts;
     }
-    
+
     public void addPost(Post post) {
         if (!this.posts.containsKey(post.getUuid()) && !isInSorted(post.getUuid())) {
             this.posts.put(post.getUuid(), post);
             this.sortedPosts.add(0, post.getUuid());
         }
     }
-    
+
     public void removePost(Post post) {
         if (this.posts.containsKey(post.getUuid()) && isInSorted(post.getUuid())) {
             this.posts.remove(post.getUuid());
             this.sortedPosts.remove(post.getUuid());
         }
     }
-    
+
     public Post getPostById(String key) {
         if (this.posts.containsKey(key)) {
             return this.posts.get(key);
         }
         return null;
     }
-    
+
     public boolean isFriendWith(String id) {
         return this.friends.contains(id);
     }
-    
+
     public boolean isInSorted(String id) {
         for (String postId : this.sortedPosts) {
             if (postId.equals(id)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -218,16 +220,45 @@ public class User extends Uid implements Serializable {
     public HashSet<String> getGroupsPending() {
         return groupsPending;
     }
-    
+
     public void removeGroup(String id) {
         if (this.groups.contains(id)) {
             this.groups.remove(id);
         }
     }
-    
+
     public void addGroup(String id) {
         if (!this.groups.contains(id)) {
             this.groups.add(id);
+        }
+    }
+
+    /**
+     * @return the photos
+     */
+    public ArrayList<PhotoPost> getPhotos() {
+        return photos;
+    }
+
+    public boolean isInPhotos(String id) {
+        for (PhotoPost pp : this.photos) {
+            if (pp.getUuid().equals(id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void addPhoto(PhotoPost photo) {
+        if (!isInPhotos(photo.getUuid())) {
+            this.photos.add(photo);
+        }
+    }
+    
+    public void removePhoto(PhotoPost pp) {
+        if(isInPhotos(pp.getUuid())) {
+            this.photos.remove(pp);
         }
     }
 }

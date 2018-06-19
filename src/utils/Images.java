@@ -60,6 +60,12 @@ public class Images {
         }
 
     }
+    public static Icon photoPost(File file) {
+        ImageIcon imageIcon = new ImageIcon(file.getPath());
+        Image img = imageIcon.getImage();
+        Image newImg = img.getScaledInstance(476, 301, Image.SCALE_DEFAULT);
+        return new ImageIcon(newImg);
+    }
 
     public static Icon profilePic(File file) {
         ImageIcon imageIcon = new ImageIcon(file.getPath());

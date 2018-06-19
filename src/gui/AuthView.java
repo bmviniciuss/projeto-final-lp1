@@ -1,5 +1,6 @@
 package gui;
 
+import Listeners.DeletePostListener;
 import Listeners.EditBioListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -11,6 +12,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import social.Database;
 import social.Group;
+import social.PhotoPost;
 import social.User;
 import utils.Messages;
 import utils.Validators;
@@ -45,6 +47,9 @@ public class AuthView extends javax.swing.JFrame {
         updateProfilePanel();
 
         updatePostsPanel();
+
+        // PHOTO PANE
+        updatePhotosPanel();
 
         // NOTIFICATION PANE
         showNotificationPanel();
@@ -102,6 +107,8 @@ public class AuthView extends javax.swing.JFrame {
         jScrollPane8 = new javax.swing.JScrollPane();
         usersGroupList = new javax.swing.JList<>();
         createGroupButton = new javax.swing.JButton();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        photosPanel = new javax.swing.JPanel();
         searchPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         nameSearchLabel = new javax.swing.JLabel();
@@ -162,7 +169,12 @@ public class AuthView extends javax.swing.JFrame {
             }
         });
 
-        addPhotoButton.setText("Add Photo");
+        addPhotoButton.setText("Post a Photo");
+        addPhotoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addPhotoButtonActionPerformed(evt);
+            }
+        });
 
         publicPostToggle.setText("Public Post");
 
@@ -335,6 +347,11 @@ public class AuthView extends javax.swing.JFrame {
         );
 
         tabPane.addTab("Groups", groupsPanel);
+
+        photosPanel.setLayout(new javax.swing.BoxLayout(photosPanel, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane9.setViewportView(photosPanel);
+
+        tabPane.addTab("Photos", jScrollPane9);
 
         nameSearchLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         nameSearchLabel.setText("Search:");
@@ -687,6 +704,31 @@ public class AuthView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_searchGroupsListMouseClicked
 
+    private void addPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPhotoButtonActionPerformed
+        // ADD PHOTO
+        boolean publicPhoto = false;
+
+        if (publicPostToggle.isSelected()) {
+            publicPhoto = true;
+        }
+
+        File file = new social.ImagePicker(this).pickImage();
+
+        if (file != null) {
+            Images.uploadUserImage(file, currentUser);
+
+            File uploadedPhoto;
+            uploadedPhoto = new File(Images.getUserPath(currentUser) + file.getName());
+
+            PhotoPost pp = new PhotoPost(currentUser, uploadedPhoto, publicPhoto);
+            currentUser.addPhoto(pp);
+
+        }
+        
+        updatePhotosPanel();
+        db.serializeData();
+    }//GEN-LAST:event_addPhotoButtonActionPerformed
+
     private void clearPostFields() {
         postTextArea.setText("");
         publicPostToggle.setSelected(false);
@@ -727,6 +769,7 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton makePostButton;
     private javax.swing.JLabel makePostLabel;
@@ -736,6 +779,7 @@ public class AuthView extends javax.swing.JFrame {
     private javax.swing.JLabel nameSearchLabel;
     private javax.swing.JPanel notificationPanel;
     private javax.swing.JPanel optionsPanel;
+    private javax.swing.JPanel photosPanel;
     private javax.swing.JTextArea postTextArea;
     private javax.swing.JList<Post> postsList;
     private javax.swing.JPanel profilePane;
@@ -785,15 +829,36 @@ public class AuthView extends javax.swing.JFrame {
     }
 
     private void showGroupPanel() {
-        System.out.println("GROUPS");
         DefaultListModel<Group> groups = new DefaultListModel<>();
 
         for (String key : this.currentUser.getGroups()) {
             Group gp = this.db.getGroupById(key);
-            System.out.println("GP: " + gp);
             groups.addElement(gp);
         }
 
         usersGroupList.setModel(groups);
+    }
+
+    private void updatePhotosPanel() {
+        photosPanel.removeAll();
+
+        for (PhotoPost pp : this.currentUser.getPhotos()) {
+            if(pp != null) {
+                PhotoPostView ppv = new PhotoPostView(pp, currentUser);
+                ppv.setListener(new DeletePostListener() {
+                    @Override
+                    public void deletePost(Post p, User currentUser) {
+                        currentUser.removePhoto(pp);
+                        updatePhotosPanel();
+                    }
+                });
+                photosPanel.add(ppv);
+            
+            }
+        }
+
+        photosPanel.repaint();
+        photosPanel.revalidate();
+
     }
 }
