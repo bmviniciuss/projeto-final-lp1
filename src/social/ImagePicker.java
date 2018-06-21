@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- *
+ * Create a Image File Picker
  * @author bmvin
  */
 public class ImagePicker {
@@ -22,8 +22,8 @@ public class ImagePicker {
     }
 
     /**
-     *
-     * @return
+     * Create a File Picker.
+     * @return selected file
      */
     public File pickImage() {
         // Filter

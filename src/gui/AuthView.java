@@ -830,7 +830,7 @@ public class AuthView extends javax.swing.JFrame {
                 textPostsModel.addElement(p);
             } else if (p instanceof PhotoPost) {
                 PhotoPost pp = (PhotoPost) p;
-                PhotoPostView ppv = new PhotoPostView(pp, currentUser);
+                PhotoPostView ppv = new PhotoPostView(pp, currentUser, currentUser, null);
                 ppv.setListener(new DeletePostListener() {
                     @Override
                     public void deletePost(Post p, User currentUser) {

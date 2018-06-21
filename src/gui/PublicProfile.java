@@ -75,6 +75,7 @@ public class PublicProfile extends javax.swing.JDialog {
         profilePic = new javax.swing.JLabel();
         postButton = new javax.swing.JButton();
         postPhotoButton = new javax.swing.JButton();
+        photos = new javax.swing.JPanel();
         photosPane = new javax.swing.JScrollPane();
         photosPanel = new javax.swing.JPanel();
 
@@ -191,7 +192,28 @@ public class PublicProfile extends javax.swing.JDialog {
         photosPanel.setLayout(new javax.swing.BoxLayout(photosPanel, javax.swing.BoxLayout.Y_AXIS));
         photosPane.setViewportView(photosPanel);
 
-        jTabbedPane1.addTab("Photos", photosPane);
+        javax.swing.GroupLayout photosLayout = new javax.swing.GroupLayout(photos);
+        photos.setLayout(photosLayout);
+        photosLayout.setHorizontalGroup(
+            photosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 691, Short.MAX_VALUE)
+            .addGroup(photosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(photosLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(photosPane, javax.swing.GroupLayout.PREFERRED_SIZE, 691, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        photosLayout.setVerticalGroup(
+            photosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 433, Short.MAX_VALUE)
+            .addGroup(photosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(photosLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(photosPane, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane1.addTab("Photos", photos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -326,7 +348,7 @@ public class PublicProfile extends javax.swing.JDialog {
             Post pp = new PhotoPost(originUser, null, false, uploadedPhoto);
             targetUser.addPost(pp);
         }
-
+        setUsersPosts();
     }//GEN-LAST:event_postPhotoButtonActionPerformed
 
     /**
@@ -354,11 +376,12 @@ public class PublicProfile extends javax.swing.JDialog {
                     PhotoPost pp = (PhotoPost) p;
 
                     if (targetUser.isFriendWith(originUser.getUuid()) || pp.isPublic()) {
-                        PhotoPostView ppv = new PhotoPostView(pp, originUser);
+                        PhotoPostView ppv = new PhotoPostView(pp, targetUser, originUser, null);
                         ppv.setListener(new DeletePostListener() {
                             @Override
                             public void deletePost(Post p, User currentUser) {
-                                currentUser.removePost(pp);
+                                targetUser.removePost(pp);
+                                photosPanel.remove(ppv);
                                 setUsersPosts();
                             }
                         });
@@ -400,6 +423,7 @@ public class PublicProfile extends javax.swing.JDialog {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel mainPane;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JPanel photos;
     private javax.swing.JScrollPane photosPane;
     private javax.swing.JPanel photosPanel;
     private javax.swing.JButton postButton;

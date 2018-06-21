@@ -73,10 +73,11 @@ public class GroupView extends javax.swing.JDialog {
         jScrollPane4 = new javax.swing.JScrollPane();
         membersList = new javax.swing.JList<>();
         blockedUsersButton = new javax.swing.JButton();
-        groupFeed = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
+        feed = new javax.swing.JPanel();
+        feedScroll = new javax.swing.JScrollPane();
         gpFeedPanel = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        photoPane = new javax.swing.JPanel();
+        photoScroll = new javax.swing.JScrollPane();
         photosPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -185,31 +186,56 @@ public class GroupView extends javax.swing.JDialog {
         jTabbedPane1.addTab("Main", mainPane);
 
         gpFeedPanel.setLayout(new javax.swing.BoxLayout(gpFeedPanel, javax.swing.BoxLayout.Y_AXIS));
-        jScrollPane5.setViewportView(gpFeedPanel);
+        feedScroll.setViewportView(gpFeedPanel);
 
-        javax.swing.GroupLayout groupFeedLayout = new javax.swing.GroupLayout(groupFeed);
-        groupFeed.setLayout(groupFeedLayout);
-        groupFeedLayout.setHorizontalGroup(
-            groupFeedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(groupFeedLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+        javax.swing.GroupLayout feedLayout = new javax.swing.GroupLayout(feed);
+        feed.setLayout(feedLayout);
+        feedLayout.setHorizontalGroup(
+            feedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 672, Short.MAX_VALUE)
+            .addGroup(feedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(feedLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(feedScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
-        groupFeedLayout.setVerticalGroup(
-            groupFeedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(groupFeedLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+        feedLayout.setVerticalGroup(
+            feedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 515, Short.MAX_VALUE)
+            .addGroup(feedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(feedLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(feedScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        jTabbedPane1.addTab("Feed", groupFeed);
+        jTabbedPane1.addTab("Feed", feed);
 
         photosPanel.setLayout(new javax.swing.BoxLayout(photosPanel, javax.swing.BoxLayout.Y_AXIS));
-        jScrollPane3.setViewportView(photosPanel);
+        photoScroll.setViewportView(photosPanel);
 
-        jTabbedPane1.addTab("Photos", jScrollPane3);
+        javax.swing.GroupLayout photoPaneLayout = new javax.swing.GroupLayout(photoPane);
+        photoPane.setLayout(photoPaneLayout);
+        photoPaneLayout.setHorizontalGroup(
+            photoPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 672, Short.MAX_VALUE)
+            .addGroup(photoPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(photoPaneLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(photoScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        photoPaneLayout.setVerticalGroup(
+            photoPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 515, Short.MAX_VALUE)
+            .addGroup(photoPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(photoPaneLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(photoScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane1.addTab("Photos", photoPane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -235,7 +261,7 @@ public class GroupView extends javax.swing.JDialog {
             group.addPost(p);
             postArea.setText("");
         }
-        
+
         populateFeed();
     }//GEN-LAST:event_postButtonActionPerformed
 
@@ -275,7 +301,7 @@ public class GroupView extends javax.swing.JDialog {
             uploadedPhoto = new File(Images.getPath(group) + file.getName());
 
             PhotoPost pp = new PhotoPost(currentUser, group, false, uploadedPhoto);
-            group.addPhoto(pp);
+            group.addPost(pp);
 
         }
 
@@ -287,20 +313,21 @@ public class GroupView extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton blockedUsersButton;
+    private javax.swing.JPanel feed;
+    private javax.swing.JScrollPane feedScroll;
     private javax.swing.JTextArea gpDesc;
     private javax.swing.JPanel gpFeedPanel;
     private javax.swing.JLabel gpName;
-    private javax.swing.JPanel groupFeed;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel mainPane;
     private javax.swing.JList<User> membersList;
+    private javax.swing.JPanel photoPane;
+    private javax.swing.JScrollPane photoScroll;
     private javax.swing.JPanel photosPanel;
     private javax.swing.JTextArea postArea;
     private javax.swing.JButton postButton;
@@ -332,8 +359,6 @@ public class GroupView extends javax.swing.JDialog {
 
         // update members
         showMembers();
-
-        
 
     }
 
@@ -372,21 +397,22 @@ public class GroupView extends javax.swing.JDialog {
                 });
                 gpFeedPanel.add(spv);
             } else if (p instanceof PhotoPost) {
-                System.out.println("TEM FOTO");
                 PhotoPost pp = (PhotoPost) p;
-                PhotoPostView ppv = new PhotoPostView(pp, currentUser);
+                PhotoPostView ppv = new PhotoPostView(pp, currentUser, currentUser, group);
                 ppv.setListener(new DeletePostListener() {
                     @Override
                     public void deletePost(Post p, User currentUser) {
-                        group.removePhoto(pp);
+                        group.removePost(pp, currentUser);
                         populateFeed();
                     }
                 });
                 photosPanel.add(ppv);
             }
         }
+
         gpFeedPanel.repaint();
         gpFeedPanel.revalidate();
+        
         photosPanel.repaint();
         photosPanel.revalidate();
     }

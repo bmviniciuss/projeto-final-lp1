@@ -238,7 +238,6 @@ public class PostView extends javax.swing.JDialog {
         commentsPanel.removeAll();
 
         for (Comment comment : this.post.getComments()) {
-            System.out.println("COMMENT: " + comment);
             CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
             commentsPanel.add(cv);
         }

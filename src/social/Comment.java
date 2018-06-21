@@ -11,7 +11,7 @@ public class Comment extends Uid {
     private final String content;
 
     /**
-     *
+     * Create a comment.
      * @param owner
      * @param content
      */
@@ -36,7 +36,7 @@ public class Comment extends Uid {
     }
 
     /**
-     *
+     * Comment String representation.
      * @return String representation for the object
      */
     @Override

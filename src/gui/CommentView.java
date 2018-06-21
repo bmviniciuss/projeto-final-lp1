@@ -39,7 +39,7 @@ public class CommentView extends javax.swing.JPanel {
         commentText.setEditable(false);
         commentText.setText(comment.getContent());
 
-        if (comment.getOwner().getUuid().equals(this.origin.getUuid())) {
+        if (comment.getOwner().getUuid().equals(this.origin.getUuid()) ||  post.getOwner().getUuid().equals(origin.getUuid())) {
             deleteButton.setVisible(true);
         }
 

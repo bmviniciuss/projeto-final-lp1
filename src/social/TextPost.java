@@ -1,7 +1,7 @@
 package social;
 
 /**
- *
+ * Text Based Post
  * @author bmvin
  */
 public class TextPost extends Post {
@@ -9,7 +9,7 @@ public class TextPost extends Post {
     private String content;
 
     /**
-     *
+     * Create a Text Based comment.
      * @param owner
      * @param inGroup
      * @param isPublic
@@ -21,8 +21,8 @@ public class TextPost extends Post {
     }
 
     /**
-     *
-     * @return
+     * Get Text representation
+     * @return String representation
      */
     @Override
     public String toString() {
@@ -30,8 +30,8 @@ public class TextPost extends Post {
     }
 
     /**
-     *
-     * @return
+     * Get Post's Content
+     * @return post's content
      */
     public String getContent() {
         return this.content;

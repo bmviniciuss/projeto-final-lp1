@@ -25,7 +25,7 @@ public class PhotoPost extends Post {
 
     /**
      *
-     * @return
+     * @return image file
      */
     public File getFile() {
         return this.file;

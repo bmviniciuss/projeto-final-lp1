@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
+ * Post Abstract class
  *
  * @author bmvin
  */
@@ -16,6 +17,7 @@ public abstract class Post extends Uid {
     private HashSet<String> likes;
 
     /**
+     * Super class constructor
      *
      * @param owner
      * @param inGroup
@@ -31,30 +33,34 @@ public abstract class Post extends Uid {
     }
 
     /**
+     * Get, if exists, post's group.
      *
-     * @return
+     * @return post's group or null
      */
     public Group getGroup() {
         return this.inGroup;
     }
 
     /**
+     * Get number os likes.
      *
-     * @return
+     * @return number of likes
      */
     public int numLikes() {
         return this.likes.size();
     }
 
     /**
+     * Get the number of comments
      *
-     * @return
+     * @return number of comments
      */
     public int numComments() {
         return this.comments.size();
     }
 
     /**
+     * User liked a Post
      *
      * @param userKey
      */
@@ -65,6 +71,7 @@ public abstract class Post extends Uid {
     }
 
     /**
+     * User disliked a Post.
      *
      * @param userKey
      */
@@ -75,42 +82,47 @@ public abstract class Post extends Uid {
     }
 
     /**
+     * Check if User has liked a Post.
      *
      * @param key
-     * @return
+     * @return true if has Liked.
      */
     public boolean hasLiked(String key) {
         return this.likes.contains(key);
     }
 
     /**
+     * Get Post's owner
      *
-     * @return
+     * @return post's owner
      */
     public User getOwner() {
         return this.owner;
     }
 
     /**
+     * Get Post visibility.
      *
-     * @return
+     * @return True if is public.
      */
     public boolean isPublic() {
         return this.isPublic;
     }
 
     /**
+     * Get Post's Comments
      *
-     * @return
+     * @return post's comments
      */
     public ArrayList<Comment> getComments() {
         return this.comments;
     }
 
     /**
+     * Check if given comment is in Comments
      *
      * @param query
-     * @return
+     * @return true if given input is in comments.
      */
     public boolean isInComments(Comment query) {
         for (Comment comment : this.comments) {
@@ -123,6 +135,7 @@ public abstract class Post extends Uid {
     }
 
     /**
+     * Add a comment to post.
      *
      * @param comment
      */
@@ -133,17 +146,7 @@ public abstract class Post extends Uid {
     }
 
     /**
-     *
-     */
-    public void debugComments() {
-        int i = 0;
-        for (Comment c : this.comments) {
-            System.out.println(i + " - " + c);
-            i++;
-        }
-    }
-
-    /**
+     * Remove a particular comment from post.
      *
      * @param comment
      */
@@ -154,9 +157,10 @@ public abstract class Post extends Uid {
     }
 
     /**
+     * Get Comment by given commentId
      *
      * @param id
-     * @return
+     * @return comment by id
      */
     public Comment getCommentById(String id) {
         for (Comment c : this.comments) {
@@ -169,6 +173,7 @@ public abstract class Post extends Uid {
     }
 
     /**
+     * Get comment index;
      *
      * @param comment
      * @return

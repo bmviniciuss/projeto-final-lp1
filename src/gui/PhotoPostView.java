@@ -7,7 +7,9 @@ package gui;
 
 import Listeners.DeletePostListener;
 import social.Comment;
+import social.Group;
 import social.PhotoPost;
+import social.Post;
 import social.User;
 import utils.Images;
 
@@ -19,18 +21,24 @@ public class PhotoPostView extends javax.swing.JPanel {
 
     private DeletePostListener listener;
     private PhotoPost pp;
+    private User owner;
     private User currentUser;
+    private Group group;
 
     /**
      * Creates new form PhotoPostView
      *
      * @param pp
+     * @param owner
      * @param currentUser
+     * @param group
      */
-    public PhotoPostView(PhotoPost pp, User currentUser) {
+    public PhotoPostView(PhotoPost pp, User owner, User currentUser, Group group) {
         initComponents();
         this.pp = pp;
+        this.owner = owner;
         this.currentUser = currentUser;
+        this.group = group;
 
         authorName.setText(pp.getOwner().getName());
 
@@ -161,6 +169,7 @@ public class PhotoPostView extends javax.swing.JPanel {
     }//GEN-LAST:event_dislikeButtonActionPerformed
 
     private void deletePhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePhotoButtonActionPerformed
+        
         if (listener != null) {
             listener.deletePost(pp, currentUser);
         }
@@ -186,8 +195,8 @@ public class PhotoPostView extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void buttonsVisibility() {
-        User owner = pp.getOwner();
-        if (currentUser.getUuid().equals(owner.getUuid())) {
+        User ppOwner = pp.getOwner();
+        if (currentUser.getUuid().equals(ppOwner.getUuid())) {
             deletePhotoButton.setVisible(true);
         } else {
             deletePhotoButton.setVisible(false);
@@ -198,6 +207,16 @@ public class PhotoPostView extends javax.swing.JPanel {
         } else {
             likeButton.setVisible(true);
             dislikeButton.setVisible(false);
+        }
+
+        if (isOwner()) {
+            deletePhotoButton.setVisible(true);
+        }
+
+        if (group != null) {
+            if (group.isAdmin(currentUser.getUuid())) {
+                deletePhotoButton.setVisible(true);
+            }
         }
     }
 
@@ -224,5 +243,13 @@ public class PhotoPostView extends javax.swing.JPanel {
 
         commentsPanel.repaint();
         commentsPanel.revalidate();
+    }
+
+    private boolean isOwner() {
+
+        if (owner.getUuid().equals(currentUser.getUuid()) || currentUser.getUuid().equals(pp.getOwner().getUuid())) {
+            return true;
+        }
+        return false;
     }
 }

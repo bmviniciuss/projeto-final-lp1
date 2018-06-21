@@ -22,7 +22,7 @@ public class Database implements Serializable {
     private HashMap<String, Group> groups;
 
     /**
-     *
+     * Create a database instance.
      */
     public Database() {
         this.users = new HashMap<String, User>();
@@ -45,7 +45,7 @@ public class Database implements Serializable {
     }
 
     /**
-     *
+     * Check if there is a user with given id
      * @param key
      * @return true is key is in users.
      */
@@ -64,7 +64,7 @@ public class Database implements Serializable {
     }
 
     /**
-     *
+     * Check if there is a user with given email.
      * @param email
      * @return true if has a user with email.
      */
@@ -94,7 +94,7 @@ public class Database implements Serializable {
     }
 
     /**
-     *
+     * Get a userId, if exists, with given email.
      * @param email
      * @return userId with given email.
      */

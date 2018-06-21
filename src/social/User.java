@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- *
+ * Create a User.
  * @author bmvin
  */
 public class User extends Uid implements Serializable {

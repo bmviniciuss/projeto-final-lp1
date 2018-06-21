@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 /**
  * Group Class.
+ *
  * @author bmvin
  */
 public class Group extends Uid {
@@ -21,6 +22,7 @@ public class Group extends Uid {
 
     /**
      * Create a Group.
+     *
      * @param name
      * @param desc
      * @param firstAdmin
@@ -42,6 +44,7 @@ public class Group extends Uid {
 
     /**
      * Check if there is a user with given id.
+     *
      * @param id
      * @return true if there is a user with that id.
      */
@@ -51,6 +54,7 @@ public class Group extends Uid {
 
     /**
      * Check if UserId is in Admin HashMap.
+     *
      * @param id
      * @return true if if is in Admin HashMap
      */
@@ -59,7 +63,8 @@ public class Group extends Uid {
     }
 
     /**
-     *  Check if a given user is in requests.
+     * Check if a given user is in requests.
+     *
      * @param user
      * @return true if user is.
      */
@@ -69,7 +74,8 @@ public class Group extends Uid {
 
     /**
      * Add a given user to Members
-     * @param user 
+     *
+     * @param user
      */
     private void addUserAsMember(User user) {
         if (!isMember(user.getUuid())) {
@@ -79,6 +85,7 @@ public class Group extends Uid {
 
     /**
      * Add given user to requests.
+     *
      * @param u
      */
     public void addToRequest(User u) {
@@ -89,7 +96,8 @@ public class Group extends Uid {
 
     /**
      * Remove a user from requests.
-     * @param user 
+     *
+     * @param user
      */
     private void removeFromRequests(User user) {
         if (isInRequests(user)) {
@@ -99,6 +107,7 @@ public class Group extends Uid {
 
     /**
      * Check if id is in post.
+     *
      * @param id
      * @return true if it is.
      */
@@ -113,6 +122,7 @@ public class Group extends Uid {
     }
 
     /**
+     * Remove post from group.
      *
      * @param p
      * @param doingAction
@@ -128,6 +138,7 @@ public class Group extends Uid {
     }
 
     /**
+     * Add a post to the group.
      *
      * @param post
      */
@@ -138,6 +149,7 @@ public class Group extends Uid {
     }
 
     /**
+     * Accept a group request.
      *
      * @param admin
      * @param user
@@ -149,6 +161,11 @@ public class Group extends Uid {
         }
     }
 
+    /**
+     * Helper method to delete a user from group.
+     *
+     * @param id
+     */
     private void deleteUser(String id) {
         if (isMember(id)) {
             this.groupMembers.remove(id);
@@ -156,6 +173,7 @@ public class Group extends Uid {
     }
 
     /**
+     * Remove a user from group.
      *
      * @param admin
      * @param user
@@ -196,7 +214,7 @@ public class Group extends Uid {
 
     /**
      *
-     * @return
+     * @return group's string representation.
      */
     @Override
     public String toString() {
@@ -211,6 +229,7 @@ public class Group extends Uid {
     }
 
     /**
+     * Get a member by given id.
      *
      * @param id
      * @return
@@ -224,24 +243,21 @@ public class Group extends Uid {
     }
 
     /**
-     *
-     * @return
+     * @return number os requests
      */
     public int numberRequests() {
         return this.groupRequests.size();
     }
 
     /**
-     *
-     * @return
+     * @return requests
      */
     public HashSet<User> getRequests() {
         return this.groupRequests;
     }
 
     /**
-     *
-     * @return
+     * @return blocked Users
      */
     public HashSet<String> getBlocked() {
         return this.blockedUsers;
@@ -258,7 +274,7 @@ public class Group extends Uid {
     }
 
     /**
-     *
+     * Add given id to blocked.
      * @param id
      * @return
      */
@@ -267,7 +283,7 @@ public class Group extends Uid {
     }
 
     /**
-     *
+     * Remove an id from blocked.
      * @param id
      */
     public void removeFromBlocked(String id) {
@@ -277,7 +293,7 @@ public class Group extends Uid {
     }
 
     /**
-     *
+     * Make a user Admin.
      * @param userId
      * @param user
      */
@@ -288,16 +304,16 @@ public class Group extends Uid {
     }
 
     /**
-     *
-     * @return
+     * Get Group's owner.
+     * @return group's owner
      */
     public User getOwner() {
         return this.groupOwner;
     }
 
     /**
-     *
-     * @return
+     * Get group photos
+     * @return photos
      */
     public ArrayList<PhotoPost> getPhotos() {
         ArrayList<PhotoPost> photos = new ArrayList<PhotoPost>();
@@ -308,26 +324,6 @@ public class Group extends Uid {
         }
 
         return photos;
-    }
-
-    /**
-     *
-     * @param photo
-     */
-    public void addPhoto(PhotoPost photo) {
-        if (!isInPost(photo.getUuid())) {
-            this.groupPosts.add(photo);
-        }
-    }
-
-    /**
-     *
-     * @param pp
-     */
-    public void removePhoto(PhotoPost pp) {
-        if (isInPost(pp.getUuid())) {
-            this.groupPosts.remove(pp);
-        }
     }
 
 }
