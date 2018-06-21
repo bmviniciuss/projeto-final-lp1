@@ -1,17 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Listeners;
 
 import social.Post;
 import social.User;
 
-/**
- *
- * @author bmvin
- */
 public interface DeletePostListener {
+
+    /**
+     * Send the post to the parent component. to delete.
+     * @param p
+     * @param currentUser
+     */
     public void deletePost(Post p, User currentUser);
 }

@@ -67,7 +67,7 @@ public class PhotoPostView extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         commentsPanel = new javax.swing.JPanel();
 
-        authorName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        authorName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jScrollPane2.setViewportView(photoLabel);
 
@@ -142,7 +142,7 @@ public class PhotoPostView extends javax.swing.JPanel {
                     .addComponent(likeslabel)
                     .addComponent(commentButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

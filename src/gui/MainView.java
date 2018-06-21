@@ -4,7 +4,7 @@ import social.Database;
 import utils.DataSerializer;
 
 /**
- *
+ * Main App Class
  * @author bmvin
  */
 public class MainView extends javax.swing.JFrame {
@@ -13,6 +13,7 @@ public class MainView extends javax.swing.JFrame {
 
     /**
      * Creates new form MainView
+     * @param db
      */
     public MainView(Database db) {
         initComponents();
@@ -98,6 +99,9 @@ public class MainView extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Run application.
+     */
     public void runApp() {
         new PublicView(this.db).setVisible(true);
     }

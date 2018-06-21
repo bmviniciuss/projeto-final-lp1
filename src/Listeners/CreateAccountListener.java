@@ -1,16 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Listeners;
 
 import social.User;
 
-/**
- *
- * @author bmvin
- */
+
 public interface CreateAccountListener {
+
+    /**
+     * Send a User to a parent Component.
+     * @param user
+     * @param password
+     */
     public void sendUser(User user, String password);
 }

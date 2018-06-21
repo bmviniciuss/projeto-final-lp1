@@ -16,6 +16,11 @@ import utils.Validators;
 import utils.WindowTitles;
 import utils.Wrapers;
 
+/**
+ * Creates a Public Profile View
+ *
+ * @author bmvin
+ */
 public class PublicProfile extends javax.swing.JDialog {
 
     private Frame parent;
@@ -219,6 +224,9 @@ public class PublicProfile extends javax.swing.JDialog {
         setUsersPosts();
     }
 
+    /**
+     *
+     */
     public void setBioArea() {
         bioArea.setEditable(false);
         String bio = targetUser.getBio();
@@ -227,6 +235,9 @@ public class PublicProfile extends javax.swing.JDialog {
         }
     }
 
+    /**
+     *
+     */
     public void setAddFriendBlockFriendButtons() {
         // addFriend, blockUser buttons logic
         // user is blocked
@@ -318,6 +329,9 @@ public class PublicProfile extends javax.swing.JDialog {
 
     }//GEN-LAST:event_postPhotoButtonActionPerformed
 
+    /**
+     * Show targetUser's posts.
+     */
     private void setUsersPosts() {
         // ceck if user is not blocked
         if (!targetUser.userIsBlocked(originUser.getUuid())) {
@@ -364,6 +378,18 @@ public class PublicProfile extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Display tagertUser's profile picture.
+     */
+    private void showProfilePicture() {
+        File pic = targetUser.getProfilePic();
+        if (pic == null || !pic.exists()) {
+            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found."));
+        } else {
+            profilePic.setIcon(Images.profilePic(pic));
+            profilePic.setText(null);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendButton;
@@ -383,13 +409,4 @@ public class PublicProfile extends javax.swing.JDialog {
     private javax.swing.JButton unblockUserButton;
     // End of variables declaration//GEN-END:variables
 
-    private void showProfilePicture() {
-        File pic = targetUser.getProfilePic();
-        if (pic == null || !pic.exists()) {
-            profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found."));
-        } else {
-            profilePic.setIcon(Images.profilePic(pic));
-            profilePic.setText(null);
-        }
-    }
 }

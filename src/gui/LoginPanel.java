@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gui;
 
 import utils.Validators;
@@ -11,7 +7,7 @@ import Listeners.LoginListener;
 import utils.Messages;
 
 /**
- *
+ * Create Login Panel with login input fields
  * @author bmvin
  */
 public class LoginPanel extends javax.swing.JPanel {
@@ -25,6 +21,10 @@ public class LoginPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     *
+     * @param listener
+     */
     public void setListener(LoginListener listener) {
         this.loginListener = listener;
     }
@@ -137,7 +137,6 @@ public class LoginPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
         // CLEAN FIELDS
         emailField.setText("");
         passwordField.setText("");

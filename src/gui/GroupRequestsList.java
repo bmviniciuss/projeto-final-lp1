@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import javax.swing.DefaultListModel;
@@ -11,6 +6,7 @@ import social.Group;
 import social.User;
 
 /**
+ * Group's requests list.
  *
  * @author bmvin
  */
@@ -21,6 +17,11 @@ public class GroupRequestsList extends javax.swing.JDialog {
 
     /**
      * Creates new form GroupRequestsList
+     *
+     * @param parent
+     * @param modal
+     * @param group
+     * @param currentUser
      */
     public GroupRequestsList(java.awt.Frame parent, boolean modal, User currentUser, Group group) {
         super(parent, modal);
@@ -116,14 +117,9 @@ public class GroupRequestsList extends javax.swing.JDialog {
         populateList();
     }//GEN-LAST:event_requestsListMouseClicked
 
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList<User> requestsList;
-    // End of variables declaration//GEN-END:variables
-
+    /**
+     * Populate requests list.
+     */
     private void populateList() {
         DefaultListModel<User> requests = new DefaultListModel<User>();
         for (User u : group.getRequests()) {
@@ -138,4 +134,12 @@ public class GroupRequestsList extends javax.swing.JDialog {
             dispose();
         }
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton closeButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<User> requestsList;
+    // End of variables declaration//GEN-END:variables
+
 }

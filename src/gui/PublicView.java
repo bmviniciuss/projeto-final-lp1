@@ -14,7 +14,7 @@ import social.User;
 import utils.Messages;
 
 /*
- *
+ * Create A public View to CreateAccount or Login.
  * @author bmvin
  */
 public class PublicView extends javax.swing.JFrame {

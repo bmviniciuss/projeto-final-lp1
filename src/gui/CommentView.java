@@ -1,4 +1,3 @@
-
 package gui;
 
 import javax.swing.JPanel;
@@ -6,7 +5,10 @@ import social.Comment;
 import social.Post;
 import social.User;
 
-
+/**
+ * View for a Comment.
+ * @author bmvin
+ */
 public class CommentView extends javax.swing.JPanel {
 
     private final Comment comment;
@@ -37,10 +39,9 @@ public class CommentView extends javax.swing.JPanel {
         commentText.setEditable(false);
         commentText.setText(comment.getContent());
 
-        if (comment.getOwner().getUuid().equals(origin.getUuid())) {
+        if (comment.getOwner().getUuid().equals(this.origin.getUuid())) {
             deleteButton.setVisible(true);
         }
-        
 
     }
 

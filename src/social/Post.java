@@ -3,6 +3,10 @@ package social;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ *
+ * @author bmvin
+ */
 public abstract class Post extends Uid {
 
     private User owner;
@@ -26,46 +30,88 @@ public abstract class Post extends Uid {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public Group getGroup() {
         return this.inGroup;
     }
 
+    /**
+     *
+     * @return
+     */
     public int numLikes() {
         return this.likes.size();
     }
 
+    /**
+     *
+     * @return
+     */
     public int numComments() {
         return this.comments.size();
     }
 
+    /**
+     *
+     * @param userKey
+     */
     public void likePost(String userKey) {
         if (!this.likes.contains(userKey)) {
             this.likes.add(userKey);
         }
     }
 
+    /**
+     *
+     * @param userKey
+     */
     public void removeLike(String userKey) {
         if (this.likes.contains(userKey)) {
             this.likes.remove(userKey);
         }
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public boolean hasLiked(String key) {
         return this.likes.contains(key);
     }
 
+    /**
+     *
+     * @return
+     */
     public User getOwner() {
         return this.owner;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isPublic() {
         return this.isPublic;
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<Comment> getComments() {
         return this.comments;
     }
 
+    /**
+     *
+     * @param query
+     * @return
+     */
     public boolean isInComments(Comment query) {
         for (Comment comment : this.comments) {
             if (comment.getUuid().equals(query.getUuid())) {
@@ -76,12 +122,19 @@ public abstract class Post extends Uid {
         return false;
     }
 
+    /**
+     *
+     * @param comment
+     */
     public void addComment(Comment comment) {
         if (!isInComments(comment)) {
             this.comments.add(0, comment);
         }
     }
 
+    /**
+     *
+     */
     public void debugComments() {
         int i = 0;
         for (Comment c : this.comments) {
@@ -90,12 +143,21 @@ public abstract class Post extends Uid {
         }
     }
 
+    /**
+     *
+     * @param comment
+     */
     public void removeComment(Comment comment) {
         if (isInComments(comment)) {
             this.comments.remove(comment);
         }
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Comment getCommentById(String id) {
         for (Comment c : this.comments) {
             if (c.getUuid().equals(id)) {
@@ -106,6 +168,11 @@ public abstract class Post extends Uid {
         return null;
     }
 
+    /**
+     *
+     * @param comment
+     * @return
+     */
     public int getCommentIndex(Comment comment) {
         if (isInComments(comment)) {
             return this.comments.indexOf(comment);

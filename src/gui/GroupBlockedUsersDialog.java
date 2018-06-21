@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import java.awt.Frame;
@@ -13,6 +8,7 @@ import social.Group;
 import social.User;
 
 /**
+ * Group's Blocked users list Dialog.
  *
  * @author bmvin
  */
@@ -118,14 +114,9 @@ public class GroupBlockedUsersDialog extends javax.swing.JDialog {
 
     }//GEN-LAST:event_blockedListMouseClicked
 
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList<User> blockedList;
-    private javax.swing.JButton exitButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    // End of variables declaration//GEN-END:variables
-
+    /*
+    * Show Dialog's info
+     */
     private void showInfo() {
         if (!(currentGroup.getBlocked().size() > 0)) {
             dispose();
@@ -135,6 +126,9 @@ public class GroupBlockedUsersDialog extends javax.swing.JDialog {
         }
     }
 
+    /*
+    * Populate Users list
+     */
     private void populateList() {
         DefaultListModel<User> users = new DefaultListModel<>();
 
@@ -147,4 +141,12 @@ public class GroupBlockedUsersDialog extends javax.swing.JDialog {
 
         blockedList.setModel(users);
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<User> blockedList;
+    private javax.swing.JButton exitButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration//GEN-END:variables
+
 }

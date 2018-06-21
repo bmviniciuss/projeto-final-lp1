@@ -7,7 +7,7 @@ import social.User;
 import utils.WindowTitles;
 
 /**
- *
+ * Post View.
  * @author bmvin
  */
 public class PostView extends javax.swing.JDialog {
@@ -231,6 +231,32 @@ public class PostView extends javax.swing.JDialog {
         updatePostLikes();
     }//GEN-LAST:event_dislikeButtonActionPerformed
 
+    /**
+     * Update post's comment section.
+     */
+    private void updateCommentsSection() {
+        commentsPanel.removeAll();
+
+        for (Comment comment : this.post.getComments()) {
+            System.out.println("COMMENT: " + comment);
+            CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
+            commentsPanel.add(cv);
+        }
+
+        commentsPanel.repaint();
+        commentsPanel.revalidate();
+
+    }
+    
+    /**
+     * Display View's information.
+     */
+    private void showInfo() {
+        authorLabel.setText(this.post.getOwner().getName());
+        contentArea.setEditable(false);
+        contentArea.setText(this.post.getContent());
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
@@ -245,25 +271,6 @@ public class PostView extends javax.swing.JDialog {
     private javax.swing.JButton makeCommentButton;
     // End of variables declaration//GEN-END:variables
 
-    private void updateCommentsSection() {
-        commentsPanel.removeAll();
-
-        for (Comment comment : this.post.getComments()) {
-            System.out.println("COMMENT: " + comment);
-            CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
-            commentsPanel.add(cv);
-        }
-
-        commentsPanel.repaint();
-        commentsPanel.revalidate();
-
-    }
-
-    private void showInfo() {
-        authorLabel.setText(this.post.getOwner().getName());
-        contentArea.setEditable(false);
-        contentArea.setText(this.post.getContent());
-
-    }
+    
 
 }

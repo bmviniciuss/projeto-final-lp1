@@ -5,6 +5,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ *
+ * @author bmvin
+ */
 public class User extends Uid implements Serializable {
 
     private String name;
@@ -19,6 +23,11 @@ public class User extends Uid implements Serializable {
     private HashSet<String> groups;
     private boolean publicProfile;
 
+    /**
+     *
+     * @param name
+     * @param email
+     */
     public User(String name, String email) {
         super();
         this.name = name;
@@ -34,10 +43,18 @@ public class User extends Uid implements Serializable {
         this.groups = new HashSet<String>();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getBio() {
         return this.bio;
     }
 
+    /**
+     *
+     * @param bio
+     */
     public void setBio(String bio) {
         if (bio != null && !bio.equals("")) {
             this.bio = bio;
@@ -58,6 +75,10 @@ public class User extends Uid implements Serializable {
         this.email = email;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return this.getName() + " - " + this.email;
@@ -84,6 +105,10 @@ public class User extends Uid implements Serializable {
         this.profilePicture = profilePicture;
     }
 
+    /**
+     *
+     * @return
+     */
     public File getProfilePic() {
         return this.profilePicture;
     }
@@ -95,32 +120,57 @@ public class User extends Uid implements Serializable {
         return friends;
     }
 
+    /**
+     *
+     * @return
+     */
     public HashSet<String> getRequests() {
         return this.requests;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public boolean userIsBlocked(String key) {
         return this.blockedUsers.contains(key);
     }
 
+    /**
+     *
+     * @param key
+     */
     public void blockUser(String key) {
         if (!this.blockedUsers.contains(key)) {
             this.blockedUsers.add(key);
         }
     }
 
+    /**
+     *
+     * @param key
+     */
     public void unblockUser(String key) {
         if (this.blockedUsers.contains(key)) {
             this.blockedUsers.remove(key);
         }
     }
 
+    /**
+     *
+     * @param originUser
+     */
     public void sendRequest(String originUser) {
         if (!this.friends.contains(originUser) && !this.blockedUsers.contains(originUser) && !this.requests.contains(originUser)) {
             this.requests.add(originUser);
         }
     }
 
+    /**
+     *
+     * @param originKey
+     */
     public void acceptRequest(String originKey) {
         if (this.requests.contains(originKey) && !this.friends.contains(originKey)) {
             this.friends.add(originKey);
@@ -128,32 +178,58 @@ public class User extends Uid implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param targetKey
+     */
     public void addFriend(String targetKey) {
         if (!this.friends.contains(targetKey)) {
             this.friends.add(targetKey);
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public HashSet<String> getPendingRequests() {
         return this.pendingRequests;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public boolean isPending(String key) {
         return this.pendingRequests.contains(key);
     }
 
+    /**
+     *
+     * @param targetKey
+     */
     public void addRequestToPending(String targetKey) {
         if (!this.pendingRequests.contains(targetKey)) {
             this.pendingRequests.add(targetKey);
         }
     }
 
+    /**
+     *
+     * @param targetKey
+     */
     public void removeFromPending(String targetKey) {
         if (isPending(targetKey)) {
             this.pendingRequests.remove(targetKey);
         }
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public boolean isFriendWith(String id) {
         return this.friends.contains(id);
     }
@@ -165,22 +241,38 @@ public class User extends Uid implements Serializable {
         return groups;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void removeGroup(String id) {
         if (this.groups.contains(id)) {
             this.groups.remove(id);
         }
     }
 
+    /**
+     *
+     * @param id
+     */
     public void addGroup(String id) {
         if (!this.groups.contains(id)) {
             this.groups.add(id);
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<Post> getPosts() {
         return this.posts;
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<PhotoPost> getPhotos() {
         ArrayList<PhotoPost> photos = new ArrayList<PhotoPost>();
 
@@ -193,6 +285,11 @@ public class User extends Uid implements Serializable {
         return photos;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public boolean isInPost(String id) {
         for (Post p : this.posts) {
             if (p.getUuid().equals(id)) {
@@ -202,6 +299,11 @@ public class User extends Uid implements Serializable {
         return false;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public Post getPostById(String key) {
         for (Post p : this.posts) {
             if (p.getUuid().equals(key)) {
@@ -211,6 +313,10 @@ public class User extends Uid implements Serializable {
         return null;
     }
 
+    /**
+     *
+     * @param post
+     */
     public void addPost(Post post) {
         if (!isInPost(post.getUuid())) {
             this.posts.add(post);
@@ -218,6 +324,10 @@ public class User extends Uid implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param post
+     */
     public void removePost(Post post) {
         if (isInPost(post.getUuid())) {
             this.posts.remove(post);

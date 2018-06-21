@@ -1,4 +1,3 @@
-
 package gui;
 
 import social.Comment;
@@ -6,22 +5,33 @@ import social.Post;
 import social.User;
 import utils.Validators;
 
+/**
+ * Add a Comment Dialog
+ * @author bmvin
+ */
 public class AddComment extends javax.swing.JDialog {
+
     private User currentUser;
     private Post currentPost;
+
     /**
      * Creates new form AddComent
+     *
+     * @param parent
+     * @param modal
+     * @param currentPost
+     * @param currentUser
      */
     public AddComment(java.awt.Frame parent, boolean modal, User currentUser, Post currentPost) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
-        
+
         this.currentUser = currentUser;
         this.currentPost = currentPost;
-        
+
         setVisible(true);
-        
+
     }
 
     /**
@@ -97,16 +107,17 @@ public class AddComment extends javax.swing.JDialog {
 
     private void makeCommentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeCommentButtonActionPerformed
         String content = "";
-        
+
         content = commentTextArea.getText().trim();
-        if(!Validators.checkNotEmptyStringNotNull(content)) {
-            System.out.println("EMPTY");
+        if (Validators.checkNotEmptyStringNotNull(content)) {
+            // not empty
+            Comment comment = new Comment(currentUser, content);
+
+            currentPost.addComment(comment);
+            this.dispose();
         }
-        
-        Comment comment = new Comment(currentUser, content, null);
-        
-        currentPost.addComment(comment);
-        this.dispose();
+
+
     }//GEN-LAST:event_makeCommentButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed

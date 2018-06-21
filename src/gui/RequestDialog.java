@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import java.io.File;
@@ -14,6 +9,7 @@ import utils.WindowTitles;
 import utils.Wrapers;
 
 /**
+ * Friends request Dialog.
  *
  * @author bmvin
  */
@@ -24,6 +20,7 @@ public class RequestDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form RequestDialog
+     *
      * @param parent
      * @param modal
      * @param origin
@@ -34,13 +31,13 @@ public class RequestDialog extends javax.swing.JDialog {
         initComponents();
         this.origin = origin;
         this.target = target;
-        
+
         setTitle(WindowTitles.requestTitle(origin.getName()));
         nameLabel.setText(this.origin.getName());
         messageLabel.setText(Messages.SENT_FRIEND_REQUEST);
-        
+
         showProfilePicture();
-        
+
         setLocationRelativeTo(parent);
         setVisible(true);
     }
@@ -137,15 +134,9 @@ public class RequestDialog extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_ignoreButtonActionPerformed
 
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton acceptButton;
-    private javax.swing.JButton ignoreButton;
-    private javax.swing.JLabel messageLabel;
-    private javax.swing.JLabel nameLabel;
-    private javax.swing.JLabel profilePic;
-    // End of variables declaration//GEN-END:variables
-
+    /**
+     * Show originUser's profile picture
+     */
     private void showProfilePicture() {
         File pic = origin.getProfilePic();
         if (pic == null || !pic.exists()) {
@@ -155,4 +146,13 @@ public class RequestDialog extends javax.swing.JDialog {
             profilePic.setText(null);
         }
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton acceptButton;
+    private javax.swing.JButton ignoreButton;
+    private javax.swing.JLabel messageLabel;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JLabel profilePic;
+    // End of variables declaration//GEN-END:variables
+
 }

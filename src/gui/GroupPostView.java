@@ -6,6 +6,10 @@ import social.Group;
 import social.TextPost;
 import social.User;
 
+/**
+ *
+ * @author bmvin
+ */
 public class GroupPostView extends javax.swing.JPanel {
 
     private final TextPost post;
@@ -18,6 +22,7 @@ public class GroupPostView extends javax.swing.JPanel {
      *
      * @param post
      * @param currentUser
+     * @param gp
      */
     public GroupPostView(TextPost post, User currentUser, Group gp) {
         initComponents();
@@ -204,6 +209,10 @@ public class GroupPostView extends javax.swing.JPanel {
         }
     }
 
+    /**
+     *
+     * @param listener
+     */
     public void setListener(DeletePostListener listener) {
         this.listener = listener;
     }

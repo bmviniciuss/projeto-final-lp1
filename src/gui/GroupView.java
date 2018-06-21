@@ -14,6 +14,10 @@ import social.TextPost;
 import social.User;
 import utils.Images;
 
+/**
+ *
+ * @author bmvin
+ */
 public class GroupView extends javax.swing.JDialog {
 
     private Frame parentFrame;

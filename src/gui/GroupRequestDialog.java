@@ -1,19 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import social.Group;
 import social.User;
 
 /**
+ * Group Request Dialog.
  *
  * @author bmvin
  */
 public class GroupRequestDialog extends javax.swing.JDialog {
-    
+
     private final Group group;
     private final User currentUser;
 
@@ -28,10 +24,10 @@ public class GroupRequestDialog extends javax.swing.JDialog {
     public GroupRequestDialog(java.awt.Frame parent, boolean modal, Group group, User currentUser) {
         super(parent, modal);
         initComponents();
-        
+
         this.group = group;
         this.currentUser = currentUser;
-        
+
         showInfo();
         showButtons();
         setLocationRelativeTo(parent);
@@ -128,8 +124,31 @@ public class GroupRequestDialog extends javax.swing.JDialog {
         group.addToRequest(currentUser);
         dispose();
     }//GEN-LAST:event_sendButtonActionPerformed
+    
+    /**
+     * Display dialog's information
+     */
+    private void showInfo() {
+        setTitle(group.getGroupName() + " - " + group.getGroupDescription());
+        groupNameLabel.setText(group.getGroupName());
+        groupDescArea.setText(group.getGroupDescription());
+        groupDescArea.setEditable(false);
+    }
+    /**
+     * Check buttons visibility
+     */
+    private void showButtons() {
+        sendButton.setVisible(true);
+        messageText.setVisible(false);
+        if (group.isInRequests(currentUser)) {
+            sendButton.setVisible(false);
+            messageText.setVisible(true);
+        }
 
-
+        if (group.isInBlocked(currentUser.getUuid())) {
+            sendButton.setVisible(false);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exitButton;
     private javax.swing.JTextArea groupDescArea;
@@ -140,23 +159,4 @@ public class GroupRequestDialog extends javax.swing.JDialog {
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
 
-    private void showInfo() {
-        setTitle(group.getGroupName() + " - " + group.getGroupDescription());
-        groupNameLabel.setText(group.getGroupName());
-        groupDescArea.setText(group.getGroupDescription());
-        groupDescArea.setEditable(false);
-    }
-    
-    private void showButtons() {
-        sendButton.setVisible(true);
-        messageText.setVisible(false);
-        if (group.isInRequests(currentUser)) {
-            sendButton.setVisible(false);
-            messageText.setVisible(true);
-        }
-        
-        if(group.isInBlocked(currentUser.getUuid())) {
-            sendButton.setVisible(false);
-        }
-    }
 }

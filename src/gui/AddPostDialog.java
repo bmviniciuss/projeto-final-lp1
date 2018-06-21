@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gui;
 
 import javax.swing.JOptionPane;
@@ -13,7 +9,7 @@ import utils.Messages;
 import utils.Validators;
 
 /**
- *
+ * Add Post at target user dialog.
  * @author bmvin
  */
 public class AddPostDialog extends javax.swing.JDialog {
@@ -32,11 +28,13 @@ public class AddPostDialog extends javax.swing.JDialog {
     public AddPostDialog(java.awt.Frame parent, boolean modal, User originUser, User targetUser) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(parent);
-        setTitle(targetUser.getName());
-        nameLabel.setText("Post to: " + targetUser.getName());
         this.originUser = originUser;
         this.targetUser = targetUser;
+        
+        setLocationRelativeTo(parent);
+        setTitle(targetUser.getName());
+        
+        nameLabel.setText("Post to: " + targetUser.getName());
         setVisible(true);
     }
 
@@ -109,18 +107,15 @@ public class AddPostDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void postButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postButtonActionPerformed
-        // TODO add your handling code here:
         String content = "";
         String warnings = "";
 
         content = postArea.getText().trim();
         if (!Validators.checkNotEmptyStringNotNull(content)) {
-            System.out.println("EMPTY");
             warnings += Messages.EMPTY_POST_ERROR;
         }
 

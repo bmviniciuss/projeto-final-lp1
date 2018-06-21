@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gui;
 
 import social.Database;
@@ -10,7 +6,7 @@ import social.Group;
 import social.User;
 
 /**
- *
+ * Create Group Dialog.
  * @author bmvin
  */
 public class CreateGroupDialog extends javax.swing.JDialog {

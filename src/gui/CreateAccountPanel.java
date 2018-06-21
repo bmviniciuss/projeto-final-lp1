@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gui;
 
 import utils.Validators;
@@ -12,7 +8,7 @@ import social.User;
 import utils.Messages;
 
 /**
- *
+ * Panel with create account fields
  * @author bmvin
  */
 public class CreateAccountPanel extends javax.swing.JPanel {
@@ -26,6 +22,10 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * Set CreateAccountListener to send the information to the parent component.
+     * @param listener
+     */
     public void setListener(CreateAccountListener listener) {
         this.listener = listener;
     }
@@ -123,6 +123,8 @@ public class CreateAccountPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    // Validate the inputs
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         // TODO add your handling code here:
         String name = "", email = "", password = "", passwordConfirmation = "";
@@ -166,11 +168,13 @@ public class CreateAccountPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
         // CLEAR ALL FIELDS
         clearFields();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Clear all input fields
+     */
     public void clearFields() {
         nameField.setText("");
         emailField.setText("");

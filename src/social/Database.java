@@ -6,23 +6,33 @@ import utils.DataSerializer;
 import utils.Validators;
 
 /**
+ * Datbase Class.
  *
  * @author bmviniciuss
  */
 public class Database implements Serializable {
 
+    /**
+     * database's filename.
+     */
     public static final String APPLICATION_DATA = "application_data.ser";
 
     private HashMap<String, User> users;
     private HashMap<String, String> authentication;
     private HashMap<String, Group> groups;
 
+    /**
+     *
+     */
     public Database() {
         this.users = new HashMap<String, User>();
         this.authentication = new HashMap<String, String>();
         this.groups = new HashMap<String, Group>();
     }
 
+    /**
+     * Serialize the database.
+     */
     public void serializeData() {
         DataSerializer.serializeDatabase(Database.APPLICATION_DATA, this);
     }
@@ -34,18 +44,16 @@ public class Database implements Serializable {
         return users;
     }
 
+    /**
+     *
+     * @param key
+     * @return true is key is in users.
+     */
     public User getUserById(String key) {
         if (this.users.containsKey(key)) {
             return this.users.get(key);
         }
         return null;
-    }
-
-    /**
-     * @param users the users to set
-     */
-    private void setUsers(HashMap<String, User> users) {
-        this.users = users;
     }
 
     /**
@@ -56,12 +64,10 @@ public class Database implements Serializable {
     }
 
     /**
-     * @param authentication the authentication to set
+     *
+     * @param email
+     * @return true if has a user with email.
      */
-    private void setAuthentication(HashMap<String, String> authentication) {
-        this.authentication = authentication;
-    }
-
     public boolean hasUserWithEmail(String email) {
         for (String key : this.users.keySet()) {
             User user = this.users.get(key);
@@ -87,6 +93,11 @@ public class Database implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param email
+     * @return userId with given email.
+     */
     public String getUserIdByEmail(String email) {
         for (String key : this.users.keySet()) {
             User u = this.users.get(key);
@@ -97,6 +108,13 @@ public class Database implements Serializable {
         return null;
     }
 
+    /**
+     * Validate a login.
+     *
+     * @param email
+     * @param password
+     * @return a user if login is valid.
+     */
     public User validateLogin(String email, String password) {
         String key = getUserIdByEmail(email);
         if (key != null) {
@@ -110,6 +128,11 @@ public class Database implements Serializable {
         return null;
     }
 
+    /**
+     * Search users with given name.
+     * @param queryName
+     * @return Users with given name.
+     */
     public HashMap<String, User> searchUsersByName(String queryName) {
         HashMap<String, User> result = new HashMap<String, User>();
 
@@ -139,19 +162,20 @@ public class Database implements Serializable {
     }
 
     /**
-     * @param groups the groups to set
+     * Add a Group to groups' HashMap
+     * @param group
      */
-    public void setGroups(HashMap<String, Group> groups) {
-        this.groups = groups;
-    }
-
     public void addGroup(Group group) {
         if (!this.groups.containsKey(group.getUuid())) {
             this.groups.put(group.getUuid(), group);
-            System.out.println("ADD");
         }
     }
 
+    /**
+     * Check if there is a group with given id.
+     * @param id
+     * @return Group with given id, if exists.
+     */
     public Group getGroupById(String id) {
         if (this.groups.containsKey(id)) {
             return this.groups.get(id);
@@ -160,6 +184,11 @@ public class Database implements Serializable {
         return null;
     }
 
+    /**
+     * Search groups with given name.
+     * @param name
+     * @return
+     */
     public HashMap<String, Group> searchGroupByName(String name) {
         HashMap<String, Group> searchResults = new HashMap<String, Group>();
 

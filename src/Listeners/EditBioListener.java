@@ -7,29 +7,33 @@ package Listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileFilter;
-import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import social.User;
 
-/**
- *
- * @author bmvin
- */
+
 public class EditBioListener implements ActionListener {
 
     private User user;
     private JToggleButton button;
     private JTextArea textArea;
 
+    /**
+     * Create a bio editor listener
+     * @param user
+     * @param btn
+     * @param tArea
+     */
     public EditBioListener(User user, JToggleButton btn, JTextArea tArea) {
         this.user = user;
         this.button = btn;
         this.textArea = tArea;
     }
 
+    /**
+     * Change the bio field of the user.
+     * @param ae
+     */
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (this.button.isSelected()) {
