@@ -7,6 +7,7 @@ package gui;
 
 import javax.swing.JOptionPane;
 import social.Post;
+import social.TextPost;
 import social.User;
 import utils.Messages;
 import utils.Validators;
@@ -16,11 +17,13 @@ import utils.Validators;
  * @author bmvin
  */
 public class AddPostDialog extends javax.swing.JDialog {
+
     private User originUser;
-    private User targetUser; 
-    
+    private User targetUser;
+
     /**
      * Creates new form AddPostDialog
+     *
      * @param parent
      * @param modal
      * @param originUser
@@ -114,22 +117,21 @@ public class AddPostDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         String content = "";
         String warnings = "";
-        
+
         content = postArea.getText().trim();
-        if(!Validators.checkNotEmptyStringNotNull(content)) {
+        if (!Validators.checkNotEmptyStringNotNull(content)) {
             System.out.println("EMPTY");
             warnings += Messages.EMPTY_POST_ERROR;
         }
-        
-        if(!warnings.equals("")) {
-             JOptionPane.showMessageDialog(this, warnings, Messages.EMPTY_POST, JOptionPane.WARNING_MESSAGE);
+
+        if (!warnings.equals("")) {
+            JOptionPane.showMessageDialog(this, warnings, Messages.EMPTY_POST, JOptionPane.WARNING_MESSAGE);
         } else {
-            Post p = new Post(originUser, content, true);
+            Post p = new TextPost(originUser, null, true, content);
             this.targetUser.addPost(p);
             this.dispose();
         }
     }//GEN-LAST:event_postButtonActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

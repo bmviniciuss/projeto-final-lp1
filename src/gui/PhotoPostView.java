@@ -57,6 +57,7 @@ public class PhotoPostView extends javax.swing.JPanel {
     private void initComponents() {
 
         authorName = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
         photoLabel = new javax.swing.JLabel();
         likeButton = new javax.swing.JButton();
         dislikeButton = new javax.swing.JButton();
@@ -67,6 +68,8 @@ public class PhotoPostView extends javax.swing.JPanel {
         commentsPanel = new javax.swing.JPanel();
 
         authorName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jScrollPane2.setViewportView(photoLabel);
 
         likeButton.setText("Like");
         likeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -105,13 +108,12 @@ public class PhotoPostView extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(photoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(authorName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(authorName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(likeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dislikeButton)
@@ -121,7 +123,8 @@ public class PhotoPostView extends javax.swing.JPanel {
                         .addComponent(deletePhotoButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(likeslabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -130,7 +133,7 @@ public class PhotoPostView extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(authorName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(photoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(likeButton)
@@ -139,7 +142,7 @@ public class PhotoPostView extends javax.swing.JPanel {
                     .addComponent(likeslabel)
                     .addComponent(commentButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -176,6 +179,7 @@ public class PhotoPostView extends javax.swing.JPanel {
     private javax.swing.JButton deletePhotoButton;
     private javax.swing.JButton dislikeButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton likeButton;
     private javax.swing.JLabel likeslabel;
     private javax.swing.JLabel photoLabel;

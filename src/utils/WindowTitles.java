@@ -1,6 +1,6 @@
 package utils;
 
-import social.Post;
+import social.TextPost;
 
 /**
  *
@@ -19,7 +19,7 @@ public class WindowTitles {
         return "Social App";
     }
     
-    public static String postWindowTitle(Post post) {
+    public static String postWindowTitle(TextPost post) {
         String title = "";
         String ownerName = post.getOwner().getName();
         if(Validators.checkNotEmptyStringNotNull(ownerName)) {

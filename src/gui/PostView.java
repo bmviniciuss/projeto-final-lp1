@@ -1,9 +1,8 @@
-
 package gui;
 
 import java.awt.Frame;
 import social.Comment;
-import social.Post;
+import social.TextPost;
 import social.User;
 import utils.WindowTitles;
 
@@ -13,7 +12,7 @@ import utils.WindowTitles;
  */
 public class PostView extends javax.swing.JDialog {
 
-    private Post post;
+    private TextPost post;
     private User owner;
     private User currentUser;
     private Frame parent;
@@ -27,7 +26,7 @@ public class PostView extends javax.swing.JDialog {
      * @param currentUser
      * @param owner
      */
-    public PostView(java.awt.Frame parent, boolean modal, Post post, User owner, User currentUser) {
+    public PostView(java.awt.Frame parent, boolean modal, TextPost post, User owner, User currentUser) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
@@ -45,9 +44,7 @@ public class PostView extends javax.swing.JDialog {
 
         updateLikeButtonVisibility();
 
-        authorLabel.setText("Author: " + this.post.getOwner().getName());
-        contentArea.setEditable(false);
-        contentArea.setText(this.post.getContent());
+        showInfo();
 
         updatePostLikes();
         updateCommentsSection();
@@ -75,13 +72,14 @@ public class PostView extends javax.swing.JDialog {
         likesLabel = new javax.swing.JLabel();
         deletePostButton = new javax.swing.JButton();
         likeButton = new javax.swing.JButton();
+        dislikeButton = new javax.swing.JButton();
         makeCommentButton = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        commentsScroll = new javax.swing.JScrollPane();
         commentsPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        authorLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        authorLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         contentArea.setColumns(20);
         contentArea.setRows(5);
@@ -101,6 +99,13 @@ public class PostView extends javax.swing.JDialog {
             }
         });
 
+        dislikeButton.setText("Dislike");
+        dislikeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dislikeButtonActionPerformed(evt);
+            }
+        });
+
         makeCommentButton.setText("Make Comment");
         makeCommentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,7 +114,7 @@ public class PostView extends javax.swing.JDialog {
         });
 
         commentsPanel.setLayout(new javax.swing.BoxLayout(commentsPanel, javax.swing.BoxLayout.Y_AXIS));
-        jScrollPane2.setViewportView(commentsPanel);
+        commentsScroll.setViewportView(commentsPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,13 +127,15 @@ public class PostView extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(likeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dislikeButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deletePostButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(makeCommentButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(likesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 191, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2)
+                        .addGap(0, 124, Short.MAX_VALUE))
+                    .addComponent(commentsScroll)
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
@@ -144,10 +151,11 @@ public class PostView extends javax.swing.JDialog {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(likeButton)
                         .addComponent(deletePostButton)
-                        .addComponent(makeCommentButton))
+                        .addComponent(makeCommentButton)
+                        .addComponent(dislikeButton))
                     .addComponent(likesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addComponent(commentsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -186,17 +194,18 @@ public class PostView extends javax.swing.JDialog {
         String id = getId();
 
         likeButton.setVisible(true);
+        dislikeButton.setVisible(false);
 
         if (!id.equals("")) {
             if (post.hasLiked(id)) {
                 likeButton.setVisible(false);
+                dislikeButton.setVisible(true);
             }
         }
 
     }
 
     private void likeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_likeButtonActionPerformed
-        // TODO add your handling code here:
         String id = getId();
 
         if (!id.equals("")) {
@@ -211,14 +220,26 @@ public class PostView extends javax.swing.JDialog {
         updateCommentsSection();
     }//GEN-LAST:event_makeCommentButtonActionPerformed
 
+    private void dislikeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dislikeButtonActionPerformed
+
+        String id = getId();
+
+        if (!id.equals("")) {
+            this.post.removeLike(id);
+        }
+        updateLikeButtonVisibility();
+        updatePostLikes();
+    }//GEN-LAST:event_dislikeButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
     private javax.swing.JPanel commentsPanel;
+    private javax.swing.JScrollPane commentsScroll;
     private javax.swing.JTextArea contentArea;
     private javax.swing.JButton deletePostButton;
+    private javax.swing.JButton dislikeButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton likeButton;
     private javax.swing.JLabel likesLabel;
     private javax.swing.JButton makeCommentButton;
@@ -228,12 +249,20 @@ public class PostView extends javax.swing.JDialog {
         commentsPanel.removeAll();
 
         for (Comment comment : this.post.getComments()) {
+            System.out.println("COMMENT: " + comment);
             CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
             commentsPanel.add(cv);
         }
 
         commentsPanel.repaint();
         commentsPanel.revalidate();
+
+    }
+
+    private void showInfo() {
+        authorLabel.setText(this.post.getOwner().getName());
+        contentArea.setEditable(false);
+        contentArea.setText(this.post.getContent());
 
     }
 

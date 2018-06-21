@@ -3,7 +3,6 @@ package social;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class User extends Uid implements Serializable {
@@ -12,15 +11,12 @@ public class User extends Uid implements Serializable {
     private String email;
     private String bio;
     private File profilePicture;
-    private ArrayList<PhotoPost> photos;
     private HashSet<String> friends;
     private HashSet<String> requests;
     private HashSet<String> blockedUsers;
     private HashSet<String> pendingRequests;
-    private ArrayList<String> sortedPosts;
-    private HashMap<String, Post> posts;
+    private ArrayList<Post> posts;
     private HashSet<String> groups;
-    private HashSet<String> groupsPending;
     private boolean publicProfile;
 
     public User(String name, String email) {
@@ -34,11 +30,8 @@ public class User extends Uid implements Serializable {
         this.requests = new HashSet<String>();
         this.blockedUsers = new HashSet<String>();
         this.pendingRequests = new HashSet<String>();
-        this.sortedPosts = new ArrayList<String>();
-        this.posts = new HashMap<String, Post>();
+        this.posts = new ArrayList<Post>();
         this.groups = new HashSet<String>();
-        this.groupsPending = new HashSet<String>();
-        this.photos = new ArrayList<PhotoPost>();
     }
 
     public String getBio() {
@@ -161,50 +154,8 @@ public class User extends Uid implements Serializable {
         }
     }
 
-    public HashMap<String, Post> getPosts() {
-        return this.posts;
-    }
-
-    public void addPost(Post post) {
-        if (!this.posts.containsKey(post.getUuid()) && !isInSorted(post.getUuid())) {
-            this.posts.put(post.getUuid(), post);
-            this.sortedPosts.add(0, post.getUuid());
-        }
-    }
-
-    public void removePost(Post post) {
-        if (this.posts.containsKey(post.getUuid()) && isInSorted(post.getUuid())) {
-            this.posts.remove(post.getUuid());
-            this.sortedPosts.remove(post.getUuid());
-        }
-    }
-
-    public Post getPostById(String key) {
-        if (this.posts.containsKey(key)) {
-            return this.posts.get(key);
-        }
-        return null;
-    }
-
     public boolean isFriendWith(String id) {
         return this.friends.contains(id);
-    }
-
-    public boolean isInSorted(String id) {
-        for (String postId : this.sortedPosts) {
-            if (postId.equals(id)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return the sortedPosts
-     */
-    public ArrayList<String> getSortedPosts() {
-        return sortedPosts;
     }
 
     /**
@@ -212,13 +163,6 @@ public class User extends Uid implements Serializable {
      */
     public HashSet<String> getGroups() {
         return groups;
-    }
-
-    /**
-     * @return the groupsPending
-     */
-    public HashSet<String> getGroupsPending() {
-        return groupsPending;
     }
 
     public void removeGroup(String id) {
@@ -233,32 +177,52 @@ public class User extends Uid implements Serializable {
         }
     }
 
-    /**
-     * @return the photos
-     */
-    public ArrayList<PhotoPost> getPhotos() {
-        return photos;
+    public ArrayList<Post> getPosts() {
+        return this.posts;
     }
 
-    public boolean isInPhotos(String id) {
-        for (PhotoPost pp : this.photos) {
-            if (pp.getUuid().equals(id)) {
-                return true;
+    public ArrayList<PhotoPost> getPhotos() {
+        ArrayList<PhotoPost> photos = new ArrayList<PhotoPost>();
+
+        for (Post p : this.posts) {
+            if (p instanceof PhotoPost) {
+                photos.add((PhotoPost) p);
             }
         }
 
+        return photos;
+    }
+
+    public boolean isInPost(String id) {
+        for (Post p : this.posts) {
+            if (p.getUuid().equals(id)) {
+                return true;
+            }
+        }
         return false;
     }
 
-    public void addPhoto(PhotoPost photo) {
-        if (!isInPhotos(photo.getUuid())) {
-            this.photos.add(photo);
+    public Post getPostById(String key) {
+        for (Post p : this.posts) {
+            if (p.getUuid().equals(key)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public void addPost(Post post) {
+        if (!isInPost(post.getUuid())) {
+            this.posts.add(post);
+
         }
     }
-    
-    public void removePhoto(PhotoPost pp) {
-        if(isInPhotos(pp.getUuid())) {
-            this.photos.remove(pp);
+
+    public void removePost(Post post) {
+        if (isInPost(post.getUuid())) {
+            this.posts.remove(post);
+
         }
     }
+
 }

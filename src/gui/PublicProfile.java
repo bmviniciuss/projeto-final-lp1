@@ -1,5 +1,6 @@
 package gui;
 
+import Listeners.DeletePostListener;
 import java.awt.Frame;
 import java.io.File;
 import javax.swing.DefaultListModel;
@@ -8,6 +9,7 @@ import social.Database;
 import social.PhotoPost;
 import social.User;
 import social.Post;
+import social.TextPost;
 import social.UserInteraction;
 import utils.Images;
 import utils.Validators;
@@ -55,6 +57,8 @@ public class PublicProfile extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        mainPane = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         addFriendButton = new javax.swing.JButton();
         blockUserButton = new javax.swing.JButton();
@@ -66,6 +70,8 @@ public class PublicProfile extends javax.swing.JDialog {
         profilePic = new javax.swing.JLabel();
         postButton = new javax.swing.JButton();
         postPhotoButton = new javax.swing.JButton();
+        photosPane = new javax.swing.JScrollPane();
+        photosPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -122,53 +128,77 @@ public class PublicProfile extends javax.swing.JDialog {
             }
         });
 
+        javax.swing.GroupLayout mainPaneLayout = new javax.swing.GroupLayout(mainPane);
+        mainPane.setLayout(mainPaneLayout);
+        mainPaneLayout.setHorizontalGroup(
+            mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 691, Short.MAX_VALUE)
+            .addGroup(mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1)
+                        .addGroup(mainPaneLayout.createSequentialGroup()
+                            .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane2)
+                                .addGroup(mainPaneLayout.createSequentialGroup()
+                                    .addComponent(addFriendButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(postButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(postPhotoButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(blockUserButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(unblockUserButton)
+                                    .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addContainerGap()))
+        );
+        mainPaneLayout.setVerticalGroup(
+            mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 433, Short.MAX_VALUE)
+            .addGroup(mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(mainPaneLayout.createSequentialGroup()
+                            .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(addFriendButton)
+                                .addComponent(blockUserButton)
+                                .addComponent(unblockUserButton)
+                                .addComponent(postButton)
+                                .addComponent(postPhotoButton))))
+                    .addGap(18, 18, 18)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        jTabbedPane1.addTab("Main", mainPane);
+
+        photosPanel.setLayout(new javax.swing.BoxLayout(photosPanel, javax.swing.BoxLayout.Y_AXIS));
+        photosPane.setViewportView(photosPanel);
+
+        jTabbedPane1.addTab("Photos", photosPane);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(addFriendButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(postButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(postPhotoButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(blockUserButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(unblockUserButton)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE))))
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 696, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(profilePic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(addFriendButton)
-                            .addComponent(blockUserButton)
-                            .addComponent(unblockUserButton)
-                            .addComponent(postButton)
-                            .addComponent(postPhotoButton))))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jTabbedPane1)
         );
 
         pack();
@@ -260,7 +290,7 @@ public class PublicProfile extends javax.swing.JDialog {
         JList list = (JList) evt.getSource();
         if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
             int index = list.locationToIndex(evt.getPoint());
-            Post selectedPost = (Post) list.getModel().getElementAt(index);
+            TextPost selectedPost = (TextPost) list.getModel().getElementAt(index);
             if (selectedPost != null) {
                 PostView pd = new PostView(parent, true, selectedPost, this.targetUser, this.originUser);
                 setUsersPosts();
@@ -282,8 +312,8 @@ public class PublicProfile extends javax.swing.JDialog {
             File uploadedPhoto;
             uploadedPhoto = new File(Images.getPath(targetUser) + photo.getName());
 
-            PhotoPost pp = new PhotoPost(targetUser, uploadedPhoto, false);
-            targetUser.addPhoto(pp);
+            Post pp = new PhotoPost(originUser, null, false, uploadedPhoto);
+            targetUser.addPost(pp);
         }
 
     }//GEN-LAST:event_postPhotoButtonActionPerformed
@@ -293,19 +323,43 @@ public class PublicProfile extends javax.swing.JDialog {
         if (!targetUser.userIsBlocked(originUser.getUuid())) {
             DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
 
-            for (String key : this.targetUser.getSortedPosts()) {
-                Post p = this.targetUser.getPostById(key);
-                // is friend. show everything
-                if (targetUser.isFriendWith(originUser.getUuid())) {
-                    postsModel.addElement(p);
-                } else {
-                    if (p.isPublic()) {
-                        postsModel.addElement(p);
+            photosPanel.removeAll();
+
+            for (Post p : this.targetUser.getPosts()) {
+                if (p instanceof TextPost) {
+                    TextPost tp = (TextPost) p;
+                    if (targetUser.isFriendWith(originUser.getUuid())) {
+                        postsModel.addElement(tp);
+                    } else {
+                        if (tp.isPublic()) {
+                            postsModel.addElement(tp);
+                        }
                     }
+
+                } else if (p instanceof PhotoPost) {
+                    PhotoPost pp = (PhotoPost) p;
+
+                    if (targetUser.isFriendWith(originUser.getUuid()) || pp.isPublic()) {
+                        PhotoPostView ppv = new PhotoPostView(pp, originUser);
+                        ppv.setListener(new DeletePostListener() {
+                            @Override
+                            public void deletePost(Post p, User currentUser) {
+                                currentUser.removePost(pp);
+                                setUsersPosts();
+                            }
+                        });
+                        photosPanel.add(ppv);
+                    }
+
                 }
+
             }
 
             postsList.setModel(postsModel);
+
+            photosPanel.repaint();
+            photosPanel.revalidate();
+
         }
 
     }
@@ -317,7 +371,11 @@ public class PublicProfile extends javax.swing.JDialog {
     private javax.swing.JButton blockUserButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel mainPane;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JScrollPane photosPane;
+    private javax.swing.JPanel photosPanel;
     private javax.swing.JButton postButton;
     private javax.swing.JButton postPhotoButton;
     private javax.swing.JList<Post> postsList;

@@ -12,7 +12,6 @@ public class Group extends Uid {
     private HashMap<String, User> groupMembers;
     private HashMap<String, User> groupAdmins;
     private ArrayList<Post> groupPosts;
-    private ArrayList<PhotoPost> groupPhotos;
     private HashSet<User> groupRequests;
     private HashSet<String> blockedUsers;
 
@@ -21,7 +20,6 @@ public class Group extends Uid {
         this.groupMembers = new HashMap<String, User>();
         this.groupAdmins = new HashMap<String, User>();
         this.groupPosts = new ArrayList<Post>();
-        this.groupPhotos = new ArrayList<PhotoPost>();
         this.groupRequests = new HashSet<User>();
         this.blockedUsers = new HashSet<String>();
 
@@ -62,9 +60,9 @@ public class Group extends Uid {
         }
     }
 
-    public boolean isInPost(Post p) {
+    public boolean isInPost(String id) {
         for (Post post : this.groupPosts) {
-            if (post.getUuid().equals(p.getUuid())) {
+            if (post.getUuid().equals(id)) {
                 return true;
             }
         }
@@ -73,7 +71,7 @@ public class Group extends Uid {
     }
 
     public void removePost(Post p, User doingAction) {
-        if (isInPost(p)) {
+        if (isInPost(p.getUuid())) {
             User postOwner = p.getOwner();
             if (postOwner.getUuid().equals(doingAction.getUuid()) || isAdmin(doingAction.getUuid())) {
                 this.groupPosts.remove(p);
@@ -192,30 +190,27 @@ public class Group extends Uid {
     public User getOwner() {
         return this.groupOwner;
     }
-    
-    public ArrayList<PhotoPost> getPhotos() {
-        return groupPhotos;
-    }
 
-    public boolean isInPhotos(String id) {
-        for (PhotoPost pp : this.groupPhotos) {
-            if (pp.getUuid().equals(id)) {
-                return true;
+    public ArrayList<PhotoPost> getPhotos() {
+        ArrayList<PhotoPost> photos = new ArrayList<PhotoPost>();
+        for (Post p : this.groupPosts) {
+            if (p instanceof PhotoPost) {
+                photos.add((PhotoPost) p);
             }
         }
 
-        return false;
+        return photos;
     }
 
     public void addPhoto(PhotoPost photo) {
-        if (!isInPhotos(photo.getUuid())) {
-            this.groupPhotos.add(photo);
+        if (!isInPost(photo.getUuid())) {
+            this.groupPosts.add(photo);
         }
     }
-    
+
     public void removePhoto(PhotoPost pp) {
-        if(isInPhotos(pp.getUuid())) {
-            this.groupPhotos.remove(pp);
+        if (isInPost(pp.getUuid())) {
+            this.groupPosts.remove(pp);
         }
     }
 

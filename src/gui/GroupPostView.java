@@ -1,23 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import Listeners.DeletePostListener;
 import social.Comment;
 import social.Group;
-import social.Post;
+import social.TextPost;
 import social.User;
 
-/**
- *
- * @author bmvin
- */
-public class SmallPostView extends javax.swing.JPanel {
+public class GroupPostView extends javax.swing.JPanel {
 
-    private final Post post;
+    private final TextPost post;
     private final User currentUser;
     private final Group group;
     private DeletePostListener listener;
@@ -28,7 +19,7 @@ public class SmallPostView extends javax.swing.JPanel {
      * @param post
      * @param currentUser
      */
-    public SmallPostView(Post post, User currentUser, Group gp) {
+    public GroupPostView(TextPost post, User currentUser, Group gp) {
         initComponents();
         this.post = post;
         this.currentUser = currentUser;
@@ -149,7 +140,6 @@ public class SmallPostView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void commentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commentButtonActionPerformed
-        // TODO add your handling code here:
         AddComment ac = new AddComment(null, true, currentUser, post);
         showComments();
         buttonsVisibility();
@@ -162,7 +152,6 @@ public class SmallPostView extends javax.swing.JPanel {
     }//GEN-LAST:event_likeButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        // TODO add your handling code here:
         if (listener != null) {
             listener.deletePost(post, currentUser);
         }
@@ -188,23 +177,16 @@ public class SmallPostView extends javax.swing.JPanel {
     }
 
     private void showComments() {
-        jScrollPane2.setVisible(true);
-        commentsPanel.setVisible(true);
-        if (this.post.getComments().size() > 0) {
 
-            commentsPanel.removeAll();
+        commentsPanel.removeAll();
 
-            for (Comment comment : this.post.getComments()) {
-                CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
-                commentsPanel.add(cv);
-            }
-
-            commentsPanel.repaint();
-            commentsPanel.revalidate();
-        } else {
-            jScrollPane2.setVisible(false);
-            commentsPanel.setVisible(false);
+        for (Comment comment : this.post.getComments()) {
+            CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
+            commentsPanel.add(cv);
         }
+
+        commentsPanel.repaint();
+        commentsPanel.revalidate();
 
     }
 

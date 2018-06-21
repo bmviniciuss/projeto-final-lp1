@@ -10,6 +10,7 @@ import social.Group;
 import social.ImagePicker;
 import social.PhotoPost;
 import social.Post;
+import social.TextPost;
 import social.User;
 import utils.Images;
 
@@ -201,17 +202,7 @@ public class GroupView extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Feed", groupFeed);
 
-        javax.swing.GroupLayout photosPanelLayout = new javax.swing.GroupLayout(photosPanel);
-        photosPanel.setLayout(photosPanelLayout);
-        photosPanelLayout.setHorizontalGroup(
-            photosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 670, Short.MAX_VALUE)
-        );
-        photosPanelLayout.setVerticalGroup(
-            photosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 513, Short.MAX_VALUE)
-        );
-
+        photosPanel.setLayout(new javax.swing.BoxLayout(photosPanel, javax.swing.BoxLayout.Y_AXIS));
         jScrollPane3.setViewportView(photosPanel);
 
         jTabbedPane1.addTab("Photos", jScrollPane3);
@@ -236,10 +227,11 @@ public class GroupView extends javax.swing.JDialog {
         content = postArea.getText().trim();
 
         if (!content.equals("")) {
-            Post p = new Post(currentUser, content, true);
+            TextPost p = new TextPost(currentUser, group, true, content);
             group.addPost(p);
             postArea.setText("");
         }
+        
         populateFeed();
     }//GEN-LAST:event_postButtonActionPerformed
 
@@ -271,21 +263,21 @@ public class GroupView extends javax.swing.JDialog {
 
     private void postPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postPhotoButtonActionPerformed
         File file = new ImagePicker(null).pickImage();
-        
+
         if (file != null) {
             Images.uploadImage(file, group);
 
             File uploadedPhoto;
             uploadedPhoto = new File(Images.getPath(group) + file.getName());
 
-            PhotoPost pp = new PhotoPost(group, uploadedPhoto, false);
+            PhotoPost pp = new PhotoPost(currentUser, group, false, uploadedPhoto);
             group.addPhoto(pp);
 
         }
-        
-        populatePhotosFeed();
+
+        populateFeed();
         db.serializeData();
-        
+
     }//GEN-LAST:event_postPhotoButtonActionPerformed
 
 
@@ -331,14 +323,13 @@ public class GroupView extends javax.swing.JDialog {
             }
         }
 
-        // update post lists
+        // Populate Feed
         populateFeed();
 
         // update members
         showMembers();
 
-        // populate photos
-        populatePhotosFeed();
+        
 
     }
 
@@ -362,43 +353,38 @@ public class GroupView extends javax.swing.JDialog {
 
     private void populateFeed() {
         gpFeedPanel.removeAll();
-
-        for (Post p : this.group.getGroupPosts()) {
-            SmallPostView spv = new SmallPostView(p, currentUser, group);
-            spv.setListener(new DeletePostListener() {
-                @Override
-                public void deletePost(Post p, User currentUser) {
-                    group.removePost(p, currentUser);
-                    populateFeed();
-                }
-            });
-            gpFeedPanel.add(spv);
-        }
-
-        gpFeedPanel.repaint();
-        gpFeedPanel.revalidate();
-    }
-
-    private void populatePhotosFeed() {
-
         photosPanel.removeAll();
 
-        for (PhotoPost pp : this.group.getPhotos()) {
-            if (pp != null) {
+        for (Post p : this.group.getGroupPosts()) {
+            if (p instanceof TextPost) {
+                TextPost tx = (TextPost) p;
+                GroupPostView spv = new GroupPostView(tx, currentUser, group);
+                spv.setListener(new DeletePostListener() {
+                    @Override
+                    public void deletePost(Post p, User currentUser) {
+                        group.removePost(p, currentUser);
+                        populateFeed();
+                    }
+                });
+                gpFeedPanel.add(spv);
+            } else if (p instanceof PhotoPost) {
+                System.out.println("TEM FOTO");
+                PhotoPost pp = (PhotoPost) p;
                 PhotoPostView ppv = new PhotoPostView(pp, currentUser);
                 ppv.setListener(new DeletePostListener() {
                     @Override
                     public void deletePost(Post p, User currentUser) {
                         group.removePhoto(pp);
-                        populatePhotosFeed();
+                        populateFeed();
                     }
                 });
                 photosPanel.add(ppv);
-
             }
         }
-
+        gpFeedPanel.repaint();
+        gpFeedPanel.revalidate();
         photosPanel.repaint();
         photosPanel.revalidate();
     }
+
 }

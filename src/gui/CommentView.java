@@ -40,6 +40,7 @@ public class CommentView extends javax.swing.JPanel {
         if (comment.getOwner().getUuid().equals(origin.getUuid())) {
             deleteButton.setVisible(true);
         }
+        
 
     }
 
@@ -56,6 +57,8 @@ public class CommentView extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         commentText = new javax.swing.JTextArea();
         deleteButton = new javax.swing.JButton();
+
+        nameLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
         commentText.setColumns(20);
         commentText.setRows(5);

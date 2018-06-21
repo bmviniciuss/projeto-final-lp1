@@ -17,6 +17,7 @@ import social.User;
 import utils.Messages;
 import utils.Validators;
 import social.Post;
+import social.TextPost;
 import utils.Images;
 import utils.WindowTitles;
 import utils.Wrapers;
@@ -46,10 +47,7 @@ public class AuthView extends javax.swing.JFrame {
         // ProfilePanel - Handles Name, Profile Pic and Bio
         updateProfilePanel();
 
-        updatePostsPanel();
-
-        // PHOTO PANE
-        updatePhotosPanel();
+        updateFeed();
 
         // NOTIFICATION PANE
         showNotificationPanel();
@@ -245,7 +243,7 @@ public class AuthView extends javax.swing.JFrame {
                             .addComponent(makePostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(clearPostButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(profilePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(makePostButton)
@@ -276,7 +274,7 @@ public class AuthView extends javax.swing.JFrame {
             notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notificationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -302,7 +300,7 @@ public class AuthView extends javax.swing.JFrame {
             friendsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(friendsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -342,7 +340,7 @@ public class AuthView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(createGroupButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -422,7 +420,7 @@ public class AuthView extends javax.swing.JFrame {
                     .addComponent(nameSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(nameSearchField)
                     .addComponent(nameSearchLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 2, Short.MAX_VALUE)
+                .addGap(0, 4, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -478,7 +476,7 @@ public class AuthView extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+            .addComponent(tabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
 
         pack();
@@ -539,6 +537,7 @@ public class AuthView extends javax.swing.JFrame {
 
         }
     }
+
 
     private void nameSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameSearchButtonActionPerformed
         doNameSearch();
@@ -630,7 +629,6 @@ public class AuthView extends javax.swing.JFrame {
     }//GEN-LAST:event_profilePicMouseClicked
 
     private void makePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePostButtonActionPerformed
-        // TODO add your handling code here:
         String content = "";
         boolean isPublic = false;
 
@@ -641,9 +639,9 @@ public class AuthView extends javax.swing.JFrame {
         content = postTextArea.getText();
         if (Validators.checkNotEmptyStringNotNull(content)) {
             // add post
-            Post post = new Post(currentUser, content, isPublic);
+            Post post = new TextPost(currentUser, null, isPublic, content);
             this.currentUser.addPost(post);
-            updatePostsPanel();
+            updateFeed();
             clearPostFields();
         }
 
@@ -658,10 +656,10 @@ public class AuthView extends javax.swing.JFrame {
         JList list = (JList) evt.getSource();
         if (evt.getClickCount() == 2 && list.getModel().getSize() != 0) {
             int index = list.locationToIndex(evt.getPoint());
-            Post selectedPost = (Post) list.getModel().getElementAt(index);
+            TextPost selectedPost = (TextPost) list.getModel().getElementAt(index);
             if (selectedPost != null) {
                 PostView pv = new PostView(this, true, selectedPost, currentUser, currentUser);
-                updatePostsPanel();
+                updateFeed();
             }
         }
     }//GEN-LAST:event_postsListMouseClicked
@@ -720,12 +718,12 @@ public class AuthView extends javax.swing.JFrame {
             File uploadedPhoto;
             uploadedPhoto = new File(Images.getPath(currentUser) + file.getName());
 
-            PhotoPost pp = new PhotoPost(currentUser, uploadedPhoto, publicPhoto);
-            currentUser.addPhoto(pp);
+            Post pp = new PhotoPost(currentUser, null, publicPhoto, uploadedPhoto);
+            currentUser.addPost(pp);
 
         }
-        
-        updatePhotosPanel();
+
+        updateFeed();
         db.serializeData();
     }//GEN-LAST:event_addPhotoButtonActionPerformed
 
@@ -817,15 +815,33 @@ public class AuthView extends javax.swing.JFrame {
         }
     }
 
-    private void updatePostsPanel() {
-        DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
+    private void updateFeed() {
+        photosPanel.removeAll();
 
-        for (String key : this.currentUser.getSortedPosts()) {
-            Post p = this.currentUser.getPostById(key);
-            postsModel.addElement(p);
+        DefaultListModel<Post> textPostsModel = new DefaultListModel<Post>();
+
+        for (Post p : this.currentUser.getPosts()) {
+            if (p instanceof TextPost) {
+                textPostsModel.addElement(p);
+            } else if (p instanceof PhotoPost) {
+                PhotoPost pp = (PhotoPost) p;
+                PhotoPostView ppv = new PhotoPostView(pp, currentUser);
+                ppv.setListener(new DeletePostListener() {
+                    @Override
+                    public void deletePost(Post p, User currentUser) {
+                        currentUser.removePost(pp);
+                        updateFeed();
+                    }
+                });
+                photosPanel.add(ppv);
+            }
+
         }
 
-        postsList.setModel(postsModel);
+        postsList.setModel(textPostsModel);
+
+        photosPanel.repaint();
+        photosPanel.revalidate();
     }
 
     private void showGroupPanel() {
@@ -839,26 +855,4 @@ public class AuthView extends javax.swing.JFrame {
         usersGroupList.setModel(groups);
     }
 
-    private void updatePhotosPanel() {
-        photosPanel.removeAll();
-
-        for (PhotoPost pp : this.currentUser.getPhotos()) {
-            if(pp != null) {
-                PhotoPostView ppv = new PhotoPostView(pp, currentUser);
-                ppv.setListener(new DeletePostListener() {
-                    @Override
-                    public void deletePost(Post p, User currentUser) {
-                        currentUser.removePhoto(pp);
-                        updatePhotosPanel();
-                    }
-                });
-                photosPanel.add(ppv);
-            
-            }
-        }
-
-        photosPanel.repaint();
-        photosPanel.revalidate();
-
-    }
 }
