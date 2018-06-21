@@ -1,24 +1,33 @@
-
 package social;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class Post extends Uid {
+public abstract class Post extends Uid {
 
     private User owner;
+    private Group inGroup;
     private boolean isPublic;
-    private String content;
     private ArrayList<Comment> comments;
     private HashSet<String> likes;
 
-    public Post(User owner, String content, boolean isPublic) {
+    /**
+     *
+     * @param owner
+     * @param inGroup
+     * @param isPublic
+     */
+    public Post(User owner, Group inGroup, boolean isPublic) {
         this.owner = owner;
-        this.content = content;
         this.isPublic = isPublic;
+        this.inGroup = inGroup;
         this.likes = new HashSet<String>();
         this.comments = new ArrayList<Comment>();
 
+    }
+
+    public Group getGroup() {
+        return this.inGroup;
     }
 
     public int numLikes() {
@@ -39,15 +48,6 @@ public class Post extends Uid {
         if (this.likes.contains(userKey)) {
             this.likes.remove(userKey);
         }
-    }
-
-    @Override
-    public String toString() {
-        return this.owner.getName() + " - " + this.content + " - Likes: " + numLikes() + " - Comments: " + numComments();
-    }
-
-    public String getContent() {
-        return this.content;
     }
 
     public boolean hasLiked(String key) {

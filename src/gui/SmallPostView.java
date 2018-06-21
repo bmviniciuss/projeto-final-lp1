@@ -67,7 +67,7 @@ public class SmallPostView extends javax.swing.JPanel {
         likesLabel = new javax.swing.JLabel();
         deleteButton = new javax.swing.JButton();
 
-        authorName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        authorName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         contentArea.setColumns(20);
         contentArea.setLineWrap(true);
@@ -150,7 +150,9 @@ public class SmallPostView extends javax.swing.JPanel {
 
     private void commentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commentButtonActionPerformed
         // TODO add your handling code here:
-
+        AddComment ac = new AddComment(null, true, currentUser, post);
+        showComments();
+        buttonsVisibility();
     }//GEN-LAST:event_commentButtonActionPerformed
 
     private void likeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_likeButtonActionPerformed
@@ -161,7 +163,7 @@ public class SmallPostView extends javax.swing.JPanel {
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
-        if(listener != null) {
+        if (listener != null) {
             listener.deletePost(post, currentUser);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
@@ -186,23 +188,32 @@ public class SmallPostView extends javax.swing.JPanel {
     }
 
     private void showComments() {
-        commentsPanel.removeAll();
+        jScrollPane2.setVisible(true);
+        commentsPanel.setVisible(true);
+        if (this.post.getComments().size() > 0) {
 
-        for (Comment comment : this.post.getComments()) {
-            CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
-            commentsPanel.add(cv);
+            commentsPanel.removeAll();
+
+            for (Comment comment : this.post.getComments()) {
+                CommentView cv = new CommentView(comment, currentUser, post, commentsPanel);
+                commentsPanel.add(cv);
+            }
+
+            commentsPanel.repaint();
+            commentsPanel.revalidate();
+        } else {
+            jScrollPane2.setVisible(false);
+            commentsPanel.setVisible(false);
         }
 
-        commentsPanel.repaint();
-        commentsPanel.revalidate();
     }
 
     private void buttonsVisibility() {
         deleteButton.setVisible(false);
-        if(post.getOwner().getUuid().equals(currentUser.getUuid()) || group.isAdmin(currentUser.getUuid())) {
+        if (post.getOwner().getUuid().equals(currentUser.getUuid()) || group.isAdmin(currentUser.getUuid())) {
             deleteButton.setVisible(true);
         }
-        if(!post.hasLiked(currentUser.getUuid())) {
+        if (!post.hasLiked(currentUser.getUuid())) {
             likeButton.setVisible(true);
             dislikeButton.setVisible(false);
         } else {
@@ -210,8 +221,8 @@ public class SmallPostView extends javax.swing.JPanel {
             dislikeButton.setVisible(true);
         }
     }
-    
-    public void setListener( DeletePostListener listener) {
+
+    public void setListener(DeletePostListener listener) {
         this.listener = listener;
     }
 }

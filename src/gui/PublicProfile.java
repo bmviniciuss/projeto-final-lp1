@@ -5,6 +5,7 @@ import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import social.Database;
+import social.PhotoPost;
 import social.User;
 import social.Post;
 import social.UserInteraction;
@@ -14,6 +15,7 @@ import utils.WindowTitles;
 import utils.Wrapers;
 
 public class PublicProfile extends javax.swing.JDialog {
+
     private Frame parent;
     private User targetUser;
     private User originUser;
@@ -35,7 +37,6 @@ public class PublicProfile extends javax.swing.JDialog {
         this.originUser = origin;
         this.db = db;
         this.parent = parent;
-
 
         setLocationRelativeTo(parent);
         setTitle(WindowTitles.usersNameWindowTitle(targetUser.getName()));
@@ -64,6 +65,7 @@ public class PublicProfile extends javax.swing.JDialog {
         bioArea = new javax.swing.JTextArea();
         profilePic = new javax.swing.JLabel();
         postButton = new javax.swing.JButton();
+        postPhotoButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -113,6 +115,13 @@ public class PublicProfile extends javax.swing.JDialog {
             }
         });
 
+        postPhotoButton.setText("Post a Photo");
+        postPhotoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                postPhotoButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,6 +139,8 @@ public class PublicProfile extends javax.swing.JDialog {
                                 .addComponent(addFriendButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(postButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(postPhotoButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(blockUserButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -153,7 +164,8 @@ public class PublicProfile extends javax.swing.JDialog {
                             .addComponent(addFriendButton)
                             .addComponent(blockUserButton)
                             .addComponent(unblockUserButton)
-                            .addComponent(postButton))))
+                            .addComponent(postButton)
+                            .addComponent(postPhotoButton))))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
                 .addContainerGap())
@@ -193,17 +205,21 @@ public class PublicProfile extends javax.swing.JDialog {
             addFriendButton.setVisible(false);
             unblockUserButton.setVisible(true);
             postButton.setVisible(false);
+            postPhotoButton.setVisible(false);
         } else {
             if (this.targetUser.getRequests().contains(this.originUser.getUuid())) {
                 addFriendButton.setVisible(false);
                 postButton.setVisible(false);
+                postPhotoButton.setVisible(false);
             } else {
                 addFriendButton.setVisible(true);
                 postButton.setVisible(false);
+                postPhotoButton.setVisible(false);
             }
             blockUserButton.setVisible(true);
             unblockUserButton.setVisible(false);
             postButton.setVisible(false);
+            postPhotoButton.setVisible(false);
         }
         // blocked by person
         if (this.targetUser.userIsBlocked(this.originUser.getUuid())) {
@@ -211,10 +227,12 @@ public class PublicProfile extends javax.swing.JDialog {
             blockUserButton.setVisible(false);
             unblockUserButton.setVisible(false);
             postButton.setVisible(false);
+            postPhotoButton.setVisible(false);
         }
         if (this.originUser.getFriends().contains(this.targetUser.getUuid())) {
             addFriendButton.setVisible(false);
             postButton.setVisible(true);
+            postPhotoButton.setVisible(true);
         }
     }
 
@@ -256,6 +274,20 @@ public class PublicProfile extends javax.swing.JDialog {
         setUsersPosts();
     }//GEN-LAST:event_postButtonActionPerformed
 
+    private void postPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postPhotoButtonActionPerformed
+        File photo = new social.ImagePicker(null).pickImage();
+        if (photo != null) {
+            Images.uploadImage(photo, targetUser);
+
+            File uploadedPhoto;
+            uploadedPhoto = new File(Images.getPath(targetUser) + photo.getName());
+
+            PhotoPost pp = new PhotoPost(targetUser, uploadedPhoto, false);
+            targetUser.addPhoto(pp);
+        }
+
+    }//GEN-LAST:event_postPhotoButtonActionPerformed
+
     private void setUsersPosts() {
         // ceck if user is not blocked
         if (!targetUser.userIsBlocked(originUser.getUuid())) {
@@ -287,6 +319,7 @@ public class PublicProfile extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JButton postButton;
+    private javax.swing.JButton postPhotoButton;
     private javax.swing.JList<Post> postsList;
     private javax.swing.JLabel profilePic;
     private javax.swing.JButton unblockUserButton;

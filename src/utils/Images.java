@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import social.Uid;
 import social.User;
 
 /**
@@ -22,31 +23,31 @@ public class Images {
 
     public static final String ROOT_PATH = "./images/";
 
-    public static String getUserPath(User user) {
-        return ROOT_PATH + user.getUuid() + "/";
+    public static String getPath(Uid object) {
+        return ROOT_PATH + object.getUuid() + "/";
     }
 
-    private static void createUserFolder(User user) {
-        String userPath = getUserPath(user);
-        File userFolder = new File(userPath);
-        if (!userFolder.exists()) {
-            userFolder.mkdirs();
+    private static void createFolder(Uid object) {
+        String objPath = getPath(object);
+        File objectFolder = new File(objPath);
+        if (!objectFolder.exists()) {
+            objectFolder.mkdirs();
         }
     }
 
-    public static void uploadUserImage(File image, User user) {
-        String userPath = getUserPath(user);
-        File userFolder = new File(userPath);
-        createUserFolder(user);
-        copyFile(image, user);
+    public static void uploadImage(File image, Uid object) {
+        String objPath = getPath(object);
+        File objFolder = new File(objPath);
+        createFolder(object);
+        copyFile(image, object);
 
     }
 
-    private static void copyFile(File image, User user) {
-        String userPath = getUserPath(user);
+    private static void copyFile(File image, Uid object) {
+        String objPath = getPath(object);
 
         // image destination
-        String imgPath = userPath + image.getName();
+        String imgPath = objPath + image.getName();
         File imgDest = new File(imgPath);
         if (!imgDest.exists()) {
             Path source = image.toPath();

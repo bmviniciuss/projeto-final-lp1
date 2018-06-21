@@ -34,7 +34,7 @@ public class GroupRequestDialog extends javax.swing.JDialog {
         
         showInfo();
         showButtons();
-        
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
 
@@ -57,7 +57,7 @@ public class GroupRequestDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        groupNameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        groupNameLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         groupDescArea.setColumns(20);
         groupDescArea.setRows(5);
@@ -110,11 +110,11 @@ public class GroupRequestDialog extends javax.swing.JDialog {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(messageText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(exitButton)
                     .addComponent(sendButton))
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -153,6 +153,10 @@ public class GroupRequestDialog extends javax.swing.JDialog {
         if (group.isInRequests(currentUser)) {
             sendButton.setVisible(false);
             messageText.setVisible(true);
+        }
+        
+        if(group.isInBlocked(currentUser.getUuid())) {
+            sendButton.setVisible(false);
         }
     }
 }

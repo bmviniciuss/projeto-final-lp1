@@ -12,13 +12,14 @@ import java.io.File;
  * @author bmvin
  */
 public class PhotoPost extends Post {
+
     private File file;
-    
-    public PhotoPost(User user, File file, boolean isPublic) {
-        super(user, "", isPublic);
+
+    public PhotoPost(User owner, Group inGroup, boolean isPublic, File file) {
+        super(owner, inGroup, isPublic);
         this.file = file;
     }
-    
+
     public File getFile() {
         return this.file;
     }

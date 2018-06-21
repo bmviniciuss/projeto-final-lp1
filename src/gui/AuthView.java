@@ -114,12 +114,12 @@ public class AuthView extends javax.swing.JFrame {
         nameSearchLabel = new javax.swing.JLabel();
         nameSearchField = new javax.swing.JTextField();
         nameSearchButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         searchFriendsList = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         searchGroupsList = new javax.swing.JList<>();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         optionsPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         logoutButton = new javax.swing.JButton();
@@ -369,6 +369,8 @@ public class AuthView extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Find Friends:");
+
         searchFriendsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         searchFriendsList.setToolTipText("");
         searchFriendsList.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -379,6 +381,8 @@ public class AuthView extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(searchFriendsList);
 
+        jLabel2.setText("Be part of a group:");
+
         searchGroupsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         searchGroupsList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -386,10 +390,6 @@ public class AuthView extends javax.swing.JFrame {
             }
         });
         jScrollPane7.setViewportView(searchGroupsList);
-
-        jLabel1.setText("Find Friends:");
-
-        jLabel2.setText("Be part of a group:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -422,14 +422,14 @@ public class AuthView extends javax.swing.JFrame {
                     .addComponent(nameSearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(nameSearchField)
                     .addComponent(nameSearchLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 2, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                    .addComponent(jScrollPane7))
                 .addContainerGap())
         );
 
@@ -619,9 +619,9 @@ public class AuthView extends javax.swing.JFrame {
             File file = new social.ImagePicker(this).pickImage();
 
             if (file != null) {
-                Images.uploadUserImage(file, currentUser);
+                Images.uploadImage(file, currentUser);
                 File profilePhoto;
-                profilePhoto = new File(Images.getUserPath(currentUser) + file.getName());
+                profilePhoto = new File(Images.getPath(currentUser) + file.getName());
                 this.currentUser.setProfilePicture(profilePhoto);
             }
 
@@ -715,10 +715,10 @@ public class AuthView extends javax.swing.JFrame {
         File file = new social.ImagePicker(this).pickImage();
 
         if (file != null) {
-            Images.uploadUserImage(file, currentUser);
+            Images.uploadImage(file, currentUser);
 
             File uploadedPhoto;
-            uploadedPhoto = new File(Images.getUserPath(currentUser) + file.getName());
+            uploadedPhoto = new File(Images.getPath(currentUser) + file.getName());
 
             PhotoPost pp = new PhotoPost(currentUser, uploadedPhoto, publicPhoto);
             currentUser.addPhoto(pp);

@@ -1,23 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import Listeners.DeletePostListener;
 import java.awt.Frame;
+import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import social.Database;
 import social.Group;
+import social.ImagePicker;
+import social.PhotoPost;
 import social.Post;
 import social.User;
+import utils.Images;
 
-/**
- *
- * @author bmvin
- */
 public class GroupView extends javax.swing.JDialog {
 
     private Frame parentFrame;
@@ -72,9 +67,12 @@ public class GroupView extends javax.swing.JDialog {
         postPhotoButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         membersList = new javax.swing.JList<>();
+        blockedUsersButton = new javax.swing.JButton();
         groupFeed = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         gpFeedPanel = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        photosPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -105,6 +103,11 @@ public class GroupView extends javax.swing.JDialog {
         });
 
         postPhotoButton.setText("Post a Photo");
+        postPhotoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                postPhotoButtonActionPerformed(evt);
+            }
+        });
 
         membersList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         membersList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -113,6 +116,13 @@ public class GroupView extends javax.swing.JDialog {
             }
         });
         jScrollPane4.setViewportView(membersList);
+
+        blockedUsersButton.setText("Blocked Users");
+        blockedUsersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                blockedUsersButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainPaneLayout = new javax.swing.GroupLayout(mainPane);
         mainPane.setLayout(mainPaneLayout);
@@ -134,7 +144,8 @@ public class GroupView extends javax.swing.JDialog {
                         .addComponent(postButton, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(postPhotoButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(blockedUsersButton))
                     .addGroup(mainPaneLayout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -161,7 +172,8 @@ public class GroupView extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(mainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(postButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(postPhotoButton))
+                    .addComponent(postPhotoButton)
+                    .addComponent(blockedUsersButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -188,6 +200,21 @@ public class GroupView extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab("Feed", groupFeed);
+
+        javax.swing.GroupLayout photosPanelLayout = new javax.swing.GroupLayout(photosPanel);
+        photosPanel.setLayout(photosPanelLayout);
+        photosPanelLayout.setHorizontalGroup(
+            photosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 670, Short.MAX_VALUE)
+        );
+        photosPanelLayout.setVerticalGroup(
+            photosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 513, Short.MAX_VALUE)
+        );
+
+        jScrollPane3.setViewportView(photosPanel);
+
+        jTabbedPane1.addTab("Photos", jScrollPane3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -222,10 +249,12 @@ public class GroupView extends javax.swing.JDialog {
             int index = list.locationToIndex(evt.getPoint());
             User selectedUser = (User) list.getModel().getElementAt(index);
             if (selectedUser != null) {
-                PublicProfile pp = new PublicProfile(parentFrame, true, selectedUser, this.currentUser, this.db);
+                if (!selectedUser.getUuid().equals(currentUser.getUuid())) {
+                    GroupMember gm = new GroupMember(parentFrame, true, currentUser, selectedUser, group, db);
+                }
             }
         }
-
+        showInfo();
     }//GEN-LAST:event_membersListMouseClicked
 
     private void requestsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requestsButtonActionPerformed
@@ -235,8 +264,33 @@ public class GroupView extends javax.swing.JDialog {
 
     }//GEN-LAST:event_requestsButtonActionPerformed
 
+    private void blockedUsersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blockedUsersButtonActionPerformed
+        GroupBlockedUsersDialog gbud = new GroupBlockedUsersDialog(parentFrame, true, currentUser, group, db);
+
+    }//GEN-LAST:event_blockedUsersButtonActionPerformed
+
+    private void postPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postPhotoButtonActionPerformed
+        File file = new ImagePicker(null).pickImage();
+        
+        if (file != null) {
+            Images.uploadImage(file, group);
+
+            File uploadedPhoto;
+            uploadedPhoto = new File(Images.getPath(group) + file.getName());
+
+            PhotoPost pp = new PhotoPost(group, uploadedPhoto, false);
+            group.addPhoto(pp);
+
+        }
+        
+        populatePhotosFeed();
+        db.serializeData();
+        
+    }//GEN-LAST:event_postPhotoButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton blockedUsersButton;
     private javax.swing.JTextArea gpDesc;
     private javax.swing.JPanel gpFeedPanel;
     private javax.swing.JLabel gpName;
@@ -251,9 +305,9 @@ public class GroupView extends javax.swing.JDialog {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel mainPane;
     private javax.swing.JList<User> membersList;
+    private javax.swing.JPanel photosPanel;
     private javax.swing.JTextArea postArea;
     private javax.swing.JButton postButton;
-    private javax.swing.JPanel postPanel;
     private javax.swing.JButton postPhotoButton;
     private javax.swing.JButton requestsButton;
     // End of variables declaration//GEN-END:variables
@@ -264,6 +318,7 @@ public class GroupView extends javax.swing.JDialog {
         gpDesc.setText(group.getGroupDescription());
         gpDesc.setEditable(false);
         requestsButton.setVisible(false);
+        blockedUsersButton.setVisible(false);
 
         if (group.isAdmin(currentUser.getUuid())) {
             if (group.numberRequests() > 0) {
@@ -271,12 +326,19 @@ public class GroupView extends javax.swing.JDialog {
                 requestsButton.setVisible(true);
                 showRequestCounter();
             }
+            if (group.getBlocked().size() > 0) {
+                blockedUsersButton.setVisible(true);
+            }
         }
 
         // update post lists
         populateFeed();
+
         // update members
         showMembers();
+
+        // populate photos
+        populatePhotosFeed();
 
     }
 
@@ -315,5 +377,28 @@ public class GroupView extends javax.swing.JDialog {
 
         gpFeedPanel.repaint();
         gpFeedPanel.revalidate();
+    }
+
+    private void populatePhotosFeed() {
+
+        photosPanel.removeAll();
+
+        for (PhotoPost pp : this.group.getPhotos()) {
+            if (pp != null) {
+                PhotoPostView ppv = new PhotoPostView(pp, currentUser);
+                ppv.setListener(new DeletePostListener() {
+                    @Override
+                    public void deletePost(Post p, User currentUser) {
+                        group.removePhoto(pp);
+                        populatePhotosFeed();
+                    }
+                });
+                photosPanel.add(ppv);
+
+            }
+        }
+
+        photosPanel.repaint();
+        photosPanel.revalidate();
     }
 }

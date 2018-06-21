@@ -6,20 +6,26 @@ import java.util.HashSet;
 
 public class Group extends Uid {
 
+    private User groupOwner;
     private String groupName;
     private String groupDescription;
     private HashMap<String, User> groupMembers;
     private HashMap<String, User> groupAdmins;
     private ArrayList<Post> groupPosts;
+    private ArrayList<PhotoPost> groupPhotos;
     private HashSet<User> groupRequests;
+    private HashSet<String> blockedUsers;
 
     public Group(String name, String desc, User firstAdmin) {
         super();
         this.groupMembers = new HashMap<String, User>();
         this.groupAdmins = new HashMap<String, User>();
         this.groupPosts = new ArrayList<Post>();
+        this.groupPhotos = new ArrayList<PhotoPost>();
         this.groupRequests = new HashSet<User>();
+        this.blockedUsers = new HashSet<String>();
 
+        this.groupOwner = firstAdmin;
         this.groupAdmins.put(firstAdmin.getUuid(), firstAdmin);
         this.groupMembers.put(firstAdmin.getUuid(), firstAdmin);
         this.groupName = name;
@@ -43,9 +49,9 @@ public class Group extends Uid {
             this.groupMembers.put(user.getUuid(), user);
         }
     }
-    
+
     public void addToRequest(User u) {
-        if(!isInRequests(u)) {
+        if (!isInRequests(u)) {
             this.groupRequests.add(u);
         }
     }
@@ -148,13 +154,69 @@ public class Group extends Uid {
 
         return null;
     }
-    
+
     public int numberRequests() {
         return this.groupRequests.size();
     }
-    
+
     public HashSet<User> getRequests() {
         return this.groupRequests;
     }
+
+    public HashSet<String> getBlocked() {
+        return this.blockedUsers;
+    }
+
+    public void addToBlocked(String id) {
+        if (!this.blockedUsers.contains(id)) {
+            this.blockedUsers.add(id);
+        }
+    }
+
+    public boolean isInBlocked(String id) {
+        return this.blockedUsers.contains(id);
+    }
+
+    public void removeFromBlocked(String id) {
+        if (isInBlocked(id)) {
+            this.blockedUsers.remove(id);
+        }
+    }
+
+    public void makeUserAdmin(String userId, User user) {
+        if (isMember(userId) && !isAdmin(userId)) {
+            this.groupAdmins.put(userId, user);
+        }
+    }
+
+    public User getOwner() {
+        return this.groupOwner;
+    }
     
+    public ArrayList<PhotoPost> getPhotos() {
+        return groupPhotos;
+    }
+
+    public boolean isInPhotos(String id) {
+        for (PhotoPost pp : this.groupPhotos) {
+            if (pp.getUuid().equals(id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void addPhoto(PhotoPost photo) {
+        if (!isInPhotos(photo.getUuid())) {
+            this.groupPhotos.add(photo);
+        }
+    }
+    
+    public void removePhoto(PhotoPost pp) {
+        if(isInPhotos(pp.getUuid())) {
+            this.groupPhotos.remove(pp);
+        }
+    }
+
 }
