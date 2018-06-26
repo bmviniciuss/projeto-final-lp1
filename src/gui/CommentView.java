@@ -1,5 +1,6 @@
 package gui;
 
+import java.util.ArrayList;
 import javax.swing.JPanel;
 import social.Comment;
 import social.Post;
@@ -7,6 +8,7 @@ import social.User;
 
 /**
  * View for a Comment.
+ *
  * @author bmvin
  */
 public class CommentView extends javax.swing.JPanel {
@@ -16,6 +18,7 @@ public class CommentView extends javax.swing.JPanel {
     private final User origin;
     private final Post post;
     private final JPanel panel;
+    private ArrayList<Comment> replies;
 
     /**
      * Creates new form CommentView
@@ -39,10 +42,11 @@ public class CommentView extends javax.swing.JPanel {
         commentText.setEditable(false);
         commentText.setText(comment.getContent());
 
-        if (comment.getOwner().getUuid().equals(this.origin.getUuid()) ||  post.getOwner().getUuid().equals(origin.getUuid())) {
+        if (comment.getOwner().getUuid().equals(this.origin.getUuid()) || post.getOwner().getUuid().equals(origin.getUuid())) {
             deleteButton.setVisible(true);
         }
 
+        showReplies();
     }
 
     /**
@@ -58,6 +62,9 @@ public class CommentView extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         commentText = new javax.swing.JTextArea();
         deleteButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        repliesPanel = new javax.swing.JPanel();
+        replyButton = new javax.swing.JButton();
 
         nameLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
@@ -72,18 +79,35 @@ public class CommentView extends javax.swing.JPanel {
             }
         });
 
+        repliesPanel.setLayout(new javax.swing.BoxLayout(repliesPanel, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane2.setViewportView(repliesPanel);
+
+        replyButton.setText("Reply");
+        replyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replyButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(replyButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jScrollPane2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -92,10 +116,13 @@ public class CommentView extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
-                    .addComponent(deleteButton))
+                    .addComponent(deleteButton)
+                    .addComponent(replyButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -106,12 +133,34 @@ public class CommentView extends javax.swing.JPanel {
         panel.revalidate();
     }//GEN-LAST:event_deleteButtonActionPerformed
 
+    private void replyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replyButtonActionPerformed
+        AddReply ar = new AddReply(null, origin, true, comment);
+        showReplies();
+
+    }//GEN-LAST:event_replyButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea commentText;
     private javax.swing.JButton deleteButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JPanel repliesPanel;
+    private javax.swing.JButton replyButton;
     // End of variables declaration//GEN-END:variables
+
+    private void showReplies() {
+        repliesPanel.setVisible(true);
+        repliesPanel.removeAll();
+
+        for (Comment c : this.comment.getReplies()) {
+            CommentView cv = new CommentView(c, origin, post, repliesPanel);
+            repliesPanel.add(cv);
+        }
+
+        repliesPanel.repaint();
+        repliesPanel.revalidate();
+    }
 
 }

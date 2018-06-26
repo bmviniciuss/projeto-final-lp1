@@ -266,9 +266,9 @@ public class PublicProfile extends javax.swing.JDialog {
         if (this.originUser.userIsBlocked(this.targetUser.getUuid())) {
             blockUserButton.setVisible(false);
             addFriendButton.setVisible(false);
-            unblockUserButton.setVisible(true);
             postButton.setVisible(false);
             postPhotoButton.setVisible(false);
+
         } else {
             if (this.targetUser.getRequests().contains(this.originUser.getUuid())) {
                 addFriendButton.setVisible(false);
@@ -297,25 +297,36 @@ public class PublicProfile extends javax.swing.JDialog {
             postButton.setVisible(true);
             postPhotoButton.setVisible(true);
         }
+
+        if (this.originUser.getBlockedUsers().contains(targetUser.getUuid())) {
+            unblockUserButton.setVisible(true);
+        } else {
+            unblockUserButton.setVisible(false);
+
+        }
     }
 
     private void addFriendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendButtonActionPerformed
         // TODO add your handling code here:
         UserInteraction.sendRequest(this.originUser, this.targetUser);
-//        this.targetUser.sendRequest(this.originUser.getUuid());
+
         showInfo();
     }//GEN-LAST:event_addFriendButtonActionPerformed
 
     private void blockUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blockUserButtonActionPerformed
-        // TODO add your handling code here:
         this.originUser.blockUser(this.targetUser.getUuid());
+        this.targetUser.blockUser(this.originUser.getUuid());
+        this.originUser.addBlockedUser(this.targetUser.getUuid());
         showInfo();
+        setAddFriendBlockFriendButtons();
     }//GEN-LAST:event_blockUserButtonActionPerformed
 
     private void unblockUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unblockUserButtonActionPerformed
-        // TODO add your handling code here:
         this.originUser.unblockUser(this.targetUser.getUuid());
+        this.targetUser.unblockUser(this.originUser.getUuid());
+        this.originUser.removeBlockedUser(this.targetUser.getUuid());
         showInfo();
+        setAddFriendBlockFriendButtons();
     }//GEN-LAST:event_unblockUserButtonActionPerformed
 
     private void postsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postsListMouseClicked
@@ -356,7 +367,7 @@ public class PublicProfile extends javax.swing.JDialog {
      */
     private void setUsersPosts() {
         // ceck if user is not blocked
-        if (!targetUser.userIsBlocked(originUser.getUuid())) {
+        if (!targetUser.userIsBlocked(originUser.getUuid()) && !originUser.userIsBlocked(targetUser.getUuid())) {
             DefaultListModel<Post> postsModel = new DefaultListModel<Post>();
 
             photosPanel.removeAll();

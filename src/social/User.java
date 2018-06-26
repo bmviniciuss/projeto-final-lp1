@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 /**
  * Create a User.
+ *
  * @author bmvin
  */
 public class User extends Uid implements Serializable {
@@ -17,6 +18,7 @@ public class User extends Uid implements Serializable {
     private File profilePicture;
     private HashSet<String> friends;
     private HashSet<String> requests;
+    private HashSet<String> blocked;
     private HashSet<String> blockedUsers;
     private HashSet<String> pendingRequests;
     private ArrayList<Post> posts;
@@ -37,6 +39,7 @@ public class User extends Uid implements Serializable {
         this.publicProfile = true;
         this.friends = new HashSet<String>();
         this.requests = new HashSet<String>();
+        this.blocked = new HashSet<String>();
         this.blockedUsers = new HashSet<String>();
         this.pendingRequests = new HashSet<String>();
         this.posts = new ArrayList<Post>();
@@ -134,7 +137,7 @@ public class User extends Uid implements Serializable {
      * @return
      */
     public boolean userIsBlocked(String key) {
-        return this.blockedUsers.contains(key);
+        return this.blocked.contains(key);
     }
 
     /**
@@ -142,8 +145,8 @@ public class User extends Uid implements Serializable {
      * @param key
      */
     public void blockUser(String key) {
-        if (!this.blockedUsers.contains(key)) {
-            this.blockedUsers.add(key);
+        if (!this.blocked.contains(key)) {
+            this.blocked.add(key);
         }
     }
 
@@ -152,8 +155,8 @@ public class User extends Uid implements Serializable {
      * @param key
      */
     public void unblockUser(String key) {
-        if (this.blockedUsers.contains(key)) {
-            this.blockedUsers.remove(key);
+        if (this.blocked.contains(key)) {
+            this.blocked.remove(key);
         }
     }
 
@@ -162,7 +165,7 @@ public class User extends Uid implements Serializable {
      * @param originUser
      */
     public void sendRequest(String originUser) {
-        if (!this.friends.contains(originUser) && !this.blockedUsers.contains(originUser) && !this.requests.contains(originUser)) {
+        if (!this.friends.contains(originUser) && !this.blocked.contains(originUser) && !this.requests.contains(originUser)) {
             this.requests.add(originUser);
         }
     }
@@ -221,6 +224,7 @@ public class User extends Uid implements Serializable {
      */
     public void removeFromPending(String targetKey) {
         if (isPending(targetKey)) {
+            
             this.pendingRequests.remove(targetKey);
         }
     }
@@ -332,6 +336,31 @@ public class User extends Uid implements Serializable {
         if (isInPost(post.getUuid())) {
             this.posts.remove(post);
 
+        }
+    }
+
+    public void removeFromRequests(String id) {
+        if (requests.contains(id)) {
+            requests.remove(id);
+        }
+    }
+
+    /**
+     * @return the blockedUsers
+     */
+    public HashSet<String> getBlockedUsers() {
+        return this.blockedUsers;
+    }
+
+    public void addBlockedUser(String id) {
+        if (!this.blockedUsers.contains(id)) {
+            this.blockedUsers.add(id);
+        }
+    }
+
+    public void removeBlockedUser(String id) {
+        if (this.blockedUsers.contains(id)) {
+            this.blockedUsers.remove(id);
         }
     }
 

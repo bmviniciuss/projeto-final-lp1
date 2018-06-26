@@ -15,8 +15,8 @@ import utils.Wrapers;
  */
 public class RequestDialog extends javax.swing.JDialog {
 
-    private final User origin; // sender
-    private final User target; // receiver
+    private final User sender; // sender
+    private final User receiver; // receiver
 
     /**
      * Creates new form RequestDialog
@@ -29,11 +29,11 @@ public class RequestDialog extends javax.swing.JDialog {
     public RequestDialog(java.awt.Frame parent, boolean modal, User origin, User target) {
         super(parent, modal);
         initComponents();
-        this.origin = origin;
-        this.target = target;
+        this.sender = origin;
+        this.receiver = target;
 
         setTitle(WindowTitles.requestTitle(origin.getName()));
-        nameLabel.setText(this.origin.getName());
+        nameLabel.setText(this.sender.getName());
         messageLabel.setText(Messages.SENT_FRIEND_REQUEST);
 
         showProfilePicture();
@@ -64,7 +64,7 @@ public class RequestDialog extends javax.swing.JDialog {
 
         messageLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        ignoreButton.setText("Ignore");
+        ignoreButton.setText("Delete");
         ignoreButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ignoreButtonActionPerformed(evt);
@@ -125,12 +125,15 @@ public class RequestDialog extends javax.swing.JDialog {
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
         // TODO add your handling code here:
-        UserInteraction.acceptRequest(this.origin, this.target);
+        UserInteraction.acceptRequest(this.sender, this.receiver);
         this.dispose();
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void ignoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ignoreButtonActionPerformed
-        // TODO add your handling code here:
+
+        sender.removeFromPending(receiver.getUuid());
+        receiver.removeFromRequests(sender.getUuid());
+
         this.dispose();
     }//GEN-LAST:event_ignoreButtonActionPerformed
 
@@ -138,7 +141,7 @@ public class RequestDialog extends javax.swing.JDialog {
      * Show originUser's profile picture
      */
     private void showProfilePicture() {
-        File pic = origin.getProfilePic();
+        File pic = sender.getProfilePic();
         if (pic == null || !pic.exists()) {
             profilePic.setText(Wrapers.htmlWraper("No Profile Picture Found."));
         } else {

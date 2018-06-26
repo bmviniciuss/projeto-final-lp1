@@ -129,6 +129,11 @@ public class PublicView extends javax.swing.JFrame {
         setTitle("Social App");
 
         loginButton.setText("Login");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
 
         createAccountButton.setText("New Account");
 
@@ -186,6 +191,10 @@ public class PublicView extends javax.swing.JFrame {
         this.db.serializeData();
         System.exit(0);
     }//GEN-LAST:event_exitButtonActionPerformed
+
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loginButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;

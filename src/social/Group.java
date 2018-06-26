@@ -315,7 +315,7 @@ public class Group extends Uid {
      * Get group photos
      * @return photos
      */
-    public ArrayList<PhotoPost> getPhotos() {
+        public ArrayList<PhotoPost> getPhotos() {
         ArrayList<PhotoPost> photos = new ArrayList<PhotoPost>();
         for (Post p : this.groupPosts) {
             if (p instanceof PhotoPost) {
